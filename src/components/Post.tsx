@@ -13,9 +13,10 @@ interface PostProps {
   };
   content: string;
   type: "family" | "watch";
+  mediaType: "text" | "image" | "video" | "audio";
 }
 
-export function Post({ author, content, type }: PostProps) {
+export function Post({ author, content, type, mediaType }: PostProps) {
   const [isKurattaDialogOpen, setIsKurattaDialogOpen] = useState(false);
   const { toast } = useToast();
 
@@ -25,6 +26,41 @@ export function Post({ author, content, type }: PostProps) {
       description: `You deeply resonated with this post: "${reason}"`,
     });
     setIsKurattaDialogOpen(false);
+  };
+
+  const renderMedia = () => {
+    switch (mediaType) {
+      case "image":
+        return (
+          <img
+            src={content}
+            alt="Post content"
+            className="w-full h-auto rounded-md object-cover max-h-96"
+          />
+        );
+      case "video":
+        return (
+          <div className="aspect-video w-full">
+            <iframe
+              src={content}
+              className="w-full h-full rounded-md"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        );
+      case "audio":
+        return (
+          <iframe
+            src={content}
+            className="w-full h-32 rounded-md"
+            allow="autoplay"
+          />
+        );
+      case "text":
+      default:
+        return <p className="text-sm">{content}</p>;
+    }
   };
 
   return (
@@ -42,7 +78,9 @@ export function Post({ author, content, type }: PostProps) {
         </div>
       </div>
 
-      <p className="text-sm">{content}</p>
+      <div className="space-y-4">
+        {renderMedia()}
+      </div>
 
       <Dialog open={isKurattaDialogOpen} onOpenChange={setIsKurattaDialogOpen}>
         <DialogTrigger asChild>
