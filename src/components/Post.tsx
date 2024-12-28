@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 interface PostProps {
@@ -21,6 +21,43 @@ export function Post({ author, content, caption, type, mediaType }: PostProps) {
   const [isKurattaDialogOpen, setIsKurattaDialogOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const { toast } = useToast();
+  const videoRef = useRef<HTMLIFrameElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (mediaType !== "video" || !videoContainerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!videoRef.current?.contentWindow) return;
+
+          if (entry.isIntersecting) {
+            // 画面内に入った時：再生
+            videoRef.current.contentWindow.postMessage(
+              '{"event":"command","func":"playVideo","args":""}',
+              "*"
+            );
+          } else {
+            // 画面外に出た時：停止
+            videoRef.current.contentWindow.postMessage(
+              '{"event":"command","func":"pauseVideo","args":""}',
+              "*"
+            );
+          }
+        });
+      },
+      {
+        threshold: 0.5, // 50%以上表示された時にトリガー
+      }
+    );
+
+    observer.observe(videoContainerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [mediaType]);
 
   const handleKuratta = (reason: string) => {
     toast({
@@ -60,9 +97,10 @@ export function Post({ author, content, caption, type, mediaType }: PostProps) {
         );
       case "video":
         return (
-          <div className="aspect-video w-full">
+          <div ref={videoContainerRef} className="aspect-video w-full">
             <iframe
-              src={content}
+              ref={videoRef}
+              src={`${content}?enablejsapi=1`}
               className="w-full h-full rounded-md"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
