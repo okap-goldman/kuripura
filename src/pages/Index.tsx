@@ -17,7 +17,7 @@ const SAMPLE_POSTS = [
   {
     author: {
       name: "Shota | 宇宙くん",
-      image: "https://drive.google.com/uc?export=download&id=1KFwwJDjoFhjwXZcwyRLELF74eXUwdQ5K",
+      image: "https://cdn.peraichi.com/userData/5e92b452-dcb8-4abc-a728-72d20a0000fe/img/660caeff26c50/original.jpg",
       id: "@uchu_kun__shota"
     },
     content: `僕の朝のルーティーン
@@ -34,10 +34,10 @@ const SAMPLE_POSTS = [
   {
     author: {
       name: "Kanako | スピリチュアルヒーラー",
-      image: "https://scontent-nrt1-2.cdninstagram.com/v/t51.2885-19/451751076_785890403573537_7418042110761592131_n.jpg?_nc_ht=scontent-nrt1-2.cdninstagram.com&_nc_cat=105&_nc_ohc=g9-ECcLR-B0Q7kNvgEnHbJ9&_nc_gid=27cdac4bac954ad1a0bb8ca59556d04f&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_AYAY5EL3-tdotuop6oCLZWZvHKh1d2N2hEvpF1-qa5i8jQ&oe=67762CA0&_nc_sid=7a9f4b",
+      image: "https://drive.google.com/uc?export=download&id=14LDdxvybM3Ae_LEQH3U3RyKeWrNiRbpK",
       id: "@nkmrknk694"
     },
-    content: "https://scontent-nrt1-2.cdninstagram.com/v/t51.29350-15/466755445_1072056534412512_4217496141907092812_n.jpg?se=-1&stp=dst-jpegr_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xNDQweDE4MDAuaGRyLmYyOTM1MC5kZWZhdWx0X2ltYWdlIn0&_nc_ht=scontent-nrt1-2.cdninstagram.com&_nc_cat=100&_nc_ohc=vmF5VSPMU1wQ7kNvgGH_p_y&_nc_gid=14d07cff860c4ef1b10efae7a7fee30e&edm=AOmX9WgBAAAA&ccb=7-5&ig_cache_key=MzUwMDE2ODA2Njg1MDUxNjM3Mg%3D%3D.3-ccb7-5&oh=00_AYAcfyJiMnjkahEQLoSFpzJa13L9Wltb5gcQwEQ324BaIQ&oe=6776593F&_nc_sid=bfaa47",
+    content: "https://drive.google.com/uc?export=download&id=1_3bxy9DrA-ZMYx30TL3y2FQ7PqN5or1k",
     caption: `🃏11月のカードリーディング🃏
 
 各々のなかの正義がはっきりさせる。
@@ -115,23 +115,6 @@ const SAMPLE_POSTS = [
 
 いつも命を使って僕と関わってくださり、ありがとうございます。`,
     mediaType: "text" as const,
-  },
-  {
-    author: {
-      name: "Shota | 宇宙くん",
-      image: "https://cdn.peraichi.com/userData/5e92b452-dcb8-4abc-a728-72d20a0000fe/img/660caeff26c50/original.jpg",
-      id: "@uchu_kun__shota"
-    },
-    content: "https://images.unsplash.com/photo-1532798442725-41036acc7489",
-    caption: `今日の瞑想風景🌟 
-
-宇宙とつながる特別な時間を過ごしました。
-静寂の中で感じる無限の可能性。
-みなさんも、自分だけの特別な瞑想空間を
-見つけてみてください✨
-
-#瞑想 #スピリチュアル #宇宙 #気づき`,
-    mediaType: "image" as const,
   },
   {
     author: {
