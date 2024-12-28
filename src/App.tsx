@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Profile from "./pages/Profile";
+import { FooterNav } from "./components/FooterNav";
 
 function App() {
   const queryClient = new QueryClient();
@@ -18,7 +19,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/search" element={<div className="pt-24 pb-24">Search Page (Coming Soon)</div>} />
+            <Route path="/discover" element={<div className="pt-24 pb-24">Discover Page (Coming Soon)</div>} />
           </Routes>
+          <FooterNav />
         </TooltipProvider>
       </QueryClientProvider>
     </BrowserRouter>
