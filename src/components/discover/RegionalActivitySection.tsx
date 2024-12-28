@@ -4,15 +4,42 @@ import { JapanMap3D } from "./JapanMap3D";
 import { RegionDetailView } from "./RegionDetailView";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const REGIONS = [
+  "北海道",
+  "東北",
+  "関東",
+  "中部",
+  "近畿",
+  "中国",
+  "四国",
+  "九州・沖縄"
+];
 
 export function RegionalActivitySection() {
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>("関東");
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <MapPin className="w-5 h-5" />
-        <h2 className="text-lg font-semibold">地域毎の活動状況</h2>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <MapPin className="w-5 h-5" />
+          <h2 className="text-lg font-semibold">地域毎の活動状況</h2>
+        </div>
+        
+        <Select value={selectedRegion || undefined} onValueChange={setSelectedRegion}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="地域を選択" />
+          </SelectTrigger>
+          <SelectContent>
+            {REGIONS.map((region) => (
+              <SelectItem key={region} value={region}>
+                {region}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -21,7 +48,7 @@ export function RegionalActivitySection() {
         </div>
 
         <Card className="p-4">
-          <h3 className="font-medium mb-4">注目の地域：関東</h3>
+          <h3 className="font-medium mb-4">注目の地域：{selectedRegion || "関東"}</h3>
           <div className="space-y-4">
             <div className="flex items-start gap-4">
               <Badge variant="secondary">NEW</Badge>

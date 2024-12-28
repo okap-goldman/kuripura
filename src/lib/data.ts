@@ -28,6 +28,26 @@ export const SAMPLE_POSTS = [
     type: "family" as const,
     mediaType: "audio" as const,
   },
+  {
+    author: {
+      name: "自然の友",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
+    },
+    content: "https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1",
+    caption: "自然の中での瞑想体験をシェアします",
+    type: "watch" as const,
+    mediaType: "video" as const,
+  },
+  {
+    author: {
+      name: "瞑想マスター",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=4",
+    },
+    content: "https://images.unsplash.com/photo-1506126613408-eca07ce68773",
+    caption: "朝日と共に始める瞑想の時間",
+    type: "family" as const,
+    mediaType: "image" as const,
+  },
 ];
 
 export const SHOP_ITEMS = [
