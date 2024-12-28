@@ -77,13 +77,13 @@ const Index = () => {
             variant={timelineType === "family" ? "default" : "outline"}
             onClick={() => handleTimelineChange("family")}
           >
-            Family
+            ファミリー
           </Button>
           <Button
             variant={timelineType === "watch" ? "default" : "outline"}
             onClick={() => handleTimelineChange("watch")}
           >
-            Watch
+            ウォッチ
           </Button>
         </div>
 

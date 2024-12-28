@@ -86,16 +86,19 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
         );
       case "audio":
         return (
-          <div className="w-full">
-            <iframe
-              width="100%"
-              height="300"
-              scrolling="no"
-              frameBorder="no"
-              allow="autoplay"
-              src={content}
-              className="rounded-md"
-            />
+          <div className="w-full bg-purple-600 text-white p-6 rounded-lg">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold">音声を再生</h3>
+                <p className="text-sm opacity-80">1時間5分・165人がリスニング/リプレイ</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm bg-white/20 px-2 py-1 rounded">ホスト</span>
+              </div>
+            </div>
+            <button className="w-full bg-white text-purple-600 py-3 rounded-lg font-semibold">
+              録音を再生
+            </button>
           </div>
         );
       case "text":

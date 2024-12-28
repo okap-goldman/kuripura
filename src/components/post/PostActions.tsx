@@ -2,6 +2,7 @@ import { Heart, MessageSquare, Flame } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 interface PostActionsProps {
   postId: string;
@@ -18,11 +19,15 @@ export function PostActions({ postId, onComment }: PostActionsProps) {
       <Button
         variant="ghost"
         size="sm"
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 group"
         onClick={() => setLiked(!liked)}
       >
-        <Heart className={`h-5 w-5 ${liked ? "fill-red-500 text-red-500" : ""}`} />
-        <span className="hidden sm:inline">いいね</span>
+        <Heart 
+          className={cn(
+            "h-5 w-5 transition-all duration-300 ease-in-out",
+            liked && "fill-red-500 text-red-500 scale-125 animate-heartBeat"
+          )} 
+        />
       </Button>
 
       <Button
@@ -32,7 +37,6 @@ export function PostActions({ postId, onComment }: PostActionsProps) {
         onClick={onComment}
       >
         <MessageSquare className="h-5 w-5" />
-        <span className="hidden sm:inline">コメント</span>
       </Button>
 
       <Button
@@ -43,7 +47,6 @@ export function PostActions({ postId, onComment }: PostActionsProps) {
         disabled={kuratta}
       >
         <Flame className={`h-5 w-5 ${kuratta ? "fill-orange-500 text-orange-500" : ""}`} />
-        <span className="hidden sm:inline">くらった</span>
       </Button>
 
       <Dialog open={showKurattaDialog} onOpenChange={setShowKurattaDialog}>

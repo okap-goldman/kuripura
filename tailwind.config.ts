@@ -84,11 +84,19 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				heartBeat: {
+					'0%': { transform: 'scale(1)' },
+					'14%': { transform: 'scale(1.3)' },
+					'28%': { transform: 'scale(1)' },
+					'42%': { transform: 'scale(1.3)' },
+					'70%': { transform: 'scale(1)' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				heartBeat: 'heartBeat 1s ease-in-out',
 			}
 		}
 	},
