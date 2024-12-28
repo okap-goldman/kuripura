@@ -1,24 +1,22 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Post } from "@/components/Post";
-import { SAMPLE_POSTS, SHOP_ITEMS } from "@/lib/data";
+import { SAMPLE_POSTS } from "@/lib/data";
 
 interface ProfileTabsProps {
   selectedTab: string;
   setSelectedPost: (post: any) => void;
-  setSelectedShopItem: (item: any) => void;
 }
 
-export function ProfileTabs({ selectedTab, setSelectedPost, setSelectedShopItem }: ProfileTabsProps) {
+export function ProfileTabs({ selectedTab, setSelectedPost }: ProfileTabsProps) {
   return (
-    <Tabs value={selectedTab} className="mt-8">
-      <TabsList className="grid w-full grid-cols-6">
+    <Tabs defaultValue={selectedTab} className="mt-8">
+      <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger value="media">メディア</TabsTrigger>
         <TabsTrigger value="audio">音声</TabsTrigger>
         <TabsTrigger value="text">テキスト</TabsTrigger>
         <TabsTrigger value="highlights">ハイライト</TabsTrigger>
         <TabsTrigger value="events">イベント</TabsTrigger>
-        <TabsTrigger value="shop">ショップ</TabsTrigger>
       </TabsList>
 
       <TabsContent value="media" className="mt-4">
@@ -81,28 +79,6 @@ export function ProfileTabs({ selectedTab, setSelectedPost, setSelectedShopItem 
           <p className="text-sm text-muted-foreground">2024年4月1日 14:00-16:00</p>
           <p className="mt-2">心の平安を見つける瞑想の基礎を学びましょう。</p>
         </Card>
-      </TabsContent>
-
-      <TabsContent value="shop" className="mt-4">
-        <div className="grid grid-cols-2 gap-4">
-          {SHOP_ITEMS.map((item) => (
-            <Card 
-              key={item.id} 
-              className="cursor-pointer"
-              onClick={() => setSelectedShopItem(item)}
-            >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full aspect-square object-cover rounded-t-lg"
-              />
-              <div className="p-4">
-                <h3 className="font-medium">{item.name}</h3>
-                <p className="text-sm text-muted-foreground">¥{item.price.toLocaleString()}</p>
-              </div>
-            </Card>
-          ))}
-        </div>
       </TabsContent>
     </Tabs>
   );

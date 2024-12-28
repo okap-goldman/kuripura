@@ -1,6 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
+import { Play, Store } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileHeaderProps {
   isPlaying: boolean;
@@ -10,6 +11,8 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col items-center space-y-6">
       <div className="flex items-center gap-8">
@@ -27,6 +30,16 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
           <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=1" />
           <AvatarFallback>UN</AvatarFallback>
         </Avatar>
+
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full"
+          onClick={() => navigate("/shop")}
+        >
+          <Store className="h-6 w-6" />
+          <span className="sr-only">Shop</span>
+        </Button>
       </div>
 
       <div className="text-center space-y-2">

@@ -2,6 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Post } from "@/components/Post";
 import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const SAMPLE_POSTS = [
   {
@@ -47,6 +57,15 @@ const SAMPLE_POSTS = [
 
 const Index = () => {
   const [timelineType, setTimelineType] = useState<"family" | "watch">("family");
+  const [showWatchConfirm, setShowWatchConfirm] = useState(false);
+
+  const handleTimelineChange = (type: "family" | "watch") => {
+    if (type === "watch") {
+      setShowWatchConfirm(true);
+    } else {
+      setTimelineType(type);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -56,13 +75,13 @@ const Index = () => {
         <div className="flex justify-center gap-2 mb-8">
           <Button
             variant={timelineType === "family" ? "default" : "outline"}
-            onClick={() => setTimelineType("family")}
+            onClick={() => handleTimelineChange("family")}
           >
             Family
           </Button>
           <Button
             variant={timelineType === "watch" ? "default" : "outline"}
-            onClick={() => setTimelineType("watch")}
+            onClick={() => handleTimelineChange("watch")}
           >
             Watch
           </Button>
@@ -76,6 +95,28 @@ const Index = () => {
             ))}
         </div>
       </main>
+
+      <AlertDialog open={showWatchConfirm} onOpenChange={setShowWatchConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>ウォッチタイムラインの表示</AlertDialogTitle>
+            <AlertDialogDescription>
+              ウォッチタイムラインを表示しますか？
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>キャンセル</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setTimelineType("watch");
+                setShowWatchConfirm(false);
+              }}
+            >
+              表示する
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

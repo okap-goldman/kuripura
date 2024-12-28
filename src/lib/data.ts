@@ -23,7 +23,7 @@ export const SAMPLE_POSTS = [
       name: "瞑想ガイド",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
     },
-    content: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1736943442",
+    content: "https://s328.podbean.com/pb/4b3e15298687315db3070972aaa50fee/676f0aab/data1/fs91/20007750/uploads/6b592.m4a?pbss=abbaab44-f1dd-5725-bf73-452199e42c01",
     caption: "新しい瞑想ガイダンスを作成しました。心を落ち着かせ、内なる声に耳を傾けましょう。",
     type: "family" as const,
     mediaType: "audio" as const,
