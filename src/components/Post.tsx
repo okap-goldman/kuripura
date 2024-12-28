@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Heart, MessageCircle, Flame } from "lucide-react";
 
 interface PostProps {
   author: {
@@ -65,6 +66,20 @@ export function Post({ author, content, caption, type, mediaType }: PostProps) {
       description: `You deeply resonated with this post: "${reason}"`,
     });
     setIsKurattaDialogOpen(false);
+  };
+
+  const handleLike = () => {
+    toast({
+      title: "いいね！",
+      description: "投稿にいいねしました",
+    });
+  };
+
+  const handleComment = () => {
+    toast({
+      title: "コメント",
+      description: "コメント機能は開発中です",
+    });
   };
 
   const renderTruncatedText = (text: string) => {
@@ -153,33 +168,60 @@ export function Post({ author, content, caption, type, mediaType }: PostProps) {
         )}
       </div>
 
-      <Dialog open={isKurattaDialogOpen} onOpenChange={setIsKurattaDialogOpen}>
-        <DialogTrigger asChild>
-          <button className="kuratta-button">
-            <span>くらった</span>
-          </button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Share why this resonated with you</DialogTitle>
-          </DialogHeader>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              handleKuratta(formData.get("reason") as string);
-            }}
-            className="space-y-4"
-          >
-            <Input
-              name="reason"
-              placeholder="What touched your heart?"
-              required
-            />
-            <Button type="submit">Share</Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <div className="flex gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex-1 hover:bg-pink-50 hover:text-pink-500"
+          onClick={handleLike}
+        >
+          <Heart className="w-4 h-4 mr-2" />
+          いいね
+        </Button>
+        
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex-1 hover:bg-blue-50 hover:text-blue-500"
+          onClick={handleComment}
+        >
+          <MessageCircle className="w-4 h-4 mr-2" />
+          コメント
+        </Button>
+
+        <Dialog open={isKurattaDialogOpen} onOpenChange={setIsKurattaDialogOpen}>
+          <DialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex-1 hover:bg-orange-50 hover:text-orange-500"
+            >
+              <Flame className="w-4 h-4 mr-2" />
+              くらった
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Share why this resonated with you</DialogTitle>
+            </DialogHeader>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                handleKuratta(formData.get("reason") as string);
+              }}
+              className="space-y-4"
+            >
+              <Input
+                name="reason"
+                placeholder="What touched your heart?"
+                required
+              />
+              <Button type="submit">Share</Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
     </Card>
   );
 }

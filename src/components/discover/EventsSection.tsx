@@ -14,14 +14,14 @@ export function EventsSection() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Calendar className="w-5 h-5" />
           <h2 className="text-lg font-semibold">イベント</h2>
         </div>
         
-        <div className="flex gap-2">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               className="pl-8"
@@ -30,14 +30,14 @@ export function EventsSection() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="sm:w-auto">
             <Filter className="w-4 h-4 mr-1" />
             フィルター
           </Button>
           
           <Dialog>
             <DialogTrigger asChild>
-              <Button size="sm">
+              <Button size="sm" className="sm:w-auto">
                 <Plus className="w-4 h-4 mr-1" />
                 イベントを企画
               </Button>
@@ -114,7 +114,7 @@ export function EventsSection() {
         </div>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         {[1, 2, 3, 4].map((i) => (
           <Card 
             key={i}
