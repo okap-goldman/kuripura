@@ -26,6 +26,16 @@ const SAMPLE_POSTS = [
     type: "watch" as const,
     mediaType: "image" as const,
   },
+  {
+    author: {
+      name: "心の探求者",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=1",
+    },
+    content: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1736943442",
+    caption: "新しい瞑想ガイダンスです",
+    type: "family" as const,
+    mediaType: "audio" as const,
+  },
 ];
 
 const Profile = () => {
@@ -66,6 +76,7 @@ const Profile = () => {
         {/* Bio Section */}
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold">心の探求者</h1>
+          <p className="text-sm text-muted-foreground">@seeker_of_heart</p>
           <p className="text-muted-foreground max-w-md">
             地球での使命：人々の心に光を灯し、内なる平安への道を示すこと
           </p>
@@ -73,13 +84,25 @@ const Profile = () => {
 
         {/* Followers Section */}
         <div className="flex gap-8">
-          <div className="text-center">
-            <div className="font-bold">1.2k</div>
-            <div className="text-sm text-muted-foreground">ファミリー</div>
+          <div className="space-y-1">
+            <div className="text-center">
+              <div className="font-bold">1.2k</div>
+              <div className="text-sm text-muted-foreground">ファミリー</div>
+            </div>
+            <div className="text-center">
+              <div className="font-bold">3.4k</div>
+              <div className="text-xs text-muted-foreground">フォロワー</div>
+            </div>
           </div>
-          <div className="text-center">
-            <div className="font-bold">3.4k</div>
-            <div className="text-sm text-muted-foreground">フォロー</div>
+          <div className="space-y-1">
+            <div className="text-center">
+              <div className="font-bold">890</div>
+              <div className="text-sm text-muted-foreground">ウォッチ</div>
+            </div>
+            <div className="text-center">
+              <div className="font-bold">2.1k</div>
+              <div className="text-xs text-muted-foreground">フォロワー</div>
+            </div>
           </div>
         </div>
       </div>
@@ -96,15 +119,13 @@ const Profile = () => {
 
         <TabsContent value="media" className="mt-4">
           <div className="grid grid-cols-3 gap-1">
-            {SAMPLE_POSTS.map((post, index) => (
+            {SAMPLE_POSTS.filter(post => post.mediaType === "image").map((post, index) => (
               <Card key={index} className="aspect-square overflow-hidden">
-                {post.mediaType === "image" && (
-                  <img
-                    src={post.content}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                )}
+                <img
+                  src={post.content}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
               </Card>
             ))}
           </div>
@@ -112,28 +133,27 @@ const Profile = () => {
 
         <TabsContent value="audio" className="mt-4">
           <div className="space-y-4">
-            {/* Audio player placeholder */}
-            <Card className="p-4">
-              <div className="flex items-center gap-4">
-                <Button variant="outline" size="icon">
-                  <Play className="h-4 w-4" />
-                </Button>
-                <div>
-                  <div className="font-medium">瞑想ガイド #1</div>
-                  <div className="text-sm text-muted-foreground">10:30</div>
-                </div>
-              </div>
-            </Card>
+            {SAMPLE_POSTS.filter(post => post.mediaType === "audio").map((post, index) => (
+              <Card key={index} className="p-4">
+                <iframe
+                  width="100%"
+                  height="300"
+                  scrolling="no"
+                  frameBorder="no"
+                  allow="autoplay"
+                  src={post.content}
+                  className="rounded-md"
+                />
+              </Card>
+            ))}
           </div>
         </TabsContent>
 
         <TabsContent value="text" className="mt-4">
           <div className="space-y-4">
-            {SAMPLE_POSTS
-              .filter((post) => post.mediaType === "text")
-              .map((post, index) => (
-                <Post key={index} {...post} />
-              ))}
+            {SAMPLE_POSTS.filter(post => post.mediaType === "text").map((post, index) => (
+              <Post key={index} {...post} />
+            ))}
           </div>
         </TabsContent>
 
