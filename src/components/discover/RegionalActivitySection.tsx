@@ -5,6 +5,7 @@ import { RegionDetailView } from "./RegionDetailView";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const REGIONS = [
   "北海道",
@@ -42,36 +43,67 @@ export function RegionalActivitySection() {
         </Select>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="aspect-[4/3] bg-muted rounded-lg relative overflow-hidden">
-          <JapanMap3D onRegionSelect={(region) => setSelectedRegion(region)} />
-        </div>
+      <Tabs defaultValue="map" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="map">マップ</TabsTrigger>
+          <TabsTrigger value="list">リスト</TabsTrigger>
+        </TabsList>
+        <TabsContent value="map">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="aspect-[4/3] bg-muted rounded-lg relative overflow-hidden">
+              <JapanMap3D onRegionSelect={(region) => setSelectedRegion(region)} />
+            </div>
 
-        <Card className="p-4">
-          <h3 className="font-medium mb-4">注目の地域：{selectedRegion || "関東"}</h3>
-          <div className="space-y-4">
-            <div className="flex items-start gap-4">
-              <Badge variant="secondary">NEW</Badge>
-              <div>
-                <h4 className="font-medium">青梅市でシアターワーク開催</h4>
-                <p className="text-sm text-muted-foreground mt-1">
-                  地域コミュニティの活性化を目指す新しい取り組みが始まっています。
-                </p>
+            <Card className="p-4">
+              <h3 className="font-medium mb-4">注目の地域：{selectedRegion || "関東"}</h3>
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <Badge variant="secondary">NEW</Badge>
+                  <div>
+                    <h4 className="font-medium">青梅市でシアターワーク開催</h4>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      地域コミュニティの活性化を目指す新しい取り組みが始まっています。
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <Badge variant="secondary">TREND</Badge>
+                  <div>
+                    <h4 className="font-medium">都心部での瞑想会が増加中</h4>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      平日の朝に開催される瞑想会が人気を集めています。
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-start gap-4">
-              <Badge variant="secondary">TREND</Badge>
-              <div>
-                <h4 className="font-medium">都心部での瞑想会が増加中</h4>
-                <p className="text-sm text-muted-foreground mt-1">
-                  平日の朝に開催される瞑想会が人気を集めています。
-                </p>
-              </div>
-            </div>
+            </Card>
           </div>
-        </Card>
-      </div>
+        </TabsContent>
+        <TabsContent value="list">
+          <div className="grid gap-4">
+            {REGIONS.map((region) => (
+              <Card 
+                key={region}
+                className="p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() => setSelectedRegion(region)}
+              >
+                <div className="flex justify-between items-center">
+                  <h3 className="font-medium">{region}</h3>
+                  <Badge variant="secondary">
+                    {region === "関東" ? "活発" : "普通"}
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">
+                  {region === "関東" 
+                    ? "多くのコミュニティ活動が行われています"
+                    : "いくつかのコミュニティ活動が進行中です"}
+                </p>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
 
       <RegionDetailView
         open={!!selectedRegion}
