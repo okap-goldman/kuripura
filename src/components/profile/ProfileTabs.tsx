@@ -6,6 +6,7 @@ import { SAMPLE_POSTS } from "@/lib/data";
 interface ProfileTabsProps {
   selectedTab: string;
   setSelectedPost: (post: any) => void;
+  setSelectedShopItem?: (item: any) => void;  // オプショナルとして追加
 }
 
 export function ProfileTabs({ selectedTab, setSelectedPost }: ProfileTabsProps) {
