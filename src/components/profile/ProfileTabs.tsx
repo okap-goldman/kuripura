@@ -6,8 +6,20 @@ import { SAMPLE_POSTS } from "@/lib/data";
 interface ProfileTabsProps {
   selectedTab: string;
   setSelectedPost: (post: any) => void;
-  setSelectedShopItem?: (item: any) => void;  // オプショナルとして追加
+  setSelectedShopItem?: (item: any) => void;
 }
+
+// Define the post type to match the data structure
+type PostType = {
+  author: {
+    name: string;
+    image: string;
+    id: string;
+  };
+  content: string;
+  caption?: string;
+  mediaType: "text" | "image" | "video" | "audio";
+};
 
 export function ProfileTabs({ selectedTab, setSelectedPost }: ProfileTabsProps) {
   return (
@@ -22,7 +34,7 @@ export function ProfileTabs({ selectedTab, setSelectedPost }: ProfileTabsProps) 
 
       <TabsContent value="media" className="mt-4">
         <div className="grid grid-cols-3 gap-1">
-          {SAMPLE_POSTS.filter(post => post.mediaType === "image").map((post, index) => (
+          {SAMPLE_POSTS.filter((post: PostType) => post.mediaType === "image").map((post, index) => (
             <Card 
               key={index} 
               className="aspect-square overflow-hidden cursor-pointer"
@@ -40,7 +52,7 @@ export function ProfileTabs({ selectedTab, setSelectedPost }: ProfileTabsProps) 
 
       <TabsContent value="audio" className="mt-4">
         <div className="space-y-4">
-          {SAMPLE_POSTS.filter(post => post.mediaType === "audio").map((post, index) => (
+          {SAMPLE_POSTS.filter((post: PostType) => post.mediaType === "audio").map((post, index) => (
             <Card key={index} className="p-4">
               <iframe
                 width="100%"
@@ -58,7 +70,7 @@ export function ProfileTabs({ selectedTab, setSelectedPost }: ProfileTabsProps) 
 
       <TabsContent value="text" className="mt-4">
         <div className="space-y-4">
-          {SAMPLE_POSTS.filter(post => post.mediaType === "text").map((post, index) => (
+          {SAMPLE_POSTS.filter((post: PostType) => post.mediaType === "text").map((post, index) => (
             <div key={index} onClick={() => setSelectedPost(post)}>
               <Post {...post} />
             </div>
