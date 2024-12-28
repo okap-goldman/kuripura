@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
@@ -23,6 +23,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/search" element={<Search />} />
             <Route path="/discover" element={<Discover />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <FooterNav />
         </TooltipProvider>
