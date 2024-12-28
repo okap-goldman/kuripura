@@ -4,11 +4,11 @@ interface PostHeaderProps {
   author: {
     name: string;
     image: string;
+    id?: string;
   };
-  type: "family" | "watch";
 }
 
-export function PostHeader({ author, type }: PostHeaderProps) {
+export function PostHeader({ author }: PostHeaderProps) {
   return (
     <div className="flex items-center gap-3">
       <Avatar>
@@ -18,7 +18,7 @@ export function PostHeader({ author, type }: PostHeaderProps) {
       <div>
         <div className="font-semibold">{author.name}</div>
         <div className="text-sm text-muted-foreground">
-          {type === "family" ? "Family" : "Watch"}
+          {author.id || `@${author.name.toLowerCase().replace(/\s+/g, '')}`}
         </div>
       </div>
     </div>
