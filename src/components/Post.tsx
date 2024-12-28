@@ -12,11 +12,12 @@ interface PostProps {
     image: string;
   };
   content: string;
+  caption?: string;
   type: "family" | "watch";
   mediaType: "text" | "image" | "video" | "audio";
 }
 
-export function Post({ author, content, type, mediaType }: PostProps) {
+export function Post({ author, content, caption, type, mediaType }: PostProps) {
   const [isKurattaDialogOpen, setIsKurattaDialogOpen] = useState(false);
   const { toast } = useToast();
 
@@ -85,7 +86,14 @@ export function Post({ author, content, type, mediaType }: PostProps) {
       </div>
 
       <div className="space-y-4">
-        {renderMedia()}
+        {mediaType === "text" ? (
+          renderMedia()
+        ) : (
+          <>
+            {renderMedia()}
+            {caption && <p className="text-sm mt-2">{caption}</p>}
+          </>
+        )}
       </div>
 
       <Dialog open={isKurattaDialogOpen} onOpenChange={setIsKurattaDialogOpen}>
