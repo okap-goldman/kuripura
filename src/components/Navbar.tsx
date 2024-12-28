@@ -20,7 +20,7 @@ export function Navbar() {
             <Menu className="h-5 w-5" />
           </Button>
           <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            クリプラ
+            Kuripura
           </span>
         </div>
         
