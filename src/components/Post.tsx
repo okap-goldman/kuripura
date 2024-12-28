@@ -19,6 +19,7 @@ interface PostProps {
 
 export function Post({ author, content, caption, type, mediaType }: PostProps) {
   const [isKurattaDialogOpen, setIsKurattaDialogOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const { toast } = useToast();
 
   const handleKuratta = (reason: string) => {
@@ -27,6 +28,24 @@ export function Post({ author, content, caption, type, mediaType }: PostProps) {
       description: `You deeply resonated with this post: "${reason}"`,
     });
     setIsKurattaDialogOpen(false);
+  };
+
+  const renderTruncatedText = (text: string) => {
+    if (text.length <= 280 || isExpanded) {
+      return <p className="text-sm whitespace-pre-wrap">{text}</p>;
+    }
+    return (
+      <div>
+        <p className="text-sm whitespace-pre-wrap">{text.slice(0, 280)}...</p>
+        <Button
+          variant="link"
+          className="p-0 h-auto text-sm text-muted-foreground"
+          onClick={() => setIsExpanded(true)}
+        >
+          すべて表示
+        </Button>
+      </div>
+    );
   };
 
   const renderMedia = () => {
@@ -66,7 +85,7 @@ export function Post({ author, content, caption, type, mediaType }: PostProps) {
         );
       case "text":
       default:
-        return <p className="text-sm">{content}</p>;
+        return renderTruncatedText(content);
     }
   };
 
@@ -91,7 +110,7 @@ export function Post({ author, content, caption, type, mediaType }: PostProps) {
         ) : (
           <>
             {renderMedia()}
-            {caption && <p className="text-sm mt-2">{caption}</p>}
+            {caption && renderTruncatedText(caption)}
           </>
         )}
       </div>
