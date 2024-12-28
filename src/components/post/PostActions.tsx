@@ -52,7 +52,7 @@ export function PostActions({ postId, onComment }: PostActionsProps) {
       <Dialog open={showKurattaDialog} onOpenChange={setShowKurattaDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>この投稿をくらう理由を選択してください</DialogTitle>
+            <DialogTitle>どんなことが魂に響きましたか？</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Button
