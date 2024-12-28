@@ -50,8 +50,14 @@ export function RegionDetailView({ open, onClose, region }: RegionDetailViewProp
               </Button>
               <h2 className="text-xl font-bold">{region}の地域情報</h2>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onClose}
+              className="hover:bg-destructive/10 transition-colors"
+            >
               <X className="w-5 h-5" />
+              <span className="sr-only">閉じる</span>
             </Button>
           </div>
 
