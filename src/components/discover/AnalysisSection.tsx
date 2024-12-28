@@ -1,7 +1,12 @@
-import { BarChart, LineChart } from "lucide-react";
+import { BarChart, LightbulbIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { AnalysisDetailView } from "./AnalysisDetailView";
 
 export function AnalysisSection() {
+  const [showDetailView, setShowDetailView] = useState(false);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
@@ -10,7 +15,7 @@ export function AnalysisSection() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="p-4 space-y-2">
+        <Card className="p-4 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => setShowDetailView(true)}>
           <h3 className="font-medium">あなたの目醒め状況</h3>
           <p className="text-sm text-muted-foreground">
             最近のアクティビティから、あなたは「気づき」のフェーズにいます。
@@ -27,6 +32,11 @@ export function AnalysisSection() {
           </p>
         </Card>
       </div>
+
+      <AnalysisDetailView 
+        open={showDetailView} 
+        onClose={() => setShowDetailView(false)} 
+      />
     </div>
   );
 }
