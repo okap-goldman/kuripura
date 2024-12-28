@@ -20,34 +20,44 @@ export const SAMPLE_POSTS = [
   },
   {
     author: {
-      name: "心の探求者",
-      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=1",
+      name: "瞑想ガイド",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
     },
     content: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1736943442",
-    caption: "新しい瞑想ガイダンスです",
+    caption: "新しい瞑想ガイダンスを作成しました。心を落ち着かせ、内なる声に耳を傾けましょう。",
     type: "family" as const,
     mediaType: "audio" as const,
   },
   {
     author: {
       name: "自然の友",
-      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=4",
     },
     content: "https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1",
-    caption: "自然の中での瞑想体験をシェアします",
+    caption: "森の中での瞑想体験をシェアします。自然の音に包まれながら、心を解放する方法を見つけました。",
     type: "watch" as const,
     mediaType: "video" as const,
   },
   {
     author: {
       name: "瞑想マスター",
-      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=4",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=5",
     },
     content: "https://images.unsplash.com/photo-1506126613408-eca07ce68773",
-    caption: "朝日と共に始める瞑想の時間",
+    caption: "朝日と共に始める瞑想の時間。新しい一日を感謝の気持ちで迎えましょう。",
     type: "family" as const,
     mediaType: "image" as const,
   },
+  {
+    author: {
+      name: "心の旅人",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=6",
+    },
+    content: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1234567890",
+    caption: "心を落ち着かせるための環境音楽を作りました。瞑想のお供にどうぞ。",
+    type: "watch" as const,
+    mediaType: "audio" as const,
+  }
 ];
 
 export const SHOP_ITEMS = [

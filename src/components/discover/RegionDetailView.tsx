@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
@@ -9,16 +9,50 @@ interface RegionDetailViewProps {
   region: string;
 }
 
+const REGIONS_DATA = {
+  "北海道・東北": {
+    description: "自然豊かな地域での活動",
+    activeUsers: "234",
+  },
+  "関東": {
+    description: "都市部でのコミュニティ活動",
+    activeUsers: "567",
+  },
+  "中部": {
+    description: "伝統と革新の調和",
+    activeUsers: "345",
+  },
+  "近畿": {
+    description: "歴史ある地域での取り組み",
+    activeUsers: "456",
+  },
+  "中国・四国": {
+    description: "地域に根ざした活動",
+    activeUsers: "234",
+  },
+  "九州・沖縄": {
+    description: "島々をつなぐ活動",
+    activeUsers: "345",
+  }
+};
+
 export function RegionDetailView({ open, onClose, region }: RegionDetailViewProps) {
+  const regionData = REGIONS_DATA[region as keyof typeof REGIONS_DATA];
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl p-0">
         <div className="p-4 space-y-6">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon" onClick={onClose}>
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <h2 className="text-xl font-bold">{region}の地域情報</h2>
+            </div>
             <Button variant="ghost" size="icon" onClick={onClose}>
-              <ArrowLeft className="w-5 h-5" />
+              <X className="w-5 h-5" />
             </Button>
-            <h2 className="text-xl font-bold">{region}の地域情報</h2>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
@@ -27,7 +61,7 @@ export function RegionDetailView({ open, onClose, region }: RegionDetailViewProp
               <div className="text-sm text-pink-600/80">参加率</div>
             </div>
             <div className="bg-blue-50 p-4 rounded-lg text-center">
-              <div className="text-2xl font-bold text-blue-600">120</div>
+              <div className="text-2xl font-bold text-blue-600">{regionData?.activeUsers || 0}</div>
               <div className="text-sm text-blue-600/80">活動中のボランティア</div>
             </div>
             <div className="bg-purple-50 p-4 rounded-lg text-center">
