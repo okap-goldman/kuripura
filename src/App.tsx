@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
+import Discover from "./pages/Discover";
 import { FooterNav } from "./components/FooterNav";
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/discover" element={<div className="pt-24 pb-24">Discover Page (Coming Soon)</div>} />
+            <Route path="/discover" element={<Discover />} />
           </Routes>
           <FooterNav />
         </TooltipProvider>
