@@ -31,12 +31,12 @@ export function Post({ author, content, caption, type, mediaType }: PostProps) {
   };
 
   const renderTruncatedText = (text: string) => {
-    if (text.length <= 280 || isExpanded) {
+    if (text.length <= 140 || isExpanded) {
       return <p className="text-sm whitespace-pre-wrap">{text}</p>;
     }
     return (
       <div>
-        <p className="text-sm whitespace-pre-wrap">{text.slice(0, 280)}...</p>
+        <p className="text-sm whitespace-pre-wrap">{text.slice(0, 140)}...</p>
         <Button
           variant="link"
           className="p-0 h-auto text-sm text-muted-foreground"
