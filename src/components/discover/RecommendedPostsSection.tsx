@@ -17,7 +17,6 @@ export function RecommendedPostsSection() {
             author={post.author}
             content={post.content}
             caption={post.caption}
-            type={post.type}
             mediaType={post.mediaType}
           />
         ))}
