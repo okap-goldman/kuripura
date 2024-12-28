@@ -27,7 +27,7 @@ const SAMPLE_POSTS = [
       name: "Soul Explorer",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
     },
-    content: "https://soundcloud.com/user-123456789/meditation-music",
+    content: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1931717666&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true",
     type: "family" as const,
     mediaType: "audio" as const,
   },

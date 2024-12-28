@@ -51,11 +51,17 @@ export function Post({ author, content, type, mediaType }: PostProps) {
         );
       case "audio":
         return (
-          <iframe
-            src={content}
-            className="w-full h-32 rounded-md"
-            allow="autoplay"
-          />
+          <div className="w-full">
+            <iframe
+              width="100%"
+              height="300"
+              scrolling="no"
+              frameBorder="no"
+              allow="autoplay"
+              src={content}
+              className="rounded-md"
+            />
+          </div>
         );
       case "text":
       default:
