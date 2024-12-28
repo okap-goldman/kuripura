@@ -10,21 +10,21 @@ interface PostProps {
   author: {
     name: string;
     image: string;
+    id: string;
   };
   content: string;
   caption?: string;
-  type: "family" | "watch";
   mediaType: "text" | "image" | "video" | "audio";
 }
 
-export function Post({ author, content, caption, type, mediaType }: PostProps) {
+export function Post({ author, content, caption, mediaType }: PostProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showFullPost, setShowFullPost] = useState(false);
 
   return (
     <Card className="p-4 space-y-4">
-      <PostHeader author={author} type={type} />
+      <PostHeader author={author} />
       
       <div 
         onClick={() => mediaType !== "text" && setShowFullPost(true)}
@@ -73,7 +73,7 @@ export function Post({ author, content, caption, type, mediaType }: PostProps) {
               setIsExpanded={setIsExpanded}
             />
             <div className="space-y-4">
-              <PostHeader author={author} type={type} />
+              <PostHeader author={author} />
               {caption && (
                 <p className="text-sm whitespace-pre-wrap">{caption}</p>
               )}

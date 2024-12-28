@@ -1,7 +1,8 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Play, Store } from "lucide-react";
+import { Play, Pause, Store } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState, useRef } from "react";
 
 interface ProfileHeaderProps {
   isPlaying: boolean;
@@ -12,6 +13,21 @@ interface ProfileHeaderProps {
 
 export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps) {
   const navigate = useNavigate();
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const toggleAudio = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio("https://s328.podbean.com/pb/4b3e15298687315db3070972aaa50fee/676f0aab/data1/fs91/20007750/uploads/6b592.m4a?pbss=abbaab44-f1dd-5725-bf73-452199e42c01");
+    }
+
+    if (isAudioPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsAudioPlaying(!isAudioPlaying);
+  };
 
   return (
     <div className="flex flex-col items-center space-y-6">
@@ -20,10 +36,14 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
           variant="outline"
           size="icon"
           className="rounded-full"
-          onClick={handlePlayVoice}
+          onClick={toggleAudio}
         >
-          <Play className={isPlaying ? "hidden" : "h-6 w-6"} />
-          <span className="sr-only">Play introduction</span>
+          {isAudioPlaying ? (
+            <Pause className="h-6 w-6" />
+          ) : (
+            <Play className="h-6 w-6" />
+          )}
+          <span className="sr-only">音声を再生</span>
         </Button>
 
         <Avatar className="h-24 w-24">
@@ -38,7 +58,7 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
           onClick={() => navigate("/shop")}
         >
           <Store className="h-6 w-6" />
-          <span className="sr-only">Shop</span>
+          <span className="sr-only">ショップ</span>
         </Button>
       </div>
 

@@ -1,100 +1,85 @@
+import { Heart, MessageSquare, Flame } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Heart, MessageCircle, Flame } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 interface PostActionsProps {
-  onComment: () => void;
   postId: string;
+  onComment: () => void;
 }
 
-export function PostActions({ onComment, postId }: PostActionsProps) {
-  const [isKurattaDialogOpen, setIsKurattaDialogOpen] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const [isKuratta, setIsKuratta] = useState(false);
-  const { toast } = useToast();
-
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    toast({
-      title: isLiked ? "いいねを取り消しました" : "いいね！",
-      description: isLiked ? "投稿のいいねを取り消しました" : "投稿にいいねしました",
-    });
-  };
-
-  const handleKuratta = (reason: string) => {
-    if (isKuratta) return;
-    
-    setIsKuratta(true);
-    toast({
-      title: "くらった！",
-      description: `You deeply resonated with this post: "${reason}"`,
-    });
-    setIsKurattaDialogOpen(false);
-  };
+export function PostActions({ postId, onComment }: PostActionsProps) {
+  const [liked, setLiked] = useState(false);
+  const [kuratta, setKuratta] = useState(false);
+  const [showKurattaDialog, setShowKurattaDialog] = useState(false);
 
   return (
-    <div className="flex gap-2">
+    <div className="flex items-center gap-4">
       <Button
         variant="ghost"
         size="sm"
-        className={`flex-1 ${
-          isLiked
-            ? "text-pink-500 hover:text-pink-600 hover:bg-pink-50"
-            : "hover:bg-pink-50 hover:text-pink-500"
-        }`}
-        onClick={handleLike}
+        className="flex items-center gap-2"
+        onClick={() => setLiked(!liked)}
       >
-        <Heart className={`w-4 h-4 mr-2 ${isLiked ? "fill-current" : ""}`} />
-        いいね
+        <Heart className={`h-5 w-5 ${liked ? "fill-red-500 text-red-500" : ""}`} />
+        <span className="hidden sm:inline">いいね</span>
       </Button>
 
       <Button
         variant="ghost"
         size="sm"
-        className="flex-1 hover:bg-blue-50 hover:text-blue-500"
+        className="flex items-center gap-2"
         onClick={onComment}
       >
-        <MessageCircle className="w-4 h-4 mr-2" />
-        コメント
+        <MessageSquare className="h-5 w-5" />
+        <span className="hidden sm:inline">コメント</span>
       </Button>
 
-      <Dialog open={isKurattaDialogOpen} onOpenChange={setIsKurattaDialogOpen}>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`flex-1 ${
-            isKuratta
-              ? "text-orange-500 hover:text-orange-600 hover:bg-orange-50"
-              : "hover:bg-orange-50 hover:text-orange-500"
-          }`}
-          onClick={() => !isKuratta && setIsKurattaDialogOpen(true)}
-          disabled={isKuratta}
-        >
-          <Flame className={`w-4 h-4 mr-2 ${isKuratta ? "fill-current" : ""}`} />
-          くらった
-        </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="flex items-center gap-2"
+        onClick={() => !kuratta && setShowKurattaDialog(true)}
+        disabled={kuratta}
+      >
+        <Flame className={`h-5 w-5 ${kuratta ? "fill-orange-500 text-orange-500" : ""}`} />
+        <span className="hidden sm:inline">くらった</span>
+      </Button>
+
+      <Dialog open={showKurattaDialog} onOpenChange={setShowKurattaDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Share why this resonated with you</DialogTitle>
+            <DialogTitle>この投稿をくらう理由を選択してください</DialogTitle>
           </DialogHeader>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              handleKuratta(formData.get("reason") as string);
-            }}
-            className="space-y-4"
-          >
-            <Input
-              name="reason"
-              placeholder="What touched your heart?"
-              required
-            />
-            <Button type="submit">Share</Button>
-          </form>
+          <div className="space-y-4">
+            <Button
+              onClick={() => {
+                setKuratta(true);
+                setShowKurattaDialog(false);
+              }}
+              className="w-full"
+            >
+              心に響いた
+            </Button>
+            <Button
+              onClick={() => {
+                setKuratta(true);
+                setShowKurattaDialog(false);
+              }}
+              className="w-full"
+            >
+              共感した
+            </Button>
+            <Button
+              onClick={() => {
+                setKuratta(true);
+                setShowKurattaDialog(false);
+              }}
+              className="w-full"
+            >
+              感動した
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
