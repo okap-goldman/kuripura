@@ -1,4 +1,6 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { Play, Pause } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface PostContentProps {
   content: string;
@@ -9,6 +11,8 @@ interface PostContentProps {
 }
 
 export function PostContent({ content, caption, mediaType, isExpanded, setIsExpanded }: PostContentProps) {
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
 
@@ -44,6 +48,19 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
       observer.disconnect();
     };
   }, [mediaType]);
+
+  const toggleAudio = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(content);
+    }
+
+    if (isAudioPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsAudioPlaying(!isAudioPlaying);
+  };
 
   const renderTruncatedText = (text: string) => {
     if (text.length <= 140 || isExpanded) {
@@ -89,16 +106,19 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
           <div className="w-full bg-purple-600 text-white p-6 rounded-lg">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-lg font-semibold">音声を再生</h3>
+                <h3 className="text-lg font-semibold">使命</h3>
                 <p className="text-sm opacity-80">1時間5分・165人がリスニング/リプレイ</p>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm bg-white/20 px-2 py-1 rounded">ホスト</span>
-              </div>
             </div>
-            <button className="w-full bg-white text-purple-600 py-3 rounded-lg font-semibold">
-              録音を再生
-            </button>
+            <Button
+              onClick={toggleAudio}
+              variant="outline"
+              size="icon"
+              className="w-full bg-white text-purple-600 hover:bg-white/90 hover:text-purple-600"
+            >
+              {isAudioPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+              <span className="sr-only">音声を再生</span>
+            </Button>
           </div>
         );
       case "text":
