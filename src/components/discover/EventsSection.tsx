@@ -115,26 +115,59 @@ export function EventsSection() {
       </Card>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {[1, 2, 3, 4].map((i) => (
+        {[
+          {
+            title: "集団瞑想会",
+            date: "2024年4月15日 10:00-12:00",
+            location: "渋谷区瞑想センター",
+            price: "¥2,000",
+            capacity: "定員10名",
+            image: "https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83"
+          },
+          {
+            title: "チャクラ開放ワークショップ",
+            date: "2024年4月16日 14:00-16:00",
+            location: "新宿区ヨガスタジオ",
+            price: "¥3,500",
+            capacity: "定員15名",
+            image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773"
+          },
+          {
+            title: "目醒めシェアリングサークル",
+            date: "2024年4月17日 19:00-21:00",
+            location: "目黒区コミュニティセンター",
+            price: "¥1,500",
+            capacity: "定員12名",
+            image: "https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a"
+          },
+          {
+            title: "スピリチュアルヒーリング体験会",
+            date: "2024年4月18日 13:00-15:00",
+            location: "池袋区カルチャーセンター",
+            price: "¥4,000",
+            capacity: "定員8名",
+            image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773"
+          }
+        ].map((event, i) => (
           <Card 
             key={i}
             className="overflow-hidden cursor-pointer hover:bg-muted/50 transition-colors"
-            onClick={() => setSelectedEvent(`イベント${i}`)}
+            onClick={() => setSelectedEvent(event.title)}
           >
             <div className="aspect-video">
               <img
-                src={`https://images.unsplash.com/photo-${i + 1527529482837}-4698179dc6ce?w=400`}
-                alt={`Event ${i}`}
+                src={event.image}
+                alt={event.title}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="p-4">
-              <h4 className="font-medium">瞑想ワークショップ {i}</h4>
-              <p className="text-sm text-muted-foreground mt-1">2024年4月{i}日 14:00-16:00</p>
-              <p className="mt-2">渋谷区文化センター</p>
+              <h4 className="font-medium">{event.title}</h4>
+              <p className="text-sm text-muted-foreground mt-1">{event.date}</p>
+              <p className="mt-2">{event.location}</p>
               <div className="flex gap-2 mt-4">
-                <Badge variant="secondary">¥3,000</Badge>
-                <Badge variant="secondary">定員15名</Badge>
+                <Badge variant="secondary">{event.price}</Badge>
+                <Badge variant="secondary">{event.capacity}</Badge>
               </div>
             </div>
           </Card>
@@ -169,7 +202,7 @@ export function EventsSection() {
                 </div>
                 <div>
                   <h4 className="text-sm font-medium">場所</h4>
-                  <p className="text-sm text-muted-foreground">渋谷区文化センター</p>
+                  <p className="text-sm text-muted-foreground">渋谷区瞑想センター</p>
                 </div>
                 <div>
                   <h4 className="text-sm font-medium">参加費</h4>
