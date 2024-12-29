@@ -15,6 +15,33 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
+  const audioContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (mediaType === "audio") {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting && audioRef.current && isAudioPlaying) {
+              audioRef.current.pause();
+              setIsAudioPlaying(false);
+            }
+          });
+        },
+        {
+          threshold: 0.5,
+        }
+      );
+
+      if (audioContainerRef.current) {
+        observer.observe(audioContainerRef.current);
+      }
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [mediaType, isAudioPlaying]);
 
   useEffect(() => {
     if (mediaType !== "video" || !videoContainerRef.current) return;
@@ -103,10 +130,10 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
         );
       case "audio":
         return (
-          <div className="w-full bg-purple-600 text-white p-6 rounded-lg">
+          <div ref={audioContainerRef} className="w-full bg-purple-600 text-white p-6 rounded-lg">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-lg font-semibold">バスケ</h3>
+                <h3 className="text-lg font-semibold">使命</h3>
                 <p className="text-sm opacity-80">1時間5分・165人がリスニング/リプレイ</p>
               </div>
             </div>

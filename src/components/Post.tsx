@@ -27,8 +27,8 @@ export function Post({ author, content, caption, mediaType }: PostProps) {
       <PostHeader author={author} />
       
       <div 
-        onClick={() => mediaType !== "text" && setShowFullPost(true)}
-        className={mediaType !== "text" ? "cursor-pointer" : ""}
+        onClick={() => mediaType !== "text" && mediaType !== "audio" && setShowFullPost(true)}
+        className={mediaType !== "text" && mediaType !== "audio" ? "cursor-pointer" : ""}
       >
         <PostContent
           content={content}
