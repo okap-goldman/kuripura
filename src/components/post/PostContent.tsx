@@ -130,7 +130,7 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
         );
       case "audio":
         return (
-          <div ref={audioContainerRef} className="w-full bg-[#00ffff] text-white p-6 rounded-lg">
+          <div ref={audioContainerRef} className="w-full bg-[#00ffff] text-black p-6 rounded-lg">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-lg font-semibold">使命</h3>
