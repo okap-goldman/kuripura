@@ -96,7 +96,7 @@ const SAMPLE_POSTS = [
   {
     author: {
       name: "かずぴー⭐︎ 【泉谷 和久】",
-      image: "https://kuripura.s3.us-east-1.amazonaws.com/%E5%86%99%E7%9C%9F.JPG",
+      image: "https://kuripura.s3.us-east-1.amazonaws.com/kazup.jpg",
       id: "@kazu993_ascensionlife"
     },
     content: `11/22は婚姻のみの予定でしたが、
