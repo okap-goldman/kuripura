@@ -34,10 +34,10 @@ const SAMPLE_POSTS = [
   {
     author: {
       name: "Kanako | スピリチュアルヒーラー",
-      image: "https://drive.google.com/uc?export=download&id=14LDdxvybM3Ae_LEQH3U3RyKeWrNiRbpK",
+      image: "https://kuripura.s3.us-east-1.amazonaws.com/Kanako.jpg",
       id: "@nkmrknk694"
     },
-    content: "https://drive.google.com/uc?export=download&id=1_3bxy9DrA-ZMYx30TL3y2FQ7PqN5or1k",
+    content: "https://kuripura.s3.us-east-1.amazonaws.com/image.jpg",
     caption: `🃏11月のカードリーディング🃏
 
 各々のなかの正義がはっきりさせる。
@@ -96,7 +96,7 @@ const SAMPLE_POSTS = [
   {
     author: {
       name: "かずぴー⭐︎ 【泉谷 和久】",
-      image: "https://scontent-nrt1-2.cdninstagram.com/v/t51.2885-19/468126137_550646691160354_2965217826538139290_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_ht=scontent-nrt1-2.cdninstagram.com&_nc_cat=110&_nc_ohc=nAY3A92S-3AQ7kNvgGH_p_y&_nc_gid=90caed4e6a1e4fa9972be8df42bad836&edm=AHzjunoBAAAA&ccb=7-5&oh=00_AYDfpayQHQFTDFpZ9AnPyDzebobzVOYneF01XEEOUM055g&oe=6776458A&_nc_sid=ba8368",
+      image: "https://kuripura.s3.us-east-1.amazonaws.com/%E5%86%99%E7%9C%9F.JPG",
       id: "@kazu993_ascensionlife"
     },
     content: `11/22は婚姻のみの予定でしたが、
