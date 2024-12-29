@@ -51,6 +51,62 @@ export const SAMPLE_POSTS = [
   }
 ];
 
+export const WATCH_POSTS = [
+  {
+    author: {
+      name: "スピリチュアルヒーラー | 美咲",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=1",
+      id: "@misaki_healer"
+    },
+    content: `瞑想の効果について、科学的な視点から解説します📚
+
+最近の研究によると、定期的な瞑想は:
+・ストレス軽減
+・集中力向上
+・免疫力アップ
+・睡眠の質改善
+
+などの効果があることが分かっています。
+
+瞑想は特別なものではなく、誰でも始められる心の習慣です。
+まずは1日5分から始めてみませんか？
+
+#マインドフルネス #瞑想効果 #セルフケア`,
+    mediaType: "text" as const,
+  },
+  {
+    author: {
+      name: "心理カウンセラー | 山田太郎",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=2",
+      id: "@yamada_counselor"
+    },
+    content: "https://images.unsplash.com/photo-1506126613408-eca07ce68773",
+    caption: `今日のワークショップの様子です🌿
+
+「自己肯定感を高める」をテーマに、
+グループワークを行いました。
+
+参加者の皆さんの気づきや変化に
+心を打たれる瞬間がたくさんありました。
+
+次回は来月開催予定です！
+ご興味ある方はDMください📩
+
+#セルフケア #メンタルヘルス #カウンセリング`,
+    mediaType: "image" as const,
+  },
+  {
+    author: {
+      name: "ヨガインストラクター | 佐藤美咲",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
+      id: "@misaki_yoga"
+    },
+    content: "https://mcdn.podbean.com/mf/web/example123/yoga_meditation.m4a",
+    caption: "朝のヨガ瞑想ガイド🧘‍♀️ 心と体を整える20分間のセッションです。",
+    mediaType: "audio" as const,
+  }
+];
+
 export const WATCH_DATA = {
   count: 450,
   label: "ウォッチ"
