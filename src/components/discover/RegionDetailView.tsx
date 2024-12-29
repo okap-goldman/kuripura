@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface RegionDetailViewProps {
   open: boolean;
@@ -13,36 +14,164 @@ const REGIONS_DATA = {
   "北海道・東北": {
     description: "大自然の中での瞑想と気づき",
     activeUsers: "234",
+    features: {
+      characteristics: "広大な大地と豊かな自然に恵まれた地域。パワースポットが多く点在し、特に阿寒湖や出羽三山は古くから修験道の聖地として知られています。",
+      specialties: [
+        "オーガニック野菜",
+        "天然水晶",
+        "浄化用の岩塩",
+        "瞑想用クッション（地元職人作）"
+      ],
+      people: [
+        {
+          name: "山田悟道",
+          role: "瞑想指導者",
+          description: "20年以上の瞑想経験を持つ。自然と調和した生活を提唱。"
+        },
+        {
+          name: "鈴木癒子",
+          role: "ヒーラー",
+          description: "地元の薬草を使用したヒーリングを実践。"
+        }
+      ]
+    }
   },
   "関東": {
     description: "都市部でのマインドフルネス実践",
     activeUsers: "567",
+    features: {
+      characteristics: "現代的なスピリチュアリティの中心地。都会の中でも静寂を見出し、新しい気づきの形を模索しています。",
+      specialties: [
+        "オリジナル瞑想アプリ",
+        "チャクラ調整ジュエリー",
+        "都市型瞑想スペース",
+        "デジタルデトックスリトリート"
+      ],
+      people: [
+        {
+          name: "佐藤明視",
+          role: "マインドフルネス講師",
+          description: "企業向けマインドフルネスプログラムを展開。"
+        },
+        {
+          name: "田中波動",
+          role: "エネルギーワーカー",
+          description: "都市部のエネルギー浄化を専門とする。"
+        }
+      ]
+    }
   },
   "中部": {
     description: "伝統と現代的な目醒めの融合",
     activeUsers: "345",
+    features: {
+      characteristics: "日本アルプスの麓に位置し、古来からの修験道と現代的なスピリチュアリティが融合する地域。",
+      specialties: [
+        "パワーストーン",
+        "浄化用の竹炭",
+        "瞑想用和紙",
+        "オリジナル香"
+      ],
+      people: [
+        {
+          name: "中村修験",
+          role: "修験道師",
+          description: "現代的な解釈で修験道を伝える。"
+        },
+        {
+          name: "小林瞑想",
+          role: "瞑想指導者",
+          description: "山岳瞑想プログラムを主催。"
+        }
+      ]
+    }
   },
   "近畿": {
     description: "古都での精神性の探求",
     activeUsers: "456",
+    features: {
+      characteristics: "古都の歴史的な寺社仏閣と現代的なスピリチュアリティが調和する地域。伝統的な瞑想法を現代に活かす取り組みが盛ん。",
+      specialties: [
+        "伝統的な瞑想具",
+        "お香",
+        "和紙製マインドフルネスノート",
+        "瞑想用座布団"
+      ],
+      people: [
+        {
+          name: "西田禅心",
+          role: "禅僧",
+          description: "現代人向けの禅プログラムを提供。"
+        },
+        {
+          name: "木村気付",
+          role: "気功師",
+          description: "古都のエネルギーを活用したヒーリングを実践。"
+        }
+      ]
+    }
   },
   "中国・四国": {
     description: "地域に根ざした心の癒し",
     activeUsers: "234",
+    features: {
+      characteristics: "豊かな自然と温泉に恵まれた地域。地域の伝統的な癒しの文化と現代的なヒーリングが融合。",
+      specialties: [
+        "ヒーリング用クリスタル",
+        "地元産ハーブティー",
+        "瞑想用クッション",
+        "自然音CD"
+      ],
+      people: [
+        {
+          name: "高橋自然",
+          role: "自然療法士",
+          description: "地域の自然を活用したヒーリングプログラムを提供。"
+        },
+        {
+          name: "松本癒し",
+          role: "音楽セラピスト",
+          description: "自然音を使ったヒーリング音楽を制作。"
+        }
+      ]
+    }
   },
   "九州・沖縄": {
     description: "島々のエネルギーと調和",
     activeUsers: "345",
+    features: {
+      characteristics: "南国特有のエネルギーと島々の神秘的なパワースポットが点在する地域。独自のスピリチュアル文化を育んでいます。",
+      specialties: [
+        "浄化用の塩",
+        "南国ハーブ",
+        "シーグラス瞑想ツール",
+        "島藍染めヨガマット"
+      ],
+      people: [
+        {
+          name: "島田波動",
+          role: "シャーマン",
+          description: "島々の伝統的な癒しの技法を継承。"
+        },
+        {
+          name: "城間祈り",
+          role: "祈祷師",
+          description: "伝統的な祈りの文化を現代に伝える。"
+        }
+      ]
+    }
   }
 };
 
 export function RegionDetailView({ open, onClose, region }: RegionDetailViewProps) {
   const regionData = REGIONS_DATA[region as keyof typeof REGIONS_DATA];
 
+  if (!regionData) return null;
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl p-0">
-        <div className="p-4 space-y-6">
+      <DialogContent className="max-w-4xl p-0">
+        <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">{region}の目醒め情報</h2>
             <Button 
@@ -71,9 +200,23 @@ export function RegionDetailView({ open, onClose, region }: RegionDetailViewProp
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">今後のイベント</h3>
-            <div className="space-y-4">
+          <Tabs defaultValue="features" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="features">特色</TabsTrigger>
+              <TabsTrigger value="events">イベント</TabsTrigger>
+              <TabsTrigger value="people">活動する人々</TabsTrigger>
+              <TabsTrigger value="specialties">名産品</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="features" className="mt-4">
+              <div className="prose max-w-none">
+                <p className="text-muted-foreground">
+                  {regionData.features.characteristics}
+                </p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="events" className="mt-4 space-y-4">
               <div className="border rounded-lg p-4">
                 <div className="flex justify-between items-start">
                   <div>
@@ -99,54 +242,30 @@ export function RegionDetailView({ open, onClose, region }: RegionDetailViewProp
                   それぞれの気づきや学びを分かち合う場を設けます。
                 </p>
               </div>
-            </div>
-          </div>
+            </TabsContent>
 
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">活動報告</h3>
-            <div className="space-y-4">
-              <div className="bg-muted/20 rounded-lg p-4">
-                <h4 className="font-medium">目醒めコミュニティミーティング</h4>
-                <p className="text-sm text-muted-foreground">2024年4月1日</p>
-                <p className="text-sm mt-2">
-                  新しい意識の高め方について、深い対話を行いました。
-                </p>
-              </div>
-
-              <div className="bg-muted/20 rounded-lg p-4">
-                <h4 className="font-medium">心の解放ワークショップ</h4>
-                <p className="text-sm text-muted-foreground">2024年4月5日</p>
-                <p className="text-sm mt-2">
-                  内なる制限から解放されるための実践を行いました。
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">必要とされていること</h3>
-            <div className="space-y-4">
-              <div className="border rounded-lg p-4">
-                <div className="flex justify-between items-start">
-                  <h4 className="font-medium">瞑想ガイド</h4>
-                  <Badge variant="destructive">緊急</Badge>
+            <TabsContent value="people" className="mt-4 space-y-4">
+              {regionData.features.people.map((person, index) => (
+                <div key={index} className="border rounded-lg p-4">
+                  <h4 className="font-medium">{person.name}</h4>
+                  <p className="text-sm text-accent-foreground">{person.role}</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {person.description}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  初心者向けの瞑想ガイドができる方を募集しています。
-                </p>
-              </div>
+              ))}
+            </TabsContent>
 
-              <div className="border rounded-lg p-4">
-                <div className="flex justify-between items-start">
-                  <h4 className="font-medium">目醒めメンター</h4>
-                  <Badge variant="secondary">募集中</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  個別サポートができるメンターを募集しています。
-                </p>
+            <TabsContent value="specialties" className="mt-4">
+              <div className="grid grid-cols-2 gap-4">
+                {regionData.features.specialties.map((specialty, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <h4 className="font-medium">{specialty}</h4>
+                  </div>
+                ))}
               </div>
-            </div>
-          </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </DialogContent>
     </Dialog>
