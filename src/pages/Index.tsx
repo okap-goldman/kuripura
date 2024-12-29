@@ -118,12 +118,12 @@ const SAMPLE_POSTS = [
   },
   {
     author: {
-      name: "魂の冒険家",
+      name: "Shota | 宇宙くん",
       image: "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
-      id: "@explorer789"
+      id: "@uchu_kun__shota"
     },
-    content: "https://s328.podbean.com/pb/4b3e15298687315db3070972aaa50fee/676f0aab/data1/fs91/20007750/uploads/6b592.m4a?pbss=abbaab44-f1dd-5725-bf73-452199e42c01",
-    caption: "この音楽を聴くと、心が落ち着きます。瞑想のお供に。",
+    content: "https://mcdn.podbean.com/mf/web/ph7adzrxywrxv7it/bbygr.m4a",
+    caption: "バスケ",
     mediaType: "audio" as const,
   },
   {
