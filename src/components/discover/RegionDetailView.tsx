@@ -1,8 +1,11 @@
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { RegionCharacteristics } from "./RegionCharacteristics";
+import { RegionEvents } from "./RegionEvents";
+import { RegionPeople } from "./RegionPeople";
+import { RegionSpecialties } from "./RegionSpecialties";
 
 interface RegionDetailViewProps {
   open: boolean;
@@ -171,102 +174,44 @@ export function RegionDetailView({ open, onClose, region }: RegionDetailViewProp
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl p-0">
-        <div className="p-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold">{region}の目醒め情報</h2>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={onClose}
-              className="hover:bg-destructive/10 transition-colors"
-            >
-              <X className="w-5 h-5" />
-              <span className="sr-only">閉じる</span>
-            </Button>
+        <ScrollArea className="h-[80vh]">
+          <div className="p-6 space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold">{region}の目醒め情報</h2>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={onClose}
+                className="hover:bg-destructive/10 transition-colors"
+              >
+                <X className="w-5 h-5" />
+                <span className="sr-only">閉じる</span>
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-pink-50 p-4 rounded-lg text-center">
+                <div className="text-2xl font-bold text-pink-600">65%</div>
+                <div className="text-sm text-pink-600/80">目醒め率</div>
+              </div>
+              <div className="bg-blue-50 p-4 rounded-lg text-center">
+                <div className="text-2xl font-bold text-blue-600">{regionData?.activeUsers || 0}</div>
+                <div className="text-sm text-blue-600/80">活動中の目醒め人</div>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-lg text-center">
+                <div className="text-2xl font-bold text-purple-600">8</div>
+                <div className="text-sm text-purple-600/80">進行中の目醒めプロジェクト</div>
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              <RegionCharacteristics characteristics={regionData.features.characteristics} />
+              <RegionEvents />
+              <RegionPeople people={regionData.features.people} />
+              <RegionSpecialties specialties={regionData.features.specialties} />
+            </div>
           </div>
-
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-pink-50 p-4 rounded-lg text-center">
-              <div className="text-2xl font-bold text-pink-600">65%</div>
-              <div className="text-sm text-pink-600/80">目醒め率</div>
-            </div>
-            <div className="bg-blue-50 p-4 rounded-lg text-center">
-              <div className="text-2xl font-bold text-blue-600">{regionData?.activeUsers || 0}</div>
-              <div className="text-sm text-blue-600/80">活動中の目醒め人</div>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg text-center">
-              <div className="text-2xl font-bold text-purple-600">8</div>
-              <div className="text-sm text-purple-600/80">進行中の目醒めプロジェクト</div>
-            </div>
-          </div>
-
-          <Tabs defaultValue="features" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="features">特色</TabsTrigger>
-              <TabsTrigger value="events">イベント</TabsTrigger>
-              <TabsTrigger value="people">活動する人々</TabsTrigger>
-              <TabsTrigger value="specialties">名産品</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="features" className="mt-4">
-              <div className="prose max-w-none">
-                <p className="text-muted-foreground">
-                  {regionData.features.characteristics}
-                </p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="events" className="mt-4 space-y-4">
-              <div className="border rounded-lg p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium">集団瞑想会</h4>
-                    <p className="text-sm text-muted-foreground">2024年4月20日</p>
-                  </div>
-                  <Button size="sm">参加する</Button>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  地域の皆さんと共に、深い瞑想体験を共有します。
-                </p>
-              </div>
-              
-              <div className="border rounded-lg p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium">目醒めシェアリングサークル</h4>
-                    <p className="text-sm text-muted-foreground">2024年4月25日</p>
-                  </div>
-                  <Button size="sm">参加する</Button>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  それぞれの気づきや学びを分かち合う場を設けます。
-                </p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="people" className="mt-4 space-y-4">
-              {regionData.features.people.map((person, index) => (
-                <div key={index} className="border rounded-lg p-4">
-                  <h4 className="font-medium">{person.name}</h4>
-                  <p className="text-sm text-accent-foreground">{person.role}</p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {person.description}
-                  </p>
-                </div>
-              ))}
-            </TabsContent>
-
-            <TabsContent value="specialties" className="mt-4">
-              <div className="grid grid-cols-2 gap-4">
-                {regionData.features.specialties.map((specialty, index) => (
-                  <div key={index} className="border rounded-lg p-4">
-                    <h4 className="font-medium">{specialty}</h4>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
