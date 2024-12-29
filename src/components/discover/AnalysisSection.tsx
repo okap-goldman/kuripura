@@ -11,7 +11,7 @@ export function AnalysisSection() {
       <div className="space-y-6 bg-pink-50/50 p-6 rounded-lg">
         <div className="flex items-center gap-2">
           <BarChart className="w-5 h-5 text-pink-500" />
-          <h2 className="text-lg font-semibold">あなたの分析</h2>
+          <h2 className="text-lg font-semibold">あなたのクローズアップ</h2>
         </div>
 
         <div className="space-y-4">
@@ -51,7 +51,7 @@ export function AnalysisSection() {
       <div className="space-y-6 bg-blue-50/50 p-6 rounded-lg">
         <div className="flex items-center gap-2">
           <Users className="w-5 h-5 text-blue-500" />
-          <h2 className="text-lg font-semibold">全体の分析</h2>
+          <h2 className="text-lg font-semibold">全体のクローズアップ</h2>
         </div>
 
         <div className="space-y-4">
