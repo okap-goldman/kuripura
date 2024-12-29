@@ -189,21 +189,6 @@ export function RegionDetailView({ open, onClose, region }: RegionDetailViewProp
               </Button>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-pink-50 p-4 rounded-lg text-center">
-                <div className="text-2xl font-bold text-pink-600">65%</div>
-                <div className="text-sm text-pink-600/80">目醒め率</div>
-              </div>
-              <div className="bg-blue-50 p-4 rounded-lg text-center">
-                <div className="text-2xl font-bold text-blue-600">{regionData?.activeUsers || 0}</div>
-                <div className="text-sm text-blue-600/80">活動中の目醒め人</div>
-              </div>
-              <div className="bg-purple-50 p-4 rounded-lg text-center">
-                <div className="text-2xl font-bold text-purple-600">8</div>
-                <div className="text-sm text-purple-600/80">進行中の目醒めプロジェクト</div>
-              </div>
-            </div>
-
             <div className="space-y-8">
               <RegionCharacteristics characteristics={regionData.features.characteristics} />
               <RegionEvents />
