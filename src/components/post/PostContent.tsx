@@ -106,7 +106,7 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
           <div className="w-full bg-purple-600 text-white p-6 rounded-lg">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-lg font-semibold">使命</h3>
+                <h3 className="text-lg font-semibold">バスケ</h3>
                 <p className="text-sm opacity-80">1時間5分・165人がリスニング/リプレイ</p>
               </div>
             </div>

@@ -123,7 +123,7 @@ const SAMPLE_POSTS = [
       id: "@uchu_kun__shota"
     },
     content: "https://mcdn.podbean.com/mf/web/ph7adzrxywrxv7it/bbygr.m4a",
-    caption: "バスケ",
+    caption: "ただバスケを見た話。笑",
     mediaType: "audio" as const,
   },
   {
