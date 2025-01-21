@@ -1,15 +1,13 @@
-/**
- * @type {import('@remix-run/dev').AppConfig}
- */
-module.exports = {
+/** @type {import('@remix-run/dev').AppConfig} */
+export default {
   serverBuildTarget: "node",
   server: process.env.NODE_ENV === "production" ? "./server.js" : undefined,
   devServerBroadcastDelay: 1000,
   ignoredRouteFiles: ["**/.*"],
-  // TailwindCSSを使うための設定
   future: {
-    unstable_postcss: true,
-    unstable_tailwind: true,
+    v3_fetcherPersist: true,
+    v3_lazyRouteDiscovery: true,
+    v3_relativeSplatPath: true,
   },
   postcss: true,
   tailwind: true,
