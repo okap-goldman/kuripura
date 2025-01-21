@@ -1,5 +1,5 @@
 /** @type {import('@remix-run/dev').AppConfig} */
-export default {
+module.exports = {
   serverBuildTarget: "node",
   server: process.env.NODE_ENV === "production" ? "./server.js" : undefined,
   devServerBroadcastDelay: 1000,
