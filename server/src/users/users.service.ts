@@ -24,7 +24,11 @@ export class UsersService {
       throw new ConflictException('Email already exists');
     }
 
-    const user = this.usersRepository.create(credentials);
+    const user = this.usersRepository.create({
+      ...credentials,
+      isEmailVerified: false,
+    });
+
     return this.usersRepository.save(user);
   }
 
@@ -53,7 +57,9 @@ export class UsersService {
     id: string,
     refreshToken: string | null,
   ): Promise<void> {
-    await this.usersRepository.update(id, { refreshToken });
+    const user = await this.findOne(id);
+    user.refreshToken = refreshToken;
+    await this.usersRepository.save(user);
   }
 
   async remove(id: string): Promise<void> {

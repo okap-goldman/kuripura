@@ -34,9 +34,9 @@ export class User {
   @Column({ default: false })
   isEmailVerified: boolean;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   @Exclude()
-  refreshToken?: string;
+  refreshToken: string | null;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -44,12 +44,15 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  private tempPassword: string | null = null;
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {
-    if (this.password) {
+    if (this.password && (!this.tempPassword || this.password !== this.tempPassword)) {
       const salt = await bcrypt.genSalt();
       this.password = await bcrypt.hash(this.password, salt);
+      this.tempPassword = this.password;
     }
   }
 
