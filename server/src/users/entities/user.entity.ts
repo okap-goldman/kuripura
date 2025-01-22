@@ -47,16 +47,19 @@ export class User {
   private tempPassword: string | null = null;
 
   @BeforeInsert()
-  @BeforeUpdate()
   async hashPassword() {
-    if (this.password && (!this.tempPassword || this.password !== this.tempPassword)) {
+    if (this.password) {
       const salt = await bcrypt.genSalt();
       this.password = await bcrypt.hash(this.password, salt);
-      this.tempPassword = this.password;
+      console.log('Password hashed:', { hashed: this.password });
     }
   }
 
-  async comparePassword(password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.password);
+  async comparePassword(plainTextPassword: string): Promise<boolean> {
+    console.log('Comparing passwords:', {
+      plain: plainTextPassword,
+      hashed: this.password
+    });
+    return bcrypt.compare(plainTextPassword, this.password);
   }
 } 

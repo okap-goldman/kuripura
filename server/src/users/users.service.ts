@@ -24,10 +24,11 @@ export class UsersService {
       throw new ConflictException('Email already exists');
     }
 
-    const user = this.usersRepository.create({
-      ...credentials,
-      isEmailVerified: false,
-    });
+    const user = new User();
+    user.email = credentials.email;
+    user.password = credentials.password;
+    user.name = credentials.name;
+    user.isEmailVerified = false;
 
     return this.usersRepository.save(user);
   }

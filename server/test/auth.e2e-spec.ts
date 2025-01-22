@@ -22,6 +22,7 @@ describe('AuthController (e2e)', () => {
           isGlobal: true,
           load: [databaseConfig],
           envFilePath: '.env.test',
+          ignoreEnvFile: false,
         }),
         TypeOrmModule.forRootAsync({
           inject: [ConfigService],
@@ -43,7 +44,16 @@ describe('AuthController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     dataSource = app.get(DataSource);
+
+    // ConfigServiceから環境変数を取得してログ出力
+    const configService = app.get(ConfigService);
+    console.log('JWT_SECRET:', configService.get('JWT_SECRET'));
+    console.log('JWT_ACCESS_TOKEN_EXPIRES_IN:', configService.get('JWT_ACCESS_TOKEN_EXPIRES_IN'));
+
     await app.init();
+
+    // テスト開始時にデータベースをクリーンアップ
+    await dataSource.synchronize(true);
   });
 
   afterAll(async () => {
@@ -71,6 +81,8 @@ describe('AuthController (e2e)', () => {
       expect(response.body.user.email).toBe(testUser.email);
       expect(response.body.user.name).toBe(testUser.name);
       expect(response.body.user.password).toBeUndefined();
+
+      accessToken = response.body.accessToken;
     });
 
     it('should not register a user with existing email', () => {
@@ -105,6 +117,8 @@ describe('AuthController (e2e)', () => {
     });
 
     it('should access protected route with valid token', async () => {
+      expect(accessToken).toBeDefined();
+      
       const response = await request(app.getHttpServer())
         .get('/users/profile')
         .set('Authorization', `Bearer ${accessToken}`)
@@ -120,4 +134,4 @@ describe('AuthController (e2e)', () => {
         .expect(401);
     });
   });
-}); 
+});

@@ -14,6 +14,7 @@ describe('AppController (e2e)', () => {
         ConfigModule.forRoot({
           isGlobal: true,
           load: [databaseConfig],
+          // テスト時には .env.test を読み込む
           envFilePath: '.env.test',
         }),
         AppModule,

@@ -12,18 +12,28 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findByEmail(email);
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    
-    const isPasswordValid = await user.comparePassword(password);
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+    try {
+      console.log('validateUser called with:', { email });
+      const user = await this.usersService.findByEmail(email);
+      console.log('User found:', { hasUser: !!user });
+      
+      if (!user) {
+        throw new UnauthorizedException('Invalid credentials - user not found');
+      }
+      
+      const isPasswordValid = await user.comparePassword(password);
+      console.log('Password validation:', { isValid: isPasswordValid });
+      
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid credentials - invalid password');
+      }
 
-    const { password: _, ...result } = user;
-    return result;
+      const { password: _, ...result } = user;
+      return result;
+    } catch (error) {
+      console.error('validateUser error:', error);
+      throw error;
+    }
   }
 
   async login(user: User) {
