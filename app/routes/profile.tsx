@@ -1,9 +1,17 @@
 import { useState } from "react";
+import type { MetaFunction } from "@remix-run/node";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
 import { ProfileHeader } from "~/components/profile/ProfileHeader";
 import { ProfileTabs } from "~/components/profile/ProfileTabs";
 import { Post } from "~/components/Post";
 import { FooterNav } from "~/components/FooterNav";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "クリプラ - プロフィール" },
+    { name: "description", content: "あなたのプロフィールページです。" },
+  ];
+};
 
 export default function Profile() {
   const [isPlaying, setIsPlaying] = useState(false);

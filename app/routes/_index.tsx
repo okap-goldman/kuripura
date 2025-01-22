@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { MetaFunction } from "@remix-run/node";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -100,7 +101,14 @@ const SAMPLE_POSTS = [
   },
 ];
 
-export default function IndexRoute() {
+export const meta: MetaFunction = () => {
+  return [
+    { title: "クリプラ - ホーム" },
+    { name: "description", content: "クリプラのホームページです。" },
+  ];
+};
+
+export default function Index() {
   const [timelineType, setTimelineType] = useState<"family" | "watch">("family");
   const [showWatchConfirm, setShowWatchConfirm] = useState(false);
 

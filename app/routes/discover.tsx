@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { MetaFunction } from "@remix-run/node";
 import { Card } from "~/components/ui/card";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { AnalysisSection } from "~/components/discover/AnalysisSection";
@@ -7,6 +8,13 @@ import { EventsSection } from "~/components/discover/EventsSection";
 import { RecommendedPostsSection } from "~/components/discover/RecommendedPostsSection";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "クリプラ - 発見" },
+    { name: "description", content: "新しい目醒め人やイベントを発見しましょう。" },
+  ];
+};
 
 type Section = "main" | "analysis" | "regional" | "events" | "recommended";
 

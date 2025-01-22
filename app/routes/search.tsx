@@ -1,4 +1,5 @@
 import { useState, FormEvent } from "react";
+import type { MetaFunction } from "@remix-run/node";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Card } from "~/components/ui/card";
@@ -6,6 +7,13 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { useToast } from "~/hooks/use-toast";
 import { Search as SearchIcon, MessageSquare } from "lucide-react";
 import { ChatMessage } from "~/components/chat/ChatMessage";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "クリプラ - 検索" },
+    { name: "description", content: "目醒め人の知恵を検索・質問できます。" },
+  ];
+};
 
 const SUGGESTED_QUESTIONS = [
   "子どもとの適切な関わり方は？",
