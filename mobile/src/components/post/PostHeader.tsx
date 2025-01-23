@@ -8,9 +8,10 @@ interface PostHeaderProps {
     image: string;
     id?: string;
   };
+  testID?: string;
 }
 
-export function PostHeader({ author }: PostHeaderProps) {
+export function PostHeader({ author, testID }: PostHeaderProps) {
   const userId = author.id || `@${author.name.toLowerCase().replace(/\s+/g, '')}`;
 
   return (

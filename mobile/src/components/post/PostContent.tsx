@@ -9,6 +9,7 @@ interface PostContentProps {
   mediaType: 'text' | 'image' | 'video' | 'audio';
   isExpanded: boolean;
   setIsExpanded: (value: boolean) => void;
+  testID?: string;
 }
 
 export function PostContent({
@@ -17,6 +18,7 @@ export function PostContent({
   mediaType,
   isExpanded,
   setIsExpanded,
+  testID,
 }: PostContentProps) {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
@@ -121,13 +123,21 @@ export function PostContent({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID={testID}>
       {mediaType === 'text' ? (
-        renderMedia()
+        <View testID={`${testID}-text`}>
+          {renderMedia()}
+        </View>
       ) : (
         <>
-          {renderMedia()}
-          {caption && renderTruncatedText(caption)}
+          <View testID={`${testID}-media`}>
+            {renderMedia()}
+          </View>
+          {caption && (
+            <View testID={`${testID}-caption`}>
+              {renderTruncatedText(caption)}
+            </View>
+          )}
         </>
       )}
     </View>

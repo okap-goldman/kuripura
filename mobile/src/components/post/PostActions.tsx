@@ -4,14 +4,16 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 interface PostActionsProps {
   postId: string;
   onComment: () => void;
+  testID?: string;
 }
 
-export function PostActions({ postId, onComment }: PostActionsProps) {
+export function PostActions({ postId, onComment, testID }: PostActionsProps) {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID={testID}>
       <TouchableOpacity
         style={styles.actionButton}
         onPress={() => {/* いいね機能の実装 */}}
+        testID={`${testID}-like-button`}
       >
         <Text>❤️</Text>
         <Text style={styles.actionText}>いいね</Text>
@@ -20,6 +22,7 @@ export function PostActions({ postId, onComment }: PostActionsProps) {
       <TouchableOpacity
         style={styles.actionButton}
         onPress={onComment}
+        testID={`${testID}-comment-button`}
       >
         <Text>💭</Text>
         <Text style={styles.actionText}>コメント</Text>
@@ -28,6 +31,7 @@ export function PostActions({ postId, onComment }: PostActionsProps) {
       <TouchableOpacity
         style={styles.actionButton}
         onPress={() => {/* シェア機能の実装 */}}
+        testID={`${testID}-share-button`}
       >
         <Text>🔄</Text>
         <Text style={styles.actionText}>シェア</Text>
@@ -36,6 +40,7 @@ export function PostActions({ postId, onComment }: PostActionsProps) {
       <TouchableOpacity
         style={styles.actionButton}
         onPress={() => {/* ブックマーク機能の実装 */}}
+        testID={`${testID}-save-button`}
       >
         <Text>🔖</Text>
         <Text style={styles.actionText}>保存</Text>

@@ -107,20 +107,28 @@
 - Node.js: ^20.0.0  
 - **AIモデル: Claude-3-Sonnet-20241022 (Anthropic Messages API 2023-06-01) ← バージョン変更禁止**
 
-## フロントエンド
-- Vite: ^5.4.1
-- React: ^18.3.1
-- Tailwind CSS: ^3.4.11
-- shadcn/ui: 最新コンポーネント
-
 ## バックエンド
-- TanStack Query: ^5.56.2
-- Zod: ^3.23.8
+- Nest.js: ^10.0.0
+- @nestjs/jwt: ^10.2.0
+- @nestjs/passport: ^10.0.3
+- @nestjs/swagger: ^7.3.0
+- @nestjs/typeorm: ^10.0.2
+- TypeORM: ^0.3.20
+- PostgreSQL (pg): ^8.11.3
+
+## モバイル
+- React Native: 0.73.4
+- Expo: ~50.0.11
+- @react-navigation/native: ^6.1.18
+- @react-navigation/native-stack: ^6.11.0
+- @tanstack/react-query: ^5.56.2
 
 ## 開発ツール
 - npm: ^10.0.0
-- ESLint: ^9.9.0
+- ESLint: ^8.42.0
 - TypeScript: ^5.5.3
+- Jest: ^29.7.0
+- Detox: ^20.32.0
 
 ---
 

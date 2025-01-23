@@ -29,15 +29,16 @@ export function HomeScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {posts.map((post) => (
+    <SafeAreaView style={styles.container} testID="home-screen">
+      <ScrollView testID="posts-list">
+        {posts.map((post, index) => (
           <Post
             key={post.id}
             author={post.author}
             content={post.content}
             caption={post.caption}
             mediaType={post.mediaType}
+            testID={`post-${index}`}
           />
         ))}
       </ScrollView>

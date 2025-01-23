@@ -15,25 +15,30 @@ interface PostProps {
   content: string;
   caption?: string;
   mediaType: 'text' | 'image' | 'video' | 'audio';
+  testID?: string;
 }
 
-export function Post({ author, content, caption, mediaType }: PostProps) {
+export function Post({ author, content, caption, mediaType, testID }: PostProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showFullPost, setShowFullPost] = useState(false);
 
   return (
     <Card>
-      <View style={styles.container}>
-        <PostHeader author={author} />
+      <View style={styles.container} testID={testID}>
+        <PostHeader
+          author={author}
+          testID={`${testID}-header`}
+        />
         
-        <View 
-          onTouchEnd={() => 
-            mediaType !== 'text' && 
-            mediaType !== 'audio' && 
+        <View
+          onTouchEnd={() =>
+            mediaType !== 'text' &&
+            mediaType !== 'audio' &&
             setShowFullPost(true)
           }
           style={styles.contentContainer}
+          testID={`${testID}-content-container`}
         >
           <PostContent
             content={content}
@@ -41,12 +46,14 @@ export function Post({ author, content, caption, mediaType }: PostProps) {
             mediaType={mediaType}
             isExpanded={isExpanded}
             setIsExpanded={setIsExpanded}
+            testID={`${testID}-content`}
           />
         </View>
 
         <PostActions
           postId="1"
           onComment={() => setShowComments(true)}
+          testID={`${testID}-actions`}
         />
 
         <Modal
