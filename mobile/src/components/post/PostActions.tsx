@@ -1,28 +1,46 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 interface PostActionsProps {
   postId: string;
-  onComment: () => void;
+  isLiked?: boolean;
+  onLike?: () => void;
+  onComment?: () => void;
+  onShare?: () => void;
+  onSave?: () => void;
   testID?: string;
 }
 
-export function PostActions({ postId, onComment, testID }: PostActionsProps) {
+export const PostActions = memo(function PostActions({
+  postId,
+  isLiked = false,
+  onLike,
+  onComment,
+  onShare,
+  onSave,
+  testID,
+}: PostActionsProps) {
   return (
     <View style={styles.container} testID={testID}>
       <TouchableOpacity
-        style={styles.actionButton}
-        onPress={() => {/* いいね機能の実装 */}}
-        testID={`${testID}-like-button`}
+        style={[styles.actionButton, isLiked && styles.actionButtonActive]}
+        onPress={onLike}
+        testID={isLiked ? `${testID}-like-button-active` : `${testID}-like-button`}
+        accessibilityLabel={isLiked ? 'いいねを取り消す' : 'いいねする'}
+        accessibilityRole="button"
       >
-        <Text>❤️</Text>
-        <Text style={styles.actionText}>いいね</Text>
+        <Text>{isLiked ? '❤️' : '🤍'}</Text>
+        <Text style={[styles.actionText, isLiked && styles.actionTextActive]}>
+          いいね
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.actionButton}
         onPress={onComment}
         testID={`${testID}-comment-button`}
+        accessibilityLabel="コメントを追加"
+        accessibilityRole="button"
       >
         <Text>💭</Text>
         <Text style={styles.actionText}>コメント</Text>
@@ -30,8 +48,10 @@ export function PostActions({ postId, onComment, testID }: PostActionsProps) {
 
       <TouchableOpacity
         style={styles.actionButton}
-        onPress={() => {/* シェア機能の実装 */}}
+        onPress={onShare}
         testID={`${testID}-share-button`}
+        accessibilityLabel="投稿をシェア"
+        accessibilityRole="button"
       >
         <Text>🔄</Text>
         <Text style={styles.actionText}>シェア</Text>
@@ -39,15 +59,17 @@ export function PostActions({ postId, onComment, testID }: PostActionsProps) {
 
       <TouchableOpacity
         style={styles.actionButton}
-        onPress={() => {/* ブックマーク機能の実装 */}}
+        onPress={onSave}
         testID={`${testID}-save-button`}
+        accessibilityLabel="投稿を保存"
+        accessibilityRole="button"
       >
         <Text>🔖</Text>
         <Text style={styles.actionText}>保存</Text>
       </TouchableOpacity>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -60,9 +82,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     padding: 8,
+    borderRadius: 8,
+  },
+  actionButtonActive: {
+    backgroundColor: '#fee2e2',
   },
   actionText: {
     fontSize: 14,
     color: '#64748b',
+  },
+  actionTextActive: {
+    color: '#ef4444',
   },
 });

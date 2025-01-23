@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useRef, useState, useEffect, useCallback, memo } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Video, Audio, AVPlaybackStatus } from 'expo-av';
 import { Button } from '../ui/Button';
 
@@ -12,7 +12,7 @@ interface PostContentProps {
   testID?: string;
 }
 
-export function PostContent({
+export const PostContent = memo(function PostContent({
   content,
   caption,
   mediaType,
@@ -22,6 +22,8 @@ export function PostContent({
 }: PostContentProps) {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<Video>(null);
 
   useEffect(() => {
@@ -32,8 +34,10 @@ export function PostContent({
     };
   }, [sound]);
 
-  const toggleAudio = async () => {
+  const toggleAudio = useCallback(async () => {
     if (!sound) {
+      setIsLoading(true);
+      setError(null);
       try {
         const { sound: newSound } = await Audio.Sound.createAsync(
           { uri: content },
@@ -49,55 +53,88 @@ export function PostContent({
         });
       } catch (error) {
         console.error('Error loading audio:', error);
+        setError('音声の読み込みに失敗しました');
+      } finally {
+        setIsLoading(false);
       }
     } else {
-      if (isAudioPlaying) {
-        await sound.pauseAsync();
-      } else {
-        await sound.playAsync();
+      try {
+        if (isAudioPlaying) {
+          await sound.pauseAsync();
+        } else {
+          await sound.playAsync();
+        }
+        setIsAudioPlaying(!isAudioPlaying);
+      } catch (error) {
+        console.error('Error playing/pausing audio:', error);
+        setError('音声の再生に失敗しました');
       }
-      setIsAudioPlaying(!isAudioPlaying);
     }
-  };
+  }, [sound, isAudioPlaying, content]);
 
-  const renderTruncatedText = (text: string) => {
+  const handleExpandText = useCallback(() => {
+    setIsExpanded(true);
+  }, [setIsExpanded]);
+
+  const renderTruncatedText = useCallback((text: string) => {
     if (text.length <= 140 || isExpanded) {
-      return <Text style={styles.text}>{text}</Text>;
+      return (
+        <Text style={styles.text} testID={`${testID}-full-text`}>
+          {text}
+        </Text>
+      );
     }
     return (
-      <View>
+      <View testID={`${testID}-truncated-text`}>
         <Text style={styles.text}>{text.slice(0, 140)}...</Text>
-        <TouchableOpacity onPress={() => setIsExpanded(true)}>
+        <TouchableOpacity
+          onPress={handleExpandText}
+          testID={`${testID}-expand-button`}
+          accessibilityLabel="すべて表示"
+          accessibilityRole="button"
+        >
           <Text style={styles.moreText}>すべて表示</Text>
         </TouchableOpacity>
       </View>
     );
-  };
+  }, [isExpanded, handleExpandText, testID]);
 
-  const renderMedia = () => {
+  const renderMedia = useCallback(() => {
     switch (mediaType) {
       case 'image':
         return (
-          <Image
-            source={{ uri: content }}
-            style={styles.image}
-            resizeMode="cover"
-          />
+          <View testID={`${testID}-image-container`}>
+            <Image
+              source={{ uri: content }}
+              style={styles.image}
+              resizeMode="cover"
+              testID={`${testID}-image`}
+              accessibilityLabel="投稿画像"
+              accessibilityRole="image"
+            />
+          </View>
         );
       case 'video':
         return (
-          <Video
-            ref={videoRef}
-            source={{ uri: content }}
-            style={styles.video}
-            useNativeControls
-            resizeMode="contain"
-            isLooping
-          />
+          <View testID={`${testID}-video-container`}>
+            <Video
+              ref={videoRef}
+              source={{ uri: content }}
+              style={styles.video}
+              useNativeControls
+              resizeMode="contain"
+              isLooping
+              testID={`${testID}-video`}
+              accessibilityLabel="投稿動画"
+            />
+          </View>
         );
       case 'audio':
         return (
-          <View style={styles.audioContainer}>
+          <View
+            style={styles.audioContainer}
+            testID={`${testID}-audio-container`}
+          >
             <View style={styles.audioHeader}>
               <View>
                 <Text style={styles.audioTitle}>使命</Text>
@@ -106,35 +143,59 @@ export function PostContent({
                 </Text>
               </View>
             </View>
-            <Button
-              onPress={toggleAudio}
-              variant="outline"
-              fullWidth
-              style={styles.audioButton}
-            >
-              <Text>{isAudioPlaying ? '停止' : '再生'}</Text>
-            </Button>
+            {isLoading ? (
+              <ActivityIndicator
+                size="small"
+                color="#0284c7"
+                testID={`${testID}-audio-loading`}
+              />
+            ) : error ? (
+              <View testID={`${testID}-audio-error`}>
+                <Text style={styles.errorText}>{error}</Text>
+                <Button
+                  onPress={toggleAudio}
+                  variant="outline"
+                  fullWidth
+                  style={styles.retryButton}
+                  testID={`${testID}-audio-retry-button`}
+                >
+                  <Text>再試行</Text>
+                </Button>
+              </View>
+            ) : (
+              <Button
+                onPress={toggleAudio}
+                variant="outline"
+                fullWidth
+                style={styles.audioButton}
+                testID={`${testID}-audio-${isAudioPlaying ? 'pause' : 'play'}-button`}
+                accessibilityLabel={isAudioPlaying ? '停止' : '再生'}
+                accessibilityRole="button"
+              >
+                <Text>{isAudioPlaying ? '停止' : '再生'}</Text>
+              </Button>
+            )}
           </View>
         );
       case 'text':
       default:
         return renderTruncatedText(content);
     }
-  };
+  }, [mediaType, content, isAudioPlaying, isLoading, error, toggleAudio, renderTruncatedText, testID]);
 
   return (
     <View style={styles.container} testID={testID}>
       {mediaType === 'text' ? (
-        <View testID={`${testID}-text`}>
+        <View testID={`${testID}-text-container`}>
           {renderMedia()}
         </View>
       ) : (
         <>
-          <View testID={`${testID}-media`}>
+          <View testID={`${testID}-media-container`}>
             {renderMedia()}
           </View>
           {caption && (
-            <View testID={`${testID}-caption`}>
+            <View testID={`${testID}-caption-container`}>
               {renderTruncatedText(caption)}
             </View>
           )}
@@ -142,7 +203,7 @@ export function PostContent({
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -150,6 +211,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
+    lineHeight: 20,
+    color: '#0f172a',
   },
   moreText: {
     fontSize: 14,
@@ -160,11 +223,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
     borderRadius: 8,
+    backgroundColor: '#f1f5f9',
   },
   video: {
     width: '100%',
     height: 300,
     borderRadius: 8,
+    backgroundColor: '#f1f5f9',
   },
   audioContainer: {
     width: '100%',
@@ -189,5 +254,14 @@ const styles = StyleSheet.create({
   },
   audioButton: {
     backgroundColor: '#ffffff',
+  },
+  retryButton: {
+    backgroundColor: '#ffffff',
+    marginTop: 8,
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#ef4444',
+    textAlign: 'center',
   },
 });

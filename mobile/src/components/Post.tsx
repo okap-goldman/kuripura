@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Modal } from 'react-native';
+import React, { useState, useCallback, memo } from 'react';
+import { View, StyleSheet, Modal, Text, TouchableOpacity } from 'react-native';
 import { Card } from './ui/Card';
 import { PostHeader } from './post/PostHeader';
 import { PostContent } from './post/PostContent';
@@ -18,25 +18,45 @@ interface PostProps {
   testID?: string;
 }
 
-export function Post({ author, content, caption, mediaType, testID }: PostProps) {
+export const Post = memo(function Post({ author, content, caption, mediaType, testID }: PostProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showFullPost, setShowFullPost] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleContentPress = useCallback(() => {
+    if (mediaType !== 'text' && mediaType !== 'audio') {
+      setShowFullPost(true);
+    }
+  }, [mediaType]);
+
+  const handleCommentsPress = useCallback(() => {
+    setShowComments(true);
+  }, []);
+
+  const handleLikePress = useCallback(() => {
+    setIsLiked(prev => !prev);
+  }, []);
+
+  const handleCloseComments = useCallback(() => {
+    setShowComments(false);
+  }, []);
+
+  const handleCloseFullPost = useCallback(() => {
+    setShowFullPost(false);
+  }, []);
 
   return (
-    <Card>
+    <Card testID={`${testID}-card`}>
       <View style={styles.container} testID={testID}>
         <PostHeader
           author={author}
           testID={`${testID}-header`}
         />
         
-        <View
-          onTouchEnd={() =>
-            mediaType !== 'text' &&
-            mediaType !== 'audio' &&
-            setShowFullPost(true)
-          }
+        <TouchableOpacity
+          onPress={handleContentPress}
+          activeOpacity={mediaType === 'text' || mediaType === 'audio' ? 1 : 0.7}
           style={styles.contentContainer}
           testID={`${testID}-content-container`}
         >
@@ -48,20 +68,32 @@ export function Post({ author, content, caption, mediaType, testID }: PostProps)
             setIsExpanded={setIsExpanded}
             testID={`${testID}-content`}
           />
-        </View>
+        </TouchableOpacity>
 
         <PostActions
           postId="1"
-          onComment={() => setShowComments(true)}
+          isLiked={isLiked}
+          onLike={handleLikePress}
+          onComment={handleCommentsPress}
           testID={`${testID}-actions`}
         />
 
         <Modal
           visible={showComments}
           animationType="slide"
-          onRequestClose={() => setShowComments(false)}
+          onRequestClose={handleCloseComments}
+          testID={`${testID}-comments-modal`}
         >
           <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>コメント</Text>
+              <TouchableOpacity
+                onPress={handleCloseComments}
+                testID={`${testID}-close-comments-button`}
+              >
+                <Text style={styles.closeButton}>閉じる</Text>
+              </TouchableOpacity>
+            </View>
             <PostComments
               postId="1"
               comments={[
@@ -75,6 +107,7 @@ export function Post({ author, content, caption, mediaType, testID }: PostProps)
                   createdAt: new Date().toISOString(),
                 },
               ]}
+              testID={`${testID}-comments`}
             />
           </View>
         </Modal>
@@ -82,18 +115,32 @@ export function Post({ author, content, caption, mediaType, testID }: PostProps)
         <Modal
           visible={showFullPost}
           animationType="fade"
-          onRequestClose={() => setShowFullPost(false)}
+          onRequestClose={handleCloseFullPost}
+          testID={`${testID}-full-post-modal`}
         >
           <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>投稿</Text>
+              <TouchableOpacity
+                onPress={handleCloseFullPost}
+                testID={`${testID}-close-full-post-button`}
+              >
+                <Text style={styles.closeButton}>閉じる</Text>
+              </TouchableOpacity>
+            </View>
             <View style={styles.fullPostContainer}>
               <PostContent
                 content={content}
                 mediaType={mediaType}
                 isExpanded={true}
                 setIsExpanded={setIsExpanded}
+                testID={`${testID}-full-post-content`}
               />
               <View style={styles.fullPostDetails}>
-                <PostHeader author={author} />
+                <PostHeader
+                  author={author}
+                  testID={`${testID}-full-post-header`}
+                />
                 {caption && (
                   <View style={styles.captionContainer}>
                     <PostContent
@@ -101,12 +148,16 @@ export function Post({ author, content, caption, mediaType, testID }: PostProps)
                       mediaType="text"
                       isExpanded={true}
                       setIsExpanded={setIsExpanded}
+                      testID={`${testID}-full-post-caption`}
                     />
                   </View>
                 )}
                 <PostActions
                   postId="1"
-                  onComment={() => setShowComments(true)}
+                  isLiked={isLiked}
+                  onLike={handleLikePress}
+                  onComment={handleCommentsPress}
+                  testID={`${testID}-full-post-actions`}
                 />
               </View>
             </View>
@@ -115,7 +166,7 @@ export function Post({ author, content, caption, mediaType, testID }: PostProps)
       </View>
     </Card>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -127,7 +178,23 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e2e8f0',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#0f172a',
+  },
+  closeButton: {
+    fontSize: 16,
+    color: '#0284c7',
   },
   fullPostContainer: {
     flex: 1,
@@ -135,6 +202,7 @@ const styles = StyleSheet.create({
   },
   fullPostDetails: {
     gap: 16,
+    padding: 16,
   },
   captionContainer: {
     paddingHorizontal: 16,

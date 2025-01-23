@@ -7,13 +7,15 @@ module.exports = {
     },
     jest: {
       setupTimeout: 120000,
+      reportSpecs: true,
+      reportWorkerAssign: true,
     },
   },
   apps: {
     'ios.debug': {
       type: 'ios.app',
       binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/mobile.app',
-      build: 'xcodebuild -workspace ios/mobile.xcworkspace -scheme mobile -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+      build: 'xcodebuild -workspace ios/mobile.xcworkspace -scheme mobile -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
     },
     'ios.release': {
       type: 'ios.app',
@@ -41,8 +43,8 @@ module.exports = {
     simulator: {
       type: 'ios.simulator',
       device: {
-        type: 'iPhone 15'
-      }
+        type: 'iPhone 16 Pro',
+      },
     },
     emulator: {
       type: 'android.emulator',
@@ -54,7 +56,7 @@ module.exports = {
   configurations: {
     'ios.sim.debug': {
       device: 'simulator',
-      app: 'ios.debug'
+      app: 'ios.debug',
     },
     'ios.sim.release': {
       device: 'simulator',
@@ -68,5 +70,26 @@ module.exports = {
       device: 'emulator',
       app: 'android.release'
     }
-  }
+  },
+  behavior: {
+    init: {
+      exposeGlobals: false,
+      reinstallApp: true,
+    },
+    cleanup: {
+      shutdownDevice: false,
+    },
+    launchApp: {
+      newInstance: true,
+      permissions: { notifications: 'YES' },
+      launchArgs: {
+        detoxPrintBusyIdleResources: 'YES',
+        detoxDisableSyncQueue: 'YES',
+        detoxURLBlacklistRegex: '.*socket\\.io.*|.*analytics.*|.*logs.*|.*dicebear\\.com.*',
+        detoxSourceAppBackgroundStatus: 'active',
+        detoxDisableScrollAnimation: 'true',
+        detoxOrientationLock: 'portrait',
+      },
+    },
+  },
 };
