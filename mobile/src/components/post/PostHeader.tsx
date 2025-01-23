@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Avatar } from '../ui/Avatar';
+import { Avatar } from '../../components/ui/avatar';
+import { colors } from '../../styles/theme';
 
 interface PostHeaderProps {
   author: {
@@ -8,18 +9,17 @@ interface PostHeaderProps {
     image: string;
     id?: string;
   };
-  testID?: string;
 }
 
-export function PostHeader({ author, testID }: PostHeaderProps) {
-  const userId = author.id || `@${author.name.toLowerCase().replace(/\s+/g, '')}`;
-
+export function PostHeader({ author }: PostHeaderProps) {
   return (
     <View style={styles.container}>
-      <Avatar source={author.image} fallback={author.name[0]} />
-      <View style={styles.textContainer}>
+      <Avatar source={{ uri: author.image }} size={40} />
+      <View style={styles.info}>
         <Text style={styles.name}>{author.name}</Text>
-        <Text style={styles.userId}>{userId}</Text>
+        <Text style={styles.id}>
+          {author.id || `@${author.name.toLowerCase().replace(/\s+/g, '')}`}
+        </Text>
       </View>
     </View>
   );
@@ -31,15 +31,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  textContainer: {
-    justifyContent: 'center',
+  info: {
+    flex: 1,
   },
   name: {
-    fontSize: 16,
     fontWeight: '600',
+    fontSize: 16,
+    color: colors.text,
   },
-  userId: {
+  id: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.textMuted,
   },
 });

@@ -1,6 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Avatar } from '../ui/Avatar';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { colors } from '../../styles/theme';
+import { Avatar } from '../../components/ui/avatar';
 
 interface Comment {
   id: string;
@@ -10,6 +12,7 @@ interface Comment {
   };
   content: string;
   createdAt: string;
+  likes?: number;
 }
 
 interface PostCommentsProps {
@@ -17,53 +20,76 @@ interface PostCommentsProps {
   comments: Comment[];
 }
 
-export function PostComments({ postId, comments }: PostCommentsProps) {
-  // コメント投稿からの経過時間を計算
-  const getTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+export function PostComments({ postId, comments: initialComments }: PostCommentsProps) {
+  const [comments, setComments] = useState<Comment[]>(initialComments);
+  const [newComment, setNewComment] = useState('');
 
-    if (diffInSeconds < 60) {
-      return `${diffInSeconds}秒前`;
-    }
-    if (diffInSeconds < 3600) {
-      return `${Math.floor(diffInSeconds / 60)}分前`;
-    }
-    if (diffInSeconds < 86400) {
-      return `${Math.floor(diffInSeconds / 3600)}時間前`;
-    }
-    return `${Math.floor(diffInSeconds / 86400)}日前`;
+  const handleSubmitComment = () => {
+    if (!newComment.trim()) return;
+
+    const comment: Comment = {
+      id: Date.now().toString(),
+      author: {
+        name: '現在のユーザー',
+        image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=current',
+      },
+      content: newComment,
+      createdAt: new Date().toISOString(),
+      likes: 0,
+    };
+
+    setComments([...comments, comment]);
+    setNewComment('');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>コメント</Text>
-      
       <ScrollView style={styles.commentsList}>
         {comments.map((comment) => (
-          <View key={comment.id} style={styles.commentContainer}>
-            <Avatar source={comment.author.image} size={32} />
+          <View key={comment.id} style={styles.commentItem}>
+            <Avatar source={{ uri: comment.author.image }} size={32} />
             <View style={styles.commentContent}>
               <View style={styles.commentHeader}>
                 <Text style={styles.authorName}>{comment.author.name}</Text>
                 <Text style={styles.timestamp}>
-                  {getTimeAgo(comment.createdAt)}
+                  {new Date(comment.createdAt).toLocaleDateString()}
                 </Text>
               </View>
               <Text style={styles.commentText}>{comment.content}</Text>
-              <View style={styles.commentActions}>
-                <TouchableOpacity>
-                  <Text style={styles.actionText}>返信</Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Text style={styles.actionText}>いいね</Text>
-                </TouchableOpacity>
-              </View>
+              {comment.likes !== undefined && (
+                <Text style={styles.likesCount}>
+                  {comment.likes.toLocaleString()} いいね
+                </Text>
+              )}
             </View>
           </View>
         ))}
       </ScrollView>
+
+      <View style={styles.inputContainer}>
+        <Avatar
+          source={{ uri: 'https://api.dicebear.com/7.x/avataaars/svg?seed=current' }}
+          size={32}
+        />
+        <View style={styles.inputWrapper}>
+          <TextInput
+            style={styles.input}
+            value={newComment}
+            onChangeText={setNewComment}
+            placeholder="コメントを追加..."
+            placeholderTextColor={colors.textMuted}
+            multiline
+          />
+          <View style={styles.inputActions}>
+            <TouchableOpacity>
+              <Feather name="smile" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Feather name="gift" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
     </View>
   );
 }
@@ -71,52 +97,70 @@ export function PostComments({ postId, comments }: PostCommentsProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  header: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 16,
-    paddingHorizontal: 16,
   },
   commentsList: {
-    flex: 1,
+    maxHeight: '60%',
   },
-  commentContainer: {
+  commentItem: {
     flexDirection: 'row',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-    gap: 12,
+    gap: 8,
+    marginBottom: 16,
   },
   commentContent: {
     flex: 1,
   },
   commentHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 4,
   },
   authorName: {
-    fontWeight: '600',
     fontSize: 14,
+    fontWeight: '600',
+    color: colors.text,
   },
   timestamp: {
     fontSize: 12,
-    color: '#64748b',
+    color: colors.textMuted,
   },
   commentText: {
     fontSize: 14,
-    lineHeight: 20,
+    color: colors.text,
+    marginTop: 4,
   },
-  commentActions: {
-    flexDirection: 'row',
-    gap: 16,
-    marginTop: 8,
-  },
-  actionText: {
+  likesCount: {
     fontSize: 12,
-    color: '#64748b',
+    color: colors.textMuted,
+    marginTop: 4,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  inputWrapper: {
+    flex: 1,
+    position: 'relative',
+  },
+  input: {
+    backgroundColor: colors.backgroundLight,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    paddingRight: 80,
+    fontSize: 14,
+    color: colors.text,
+    minHeight: 40,
+  },
+  inputActions: {
+    position: 'absolute',
+    right: 12,
+    top: '50%',
+    transform: [{ translateY: -10 }],
+    flexDirection: 'row',
+    gap: 8,
   },
 });

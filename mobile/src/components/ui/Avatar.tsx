@@ -1,49 +1,30 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { Image, View, StyleSheet } from 'react-native';
+import { colors } from '../../styles/theme';
 
 interface AvatarProps {
-  source?: string;
-  fallback?: string;
+  source: { uri: string };
   size?: number;
 }
 
-export function Avatar({ source, fallback, size = 40 }: AvatarProps) {
-  const styles = StyleSheet.create({
-    container: {
-      width: size,
-      height: size,
-      borderRadius: size / 2,
-      backgroundColor: '#e2e8f0',
-      overflow: 'hidden',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    image: {
-      width: size,
-      height: size,
-    },
-    fallback: {
-      fontSize: size / 2,
-      color: '#64748b',
-      fontWeight: '600',
-    },
-  });
-
-  if (source) {
-    return (
-      <View style={styles.container}>
-        <Image
-          source={{ uri: source }}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      </View>
-    );
-  }
-
+export function Avatar({ source, size = 40 }: AvatarProps) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.fallback}>{fallback}</Text>
+    <View style={[styles.container, { width: size, height: size }]}>
+      <Image
+        source={source}
+        style={[styles.image, { width: size, height: size }]}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 9999,
+    overflow: 'hidden',
+    backgroundColor: colors.border,
+  },
+  image: {
+    borderRadius: 9999,
+  },
+});

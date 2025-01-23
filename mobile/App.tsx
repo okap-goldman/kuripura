@@ -3,8 +3,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { HomeScreen } from './src/screens/HomeScreen';
+import { ShopScreen } from './src/screens/ShopScreen';
+import { Header } from './src/components/Header';
+import { RootStackParamList } from './src/types/navigation';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
@@ -15,11 +18,14 @@ export default function App() {
           name="Home"
           component={HomeScreen}
           options={{
-            title: 'ホーム',
-            headerStyle: {
-              backgroundColor: '#fff',
-            },
-            headerShadowVisible: false,
+            header: () => <Header />,
+          }}
+        />
+        <Stack.Screen
+          name="Shop"
+          component={ShopScreen}
+          options={{
+            header: () => <Header />,
           }}
         />
       </Stack.Navigator>

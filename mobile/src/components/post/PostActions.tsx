@@ -1,97 +1,94 @@
-import React, { memo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { colors } from '../../styles/theme';
+import { Dialog } from '../ui/dialog';
 
 interface PostActionsProps {
   postId: string;
-  isLiked?: boolean;
-  onLike?: () => void;
-  onComment?: () => void;
-  onShare?: () => void;
-  onSave?: () => void;
-  testID?: string;
+  onComment: () => void;
 }
 
-export const PostActions = memo(function PostActions({
-  postId,
-  isLiked = false,
-  onLike,
-  onComment,
-  onShare,
-  onSave,
-  testID,
-}: PostActionsProps) {
+export function PostActions({ postId, onComment }: PostActionsProps) {
+  const [liked, setLiked] = useState(false);
+  const [kuratta, setKuratta] = useState(false);
+  const [showKurattaDialog, setShowKurattaDialog] = useState(false);
+
   return (
-    <View style={styles.container} testID={testID}>
+    <View style={styles.container}>
       <TouchableOpacity
-        style={[styles.actionButton, isLiked && styles.actionButtonActive]}
-        onPress={onLike}
-        testID={isLiked ? `${testID}-like-button-active` : `${testID}-like-button`}
-        accessibilityLabel={isLiked ? 'いいねを取り消す' : 'いいねする'}
-        accessibilityRole="button"
+        style={styles.button}
+        onPress={() => setLiked(!liked)}
       >
-        <Text>{isLiked ? '❤️' : '🤍'}</Text>
-        <Text style={[styles.actionText, isLiked && styles.actionTextActive]}>
-          いいね
-        </Text>
+        <Feather
+          name="heart"
+          size={20}
+          color={liked ? colors.error : colors.textMuted}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.actionButton}
+        style={styles.button}
         onPress={onComment}
-        testID={`${testID}-comment-button`}
-        accessibilityLabel="コメントを追加"
-        accessibilityRole="button"
       >
-        <Text>💭</Text>
-        <Text style={styles.actionText}>コメント</Text>
+        <Feather
+          name="message-square"
+          size={20}
+          color={colors.textMuted}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.actionButton}
-        onPress={onShare}
-        testID={`${testID}-share-button`}
-        accessibilityLabel="投稿をシェア"
-        accessibilityRole="button"
+        style={styles.button}
+        onPress={() => !kuratta && setShowKurattaDialog(true)}
+        disabled={kuratta}
       >
-        <Text>🔄</Text>
-        <Text style={styles.actionText}>シェア</Text>
+        <Feather
+          name="flame"
+          size={20}
+          color={kuratta ? colors.warning : colors.textMuted}
+        />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.actionButton}
-        onPress={onSave}
-        testID={`${testID}-save-button`}
-        accessibilityLabel="投稿を保存"
-        accessibilityRole="button"
-      >
-        <Text>🔖</Text>
-        <Text style={styles.actionText}>保存</Text>
-      </TouchableOpacity>
+      <Dialog
+        visible={showKurattaDialog}
+        onDismiss={() => setShowKurattaDialog(false)}
+        title="どんなことが魂に響きましたか？"
+        actions={[
+          {
+            label: '心に響いた',
+            onPress: () => {
+              setKuratta(true);
+              setShowKurattaDialog(false);
+            },
+          },
+          {
+            label: '共感した',
+            onPress: () => {
+              setKuratta(true);
+              setShowKurattaDialog(false);
+            },
+          },
+          {
+            label: '感動した',
+            onPress: () => {
+              setKuratta(true);
+              setShowKurattaDialog(false);
+            },
+          },
+        ]}
+      />
     </View>
   );
-});
+}
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 8,
-  },
-  actionButton: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 16,
+  },
+  button: {
     padding: 8,
-    borderRadius: 8,
-  },
-  actionButtonActive: {
-    backgroundColor: '#fee2e2',
-  },
-  actionText: {
-    fontSize: 14,
-    color: '#64748b',
-  },
-  actionTextActive: {
-    color: '#ef4444',
   },
 });
