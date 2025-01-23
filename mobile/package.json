@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "main": "index.ts",
+  "packageManager": "pnpm@8.15.4",
   "scripts": {
     "start": "npx expo start",
     "dev": "npx expo start --dev-client",

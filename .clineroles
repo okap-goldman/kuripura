@@ -104,8 +104,7 @@
 
 ## コア技術
 - TypeScript: ^5.5.3
-- Node.js: ^20.0.0  
-- **AIモデル: Claude-3-Sonnet-20241022 (Anthropic Messages API 2023-06-01) ← バージョン変更禁止**
+- Node.js: ^20.0.0
 
 ## バックエンド
 - Nest.js: ^10.0.0
@@ -115,6 +114,8 @@
 - @nestjs/typeorm: ^10.0.2
 - TypeORM: ^0.3.20
 - PostgreSQL (pg): ^8.11.3
+- Firebase Cloud Messaging (FCM)
+- DeepSeek R1 API
 
 ## モバイル
 - React Native: 0.73.4
@@ -122,9 +123,20 @@
 - @react-navigation/native: ^6.1.18
 - @react-navigation/native-stack: ^6.11.0
 - @tanstack/react-query: ^5.56.2
+- expo-av: ~13.10.6
+- expo-status-bar: ~1.11.1
+- zod: ^3.23.8
+
+## 外部サービス連携
+- Supabase (PostgreSQL)
+- Box API (画像/GIF保存)
+- YouTube API (動画保存)
+- PodBean API (音声保存)
+- Stripe API (決済)
+- Google OAuth (認証)
 
 ## 開発ツール
-- npm: ^10.0.0
+- pnpm: ^8.15.4
 - ESLint: ^8.42.0
 - TypeScript: ^5.5.3
 - Jest: ^29.7.0
@@ -157,11 +169,18 @@ mobile/                           # モバイルアプリケーション
 ├── src/
 │   ├── components/              # アプリケーションコンポーネント
 │   │   ├── ui/                 # 基本UI（button, card等）
-│   │   └── layout/             # レイアウト関連
+│   │   ├── layout/             # レイアウト関連
+│   │   └── profile/            # プロフィール関連
 │   ├── hooks/                  # カスタムフック
 │   ├── lib/                    # ユーティリティ
 │   │   └── utils/             # 共通関数
 │   ├── screens/               # 画面コンポーネント
+│   │   ├── auth/             # 認証関連画面
+│   │   ├── home/             # ホーム画面
+│   │   ├── profile/          # プロフィール画面
+│   │   ├── discovery/        # 発見画面
+│   │   └── event/            # イベント関連画面
+│   ├── types/                # 型定義
 │   └── styles/               # スタイル定義
 └── App.tsx                    # エントリーポイント
 
@@ -170,7 +189,13 @@ server/                        # バックエンドサーバー
 │   ├── auth/                 # 認証関連
 │   ├── config/              # 設定関連
 │   ├── users/              # ユーザー関連
-│   └── main.ts             # エントリーポイント
+│   ├── posts/              # 投稿関連
+│   ├── events/             # イベント関連
+│   ├── shop/              # ショップ関連
+│   ├── ai/                # AI連携関連
+│   ├── notifications/     # 通知関連
+│   ├── app.module.ts      # アプリケーションモジュール
+│   └── main.ts            # エントリーポイント
 
 packages/                    # 共通パッケージ
 ├── shared/                 # 共通ライブラリ
@@ -189,6 +214,25 @@ packages/                    # 共通パッケージ
 - 共通処理 → `packages/shared/src/`
 - API関連処理 → `packages/shared/src/api/`
 - バックエンド処理 → `server/src/`
+
+### 重要な制約事項
+- APIクライアントは `packages/shared/src/api/client.ts` で一元管理
+- AI モデルのバージョンは client.ts 内で厳密に管理
+- これらのファイルは変更禁止（変更が必要な場合は承認が必要）：
+  - client.ts  - AIモデルとAPI設定の中核
+  - types.ts   - 型定義の一元管理
+  - config.ts  - 環境設定の一元管理
+
+### 実装規則
+- AIモデルのバージョンは client.ts でのみ定義
+- 型定義は必ず types.ts を参照
+- 環境変数の利用は config.ts 経由のみ許可
+- プッシュ通知はFCMを使用
+- 外部ストレージは用途に応じて適切なサービスを使用：
+  - 画像/GIF → Box
+  - 動画 → YouTube
+  - 音声 → PodBean
+  - テキスト → Supabase DB
 
 ---
 
