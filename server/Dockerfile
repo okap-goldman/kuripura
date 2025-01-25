@@ -35,5 +35,8 @@ COPY server/nest-cli.json ./server/
 
 WORKDIR /app/server
 
+# ビルドコマンドを追加
+RUN yarn build
+
 # 開発環境用のコマンドを設定
-CMD ["yarn", "start:dev"]
+CMD ["sh", "-c", "yarn build && yarn start:dev"]
