@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,6 +10,7 @@ import { User } from './entities/user.entity';
 import {
   RegisterCredentials,
   UpdateUserProfileRequest,
+  FileUploadResponse,
 } from '@kuripura/shared';
 
 @Injectable()
@@ -16,7 +18,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-  ) {}
+    private readonly boxService: BoxService,
+  ) { }
 
   async create(credentials: RegisterCredentials): Promise<User> {
     const existingUser = await this.findByEmail(credentials.email);
@@ -52,6 +55,27 @@ export class UsersService {
     const user = await this.findOne(id);
     Object.assign(user, updateData);
     return this.usersRepository.save(user);
+  }
+
+  async uploadProfileImage(
+    userId: string,
+    file: Express.Multer.File,
+  ): Promise<FileUploadResponse> {
+    if (!file) {
+      throw new BadRequestException('画像ファイルが必要です');
+    }
+
+    const user = await this.findOne(userId);
+    
+    const imageUrl = await this.boxService.uploadProfileImage(
+      file.buffer,
+      `profile-${userId}-${Date.now()}.jpg`,
+    );
+
+    user.avatar = imageUrl;
+    await this.usersRepository.save(user);
+
+    return { url: imageUrl };
   }
 
   async updateRefreshToken(

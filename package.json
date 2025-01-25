@@ -1,0 +1,14 @@
+{
+  "name": "kuripura",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev:mobile": "pnpm --filter @kuripura/mobile dev",
+    "dev:server": "pnpm --filter @kuripura/server start:dev"
+  },
+  "workspaces": [
+    "packages/*",
+    "server",
+    "mobile"
+  ]
+}

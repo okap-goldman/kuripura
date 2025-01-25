@@ -5,8 +5,12 @@ import {
   Delete,
   Body,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  Post,
   Request,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateUserProfileRequest } from '@kuripura/shared';
@@ -27,6 +31,15 @@ export class UsersController {
     @Body() updateData: UpdateUserProfileRequest,
   ) {
     return this.usersService.updateProfile(req.user.id, updateData);
+  }
+
+  @Post('profile/avatar')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadAvatar(
+    @Request() req,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.usersService.uploadProfileImage(req.user.id, file);
   }
 
   @Delete('profile')
