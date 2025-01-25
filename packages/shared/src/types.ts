@@ -10,6 +10,15 @@ export interface UpdateUserProfileRequest {
   bio?: string;
 }
 
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
 // レスポンス型
 export interface FileUploadResponse {
   url: string;

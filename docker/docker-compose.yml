@@ -1,0 +1,61 @@
+services:
+  # バックエンドサーバー
+  api:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ../server/.env.development
+    volumes:
+      - ../server:/app/server
+      - ../packages:/app/packages
+      - api_node_modules:/app/server/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    command: nest start --watch
+
+  # データベース
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env.docker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Expo開発サーバー
+  mobile:
+    build:
+      context: ..
+      dockerfile: mobile/Dockerfile
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    env_file:
+      - ../mobile/.env.development
+    volumes:
+      - ../mobile:/app/mobile
+      - ../packages:/app/packages
+      - mobile_node_modules:/app/mobile/node_modules
+    depends_on:
+      - api
+    command: pnpm start
+
+volumes:
+  postgres_data:
+  api_node_modules:
+  mobile_node_modules:

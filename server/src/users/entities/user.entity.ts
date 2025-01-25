@@ -6,9 +6,11 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
+  OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
+import { Post } from '../../posts/entities/post.entity';
 
 @Entity('users')
 export class User {
@@ -43,6 +45,9 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Post, post => post.author)
+  posts: Post[];
 
   private tempPassword: string | null = null;
 
