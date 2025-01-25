@@ -16,6 +16,15 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "lib": ["ES2021", "dom"],
+    "moduleResolution": "node",
+    "types": ["node", "multer"],
+    "paths": {
+      "@kuripura/shared": ["../packages/shared/src"],
+      "@kuripura/shared/*": ["../packages/shared/src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

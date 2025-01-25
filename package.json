@@ -3,8 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev:mobile": "pnpm --filter @kuripura/mobile dev",
-    "dev:server": "pnpm --filter @kuripura/server start:dev",
+    "build": "yarn workspaces foreach -pt run build",
+    "dev:mobile": "yarn workspace @kuripura/mobile dev",
+    "dev:server": "yarn workspace @kuripura/server start:dev",
     "docker:up": "docker-compose -f docker/compose/docker-compose.yml up",
     "docker:down": "docker-compose -f docker/compose/docker-compose.yml down",
     "docker:build": "docker-compose -f docker/compose/docker-compose.yml build"

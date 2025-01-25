@@ -136,7 +136,7 @@
 - Google OAuth (認証)
 
 ## 開発ツール
-- pnpm: ^8.15.4
+- yarn: ^4.5.1
 - ESLint: ^8.42.0
 - TypeScript: ^5.5.3
 - Jest: ^29.7.0
