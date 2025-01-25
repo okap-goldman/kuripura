@@ -4,7 +4,7 @@ import { colors } from '../../styles/theme';
 import { PostHeader } from './PostHeader';
 import { PostContent } from './PostContent';
 import { PostActions } from './PostActions';
-import { Dialog } from '../ui/dialog';
+import { Dialog } from '../ui/Dialog';
 import { PostComments } from './PostComments';
 
 interface PostProps {

@@ -12,7 +12,7 @@ import {
   UpdateUserProfileRequest,
   FileUploadResponse,
 } from '@kuripura/shared';
-import { BoxService } from '../box/box.service';
+import { BoxService } from './services/box.service';
 
 @Injectable()
 export class UsersService {
@@ -68,7 +68,7 @@ export class UsersService {
 
     const user = await this.findOne(userId);
     
-    const imageUrl = await this.boxService.uploadFile(
+    const imageUrl = await this.boxService.uploadProfileImage(
       file.buffer,
       `profile-${userId}-${Date.now()}.${file.originalname.split('.').pop()}`,
     );

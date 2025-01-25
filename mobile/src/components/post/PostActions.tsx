@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { colors } from '../../styles/theme';
-import { Dialog } from '../ui/dialog';
+import { Dialog } from '../ui/Dialog';
 
 interface PostActionsProps {
   postId: string;
