@@ -34,3 +34,5 @@ docker/compose/.env.docker
 .env.production
 !.env.example
 !docker/compose/.env.docker.example
+
+.yarn
