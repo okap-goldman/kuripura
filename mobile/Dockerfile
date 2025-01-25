@@ -7,21 +7,25 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# pnpmのインストール
-RUN corepack enable && corepack prepare pnpm@8.15.4 --activate
+# yarnの有効化とインストール
+RUN corepack enable && corepack prepare yarn@4.5.1 --activate
+RUN yarn set version 4.5.1
+
+# ルートのワークスペース設定ファイルのコピー
+COPY package.json .
+COPY .yarnrc.yml .
 
 # ワークスペース設定ファイルのコピー
-COPY package.json pnpm-workspace.yaml ./
 COPY packages/shared/package.json ./packages/shared/
 COPY packages/shared/src ./packages/shared/src
 COPY packages/shared/tsconfig.json ./packages/shared/
 COPY mobile/package.json ./mobile/
 
 # 依存関係のインストール
-RUN pnpm install
+RUN yarn install
 
 # Expoのインストール (ワークスペースルートに追加)
-RUN pnpm add -w expo
+RUN yarn workspace @kuripura/mobile add expo
 
 WORKDIR /app/mobile
 
@@ -30,4 +34,4 @@ EXPOSE 19000
 EXPOSE 19001
 EXPOSE 19002
 
-CMD ["pnpm", "start"]
+CMD ["yarn", "start"]
