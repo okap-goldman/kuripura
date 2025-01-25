@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Audio } from 'expo-av';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../../styles/theme';
 import { Avatar } from '../../components/ui/avatar';
+import { useProfileImage } from '../../hooks/use-profile-image';
 
 interface ProfileHeaderProps {
   isPlaying: boolean;
@@ -15,6 +16,7 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
   const navigation = useNavigation();
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const { pickImage, isLoading, error } = useProfileImage();
 
   const toggleAudio = async () => {
     if (!sound) {
@@ -52,10 +54,19 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
           />
         </TouchableOpacity>
 
-        <Avatar
-          source={{ uri: 'https://api.dicebear.com/7.x/avataaars/svg?seed=1' }}
-          size={96}
-        />
+        <TouchableOpacity
+          onPress={pickImage}
+          disabled={isLoading}
+          style={styles.avatarContainer}
+        >
+          <Avatar
+            source={{ uri: 'https://api.dicebear.com/7.x/avataaars/svg?seed=1' }}
+            size={96}
+          />
+          {isLoading && (
+            <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
+          )}
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.iconButton}
@@ -73,6 +84,9 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
           地球での使命：人々の心に光を灯し、内なる平安への道を示すこと
         </Text>
       </View>
+      {error && (
+        <Text style={styles.errorText}>{error}</Text>
+      )}
 
       <View style={styles.stats}>
         <View style={styles.statItem}>
@@ -115,6 +129,21 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  avatarContainer: {
+    position: 'relative',
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+  },
+  loader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 48,
   },
   info: {
     alignItems: 'center',
@@ -160,5 +189,11 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 12,
     color: colors.textMuted,
+  },
+  errorText: {
+    color: colors.error,
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 8,
   },
 }); 
