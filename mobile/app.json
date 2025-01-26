@@ -3,7 +3,7 @@
     "name": "mobile",
     "slug": "mobile",
     "extra": {
-      "apiUrl": "http://localhost:3000"
+      "apiUrl": "http://localhost:4000/api"
     },
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kuripura.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"

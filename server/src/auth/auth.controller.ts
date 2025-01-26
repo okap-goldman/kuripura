@@ -16,7 +16,7 @@ import {
   LoginCredentials,
   RegisterCredentials,
   RefreshTokenRequest,
-} from '@kuripura/shared';
+} from '@kuripura/shared/src/types/auth';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)

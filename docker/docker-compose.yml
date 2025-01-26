@@ -1,0 +1,77 @@
+services:
+  # バックエンドサーバー
+  api:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    ports:
+      - "4000:4000"
+    env_file:
+      - ../server/.env.development
+    volumes:
+      - ../server:/app/server
+      - ../packages:/app/packages
+      - ../package.json:/app/package.json
+      - ../.yarnrc.yml:/app/.yarnrc.yml
+      - api_node_modules:/app/server/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "yarn build && node /app/server/dist/main.js"
+    restart: always
+
+  # データベース
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env.docker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: always
+
+  # Expo開発サーバー
+  mobile:
+    build:
+      context: ..
+      dockerfile: mobile/Dockerfile
+    ports:
+      - "19000:19000"  # Expo開発サーバー
+      - "19001:19001"  # Metro bundler
+      - "19002:19002"  # Expo DevTools
+      - "19006:19006"  # Web mode
+    env_file:
+      - ../mobile/.env.development
+    environment:
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - REACT_NATIVE_PACKAGER_HOSTNAME=localhost
+      - EXPO_DEBUG=true
+      - NODE_ENV=development
+      - CI=false
+    volumes:
+      - ../mobile:/app/mobile
+      - ../packages:/app/packages
+      - ../package.json:/app/package.json
+      - ../.yarnrc.yml:/app/.yarnrc.yml
+      - /app/mobile/node_modules
+      - ../yarn.lock:/app/yarn.lock:cached
+    depends_on:
+      - api
+    command: yarn expo start --web --host lan
+    restart: always
+
+volumes:
+  postgres_data:
+  api_node_modules:
+  mobile_node_modules:

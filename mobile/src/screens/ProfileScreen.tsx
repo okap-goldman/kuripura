@@ -8,6 +8,7 @@ import { ProfileTabs } from '../components/profile/ProfileTabs';
 export const ProfileScreen = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedTab, setSelectedTab] = useState('media');
+  const [selectedPost, setSelectedPost] = useState(null);
   const navigation = useNavigation();
 
   const handlePlayVoice = () => {
@@ -21,12 +22,10 @@ export const ProfileScreen = () => {
         <ProfileHeader
           isPlaying={isPlaying}
           handlePlayVoice={handlePlayVoice}
-          selectedTab={selectedTab}
-          setSelectedTab={setSelectedTab}
         />
         <ProfileTabs
           selectedTab={selectedTab}
-          onTabChange={setSelectedTab}
+          setSelectedPost={setSelectedPost}
         />
       </ScrollView>
     </SafeAreaView>

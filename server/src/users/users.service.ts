@@ -12,6 +12,7 @@ import {
   UpdateUserProfileRequest,
   FileUploadResponse,
 } from '@kuripura/shared';
+import { BoxService } from './services/box.service';
 
 @Injectable()
 export class UsersService {
@@ -69,7 +70,7 @@ export class UsersService {
     
     const imageUrl = await this.boxService.uploadProfileImage(
       file.buffer,
-      `profile-${userId}-${Date.now()}.jpg`,
+      `profile-${userId}-${Date.now()}.${file.originalname.split('.').pop()}`,
     );
 
     user.avatar = imageUrl;

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { colors } from '../../styles/theme';
-import { Dialog } from '../ui/dialog';
+import { Dialog } from '../ui/Dialog';
 
 interface Event {
   title: string;

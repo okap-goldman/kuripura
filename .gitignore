@@ -25,3 +25,14 @@ dist-ssr
 
 .cache
 _backup
+
+# Environment variables
+.env
+docker/compose/.env.docker
+.env.development
+.env.test
+.env.production
+!.env.example
+!docker/compose/.env.docker.example
+
+.yarn

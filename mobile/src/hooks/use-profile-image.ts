@@ -9,7 +9,7 @@ interface UseProfileImageReturn {
   isLoading: boolean;
   error: string | null;
 }
-const API_URL = Constants.expoConfig?.extra?.apiUrl || 'http://localhost:3000';
+const API_URL = Constants.expoConfig?.extra?.apiUrl;
 
 export const useProfileImage = (): UseProfileImageReturn => {
   const [isLoading, setIsLoading] = useState(false);

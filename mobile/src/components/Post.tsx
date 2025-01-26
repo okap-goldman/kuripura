@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { colors } from '../styles/theme';
-import { Avatar } from '../components/ui/avatar';
+import { Avatar } from './ui/Avatar';
 
 interface PostProps {
   author: {
