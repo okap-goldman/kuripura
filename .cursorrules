@@ -222,6 +222,7 @@ packages/                    # 共通パッケージ
   - client.ts  - AIモデルとAPI設定の中核
   - types.ts   - 型定義の一元管理
   - config.ts  - 環境設定の一元管理
+- Docker関連のファイルは docker/ ディレクトリに配置
 
 ### 実装規則
 - AIモデルのバージョンは client.ts でのみ定義

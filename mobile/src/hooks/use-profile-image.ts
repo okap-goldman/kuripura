@@ -3,22 +3,30 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { useState } from 'react';
 import Constants from 'expo-constants';
 import { FileUploadResponse } from '@kuripura/shared';
+import { useAuth } from './use-auth';
 
 interface UseProfileImageReturn {
   pickImage: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
 }
+
 const API_URL = Constants.expoConfig?.extra?.apiUrl;
 
-export const useProfileImage = (): UseProfileImageReturn => {
+export function useProfileImage(): UseProfileImageReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { getAuthHeader, isAuthenticated } = useAuth();
 
   const pickImage = async () => {
     try {
       setIsLoading(true);
       setError(null);
+
+      if (!isAuthenticated) {
+        setError('認証が必要です');
+        return;
+      }
 
       // 権限の確認
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -52,19 +60,23 @@ export const useProfileImage = (): UseProfileImageReturn => {
         } as any);
 
         // サーバーにアップロード
+        const headers: HeadersInit = {
+          'Accept': 'application/json',
+          ...getAuthHeader(),
+        };
+
         const response = await fetch(`${API_URL}/users/profile/avatar`, {
           method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
-          },
+          headers,
           body: formData,
         });
 
         if (!response.ok) {
           throw new Error('画像のアップロードに失敗しました');
         }
+
         const data: FileUploadResponse = await response.json();
+        console.log('アップロード成功:', data);
       }
     } catch (err) {
       setError('画像の処理中にエラーが発生しました');
@@ -79,4 +91,4 @@ export const useProfileImage = (): UseProfileImageReturn => {
     isLoading,
     error,
   };
-};
+}

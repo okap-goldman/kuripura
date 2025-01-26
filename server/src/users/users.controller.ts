@@ -9,6 +9,7 @@ import {
   UploadedFile,
   Post,
   Request,
+  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
@@ -39,6 +40,9 @@ export class UsersController {
     @Request() req,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    if (!file) {
+      throw new BadRequestException('画像ファイルが必要です');
+    }
     return this.usersService.uploadProfileImage(req.user.id, file);
   }
 

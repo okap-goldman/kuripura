@@ -19,7 +19,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private readonly boxService: BoxService,
+    private readonly wasabiService: BoxService,
   ) { }
 
   async create(credentials: RegisterCredentials): Promise<User> {
@@ -68,7 +68,7 @@ export class UsersService {
 
     const user = await this.findOne(userId);
     
-    const imageUrl = await this.boxService.uploadProfileImage(
+    const imageUrl = await this.wasabiService.uploadProfileImage(
       file.buffer,
       `profile-${userId}-${Date.now()}.${file.originalname.split('.').pop()}`,
     );

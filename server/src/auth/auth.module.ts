@@ -15,7 +15,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     UsersModule,
     PassportModule,
     JwtModule.registerAsync({
-      imports: [ConfigModule],
+      imports: [],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         // JWT_SECRET が undefined になると認証失敗する

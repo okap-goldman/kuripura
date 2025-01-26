@@ -1,0 +1,24 @@
+map-dependencies.txt
+■ 主要依存関係マップ
+├─ 認証サービス
+│  ├─ JWTトークン生成（@nestjs/jwt）
+│  ├─ パスワードハッシュ（bcrypt）
+│  └─ リフレッシュトークン管理（PostgreSQL）
+├─ メディア管理
+│  ├─ Box API（画像/GIF）
+│  ├─ YouTube Data API（動画）
+│  └─ PodBean API（音声）
+├─ 通知システム
+│  ├─ Firebase Cloud Messaging
+│  └─ WebSocket接続管理
+└─ 決済処理
+   ├─ Stripe API
+   └─ サブスクリプション管理（PostgreSQL）
+
+■ 外部サービスSLA
+  Service   | 可用性 | レートリミット
+------------|-------|-------------
+  Box API   | 99.9% | 1000 req/min
+  YouTube   | 99.9% | 10,000/day 
+  FCM       | 99.95%| 無制限     
+  Stripe    | 99.9% | 100 req/sec

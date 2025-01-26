@@ -1,60 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import BoxSDK = require('box-node-sdk');
 import { ConfigService } from '@nestjs/config';
+import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class BoxService {
-  private sdk: BoxSDK;
-  private client: any;
+  private s3: AWS.S3;
+  private bucketName: string;
 
   constructor(private configService: ConfigService) {
-    const clientId = this.configService.get('BOX_CLIENT_ID');
-    const clientSecret = this.configService.get('BOX_CLIENT_SECRET');
-    const publicKeyId = this.configService.get('BOX_PUBLIC_KEY_ID');
-    const privateKey = this.configService.get('BOX_PRIVATE_KEY');
-    const passphrase = this.configService.get('BOX_PASSPHRASE');
+    const accessKeyId = this.configService.get('WASABI_ACCESS_KEY_ID');
+    const secretAccessKey = this.configService.get('WASABI_SECRET_ACCESS_KEY');
+    const region = this.configService.get('WASABI_REGION');
+    this.bucketName = this.configService.get('WASABI_BUCKET_NAME') || 'kuripura-dev';
+    const endpoint = this.configService.get('WASABI_ENDPOINT');
 
-    if (!clientId || !clientSecret || !publicKeyId || !privateKey || !passphrase) {
-      throw new Error('Box API credentials are not properly configured');
+    if (!accessKeyId || !secretAccessKey || !region || !endpoint) {
+      throw new Error('Wasabi API credentials are not properly configured');
     }
 
-    this.sdk = new BoxSDK({
-      clientID: clientId,
-      clientSecret: clientSecret,
-      appAuth: {
-        keyID: publicKeyId,
-        privateKey: privateKey,
-        passphrase: passphrase,
-      },
-      "enterpriseID": "0"
+    this.s3 = new AWS.S3({
+      accessKeyId: accessKeyId,
+      secretAccessKey: secretAccessKey,
+      region: region,
+      endpoint: endpoint,
+      signatureVersion: 'v4',
     });
-
-    this.client = this.sdk.getAppAuthClient('enterprise');
   }
 
   async uploadProfileImage(fileBuffer: Buffer, fileName: string): Promise<string> {
     try {
-      const folderId = this.configService.get('BOX_PROFILE_IMAGES_FOLDER_ID');
-      if (!folderId) {
-        throw new Error('BOX_PROFILE_IMAGES_FOLDER_ID is not configured');
-      }
+      const params = {
+        Bucket: this.bucketName,
+        Key: `profile-images/${fileName}`,
+        Body: fileBuffer,
+        ACL: 'public-read',
+      };
 
-      // Box APIを使用してファイルをアップロード
-      const uploadedFile = await this.client.files.uploadFile(folderId, fileName, fileBuffer);
-
-      // 共有リンクを作成
-      const sharedLink = await this.client.files.update(uploadedFile.id, {
-        shared_link: {
-          access: 'open',
-          permissions: {
-            can_download: true,
-          },
-        },
-      });
-
-      return sharedLink.shared_link.url;
+      const uploaded = await this.s3.upload(params).promise();
+      return uploaded.Location;
     } catch (error) {
-      console.error('Box API error:', error);
+      console.error('Wasabi S3 error:', error);
       throw new Error('プロフィール画像のアップロードに失敗しました');
     }
   }

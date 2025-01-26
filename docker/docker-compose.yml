@@ -4,6 +4,8 @@ services:
     build:
       context: ..
       dockerfile: server/Dockerfile
+      args:
+        - NODE_ENV=development
     ports:
       - "4000:4000"
     env_file:
@@ -11,13 +13,12 @@ services:
     volumes:
       - ../server:/app/server
       - ../packages:/app/packages
-      - ../package.json:/app/package.json
-      - ../.yarnrc.yml:/app/.yarnrc.yml
-      - api_node_modules:/app/server/node_modules
+      - /app/server/node_modules
+      - /app/packages/shared/node_modules
     depends_on:
       db:
         condition: service_healthy
-    command: sh -c "yarn build && node /app/server/dist/main.js"
+    command: yarn start:dev
     restart: always
 
   # データベース
@@ -46,32 +47,27 @@ services:
     build:
       context: ..
       dockerfile: mobile/Dockerfile
+      args:
+        - NODE_ENV=development
     ports:
-      - "19000:19000"  # Expo開発サーバー
-      - "19001:19001"  # Metro bundler
-      - "19002:19002"  # Expo DevTools
-      - "19006:19006"  # Web mode
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+      - "19006:19006"
     env_file:
       - ../mobile/.env.development
     environment:
       - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
       - REACT_NATIVE_PACKAGER_HOSTNAME=localhost
-      - EXPO_DEBUG=true
-      - NODE_ENV=development
-      - CI=false
     volumes:
       - ../mobile:/app/mobile
       - ../packages:/app/packages
-      - ../package.json:/app/package.json
-      - ../.yarnrc.yml:/app/.yarnrc.yml
       - /app/mobile/node_modules
-      - ../yarn.lock:/app/yarn.lock:cached
+      - /app/packages/shared/node_modules
     depends_on:
       - api
-    command: yarn expo start --web --host lan
+    command: yarn expo start --web
     restart: always
 
 volumes:
   postgres_data:
-  api_node_modules:
-  mobile_node_modules:

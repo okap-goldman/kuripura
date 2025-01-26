@@ -9,6 +9,7 @@ import databaseConfig from './config/database.config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['.env.development', '.env'],
       load: [databaseConfig],
     }),
     TypeOrmModule.forRootAsync({

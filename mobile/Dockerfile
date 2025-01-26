@@ -11,24 +11,19 @@ RUN apt-get update && apt-get install -y \
 RUN corepack enable && corepack prepare yarn@4.5.1 --activate
 RUN yarn set version 4.5.1
 
-# ルートのワークスペース設定ファイルのコピー
-COPY package.json .
-COPY .yarnrc.yml .
-
 # ワークスペース設定ファイルのコピー
+COPY package.json yarn.lock .yarnrc.yml ./
 COPY packages/shared/package.json ./packages/shared/
-COPY packages/shared/src ./packages/shared/src
-COPY packages/shared/tsconfig.json ./packages/shared/
 COPY mobile/package.json ./mobile/
 
-# 依存関係の完全インストール
-RUN yarn install --check-cache
+# 依存関係のインストール
+RUN yarn install
 
-# ワークスペース最適化
-RUN yarn workspaces focus @kuripura/mobile
-
-# Expoコアパッケージの明示的インストール
-RUN yarn add expo@^48.0.21 expo-dev-client@^3.0.4
+# ソースコードのコピー
+COPY packages/shared/src ./packages/shared/src
+COPY packages/shared/tsconfig.json ./packages/shared/
+COPY mobile/src ./mobile/src
+COPY mobile/tsconfig.json mobile/app.json ./mobile/
 
 WORKDIR /app/mobile
 
@@ -36,13 +31,10 @@ WORKDIR /app/mobile
 EXPOSE 19000
 EXPOSE 19001
 EXPOSE 19002
-EXPOSE 8081
+EXPOSE 19006
 
 # 環境変数の設定
 ENV EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
 ENV REACT_NATIVE_PACKAGER_HOSTNAME=localhost
-ENV EXPO_DEBUG=true
-ENV CI=1
-ENV NODE_ENV=development
 
-CMD ["yarn", "expo", "start", "--web", "--host", "localhost"]
+CMD ["yarn", "expo", "start", "--web"]

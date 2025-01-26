@@ -9,11 +9,13 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import databaseConfig from '../src/config/database.config';
 import { DataSource } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { createReadStream } from 'fs';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
   let accessToken: string;
+  let validToken: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -54,6 +56,12 @@ describe('AuthController (e2e)', () => {
 
     // テスト開始時にデータベースをクリーンアップ
     await dataSource.synchronize(true);
+
+    // テスト用のトークンを取得
+    const loginRes = await request(app)
+      .post('/auth/login')
+      .send({ email: 'test@example.com', password: 'TestPass123!' });
+    validToken = loginRes.body.token;
   });
 
   afterAll(async () => {
@@ -133,5 +141,23 @@ describe('AuthController (e2e)', () => {
         .get('/users/profile')
         .expect(401);
     });
+  });
+
+  test('POST /auth/register 異常系: 重複メールアドレス', async () => {
+    const res = await request(app)
+      .post('/auth/register')
+      .send({ email: 'existing@example.com', password: 'ValidPass123!' });
+    expect(res.statusCode).toEqual(409);
+    expect(res.body).toHaveProperty('code', 'DUPLICATE_EMAIL');
+  });
+
+  test('PATCH /users/profile/avatar 正常系: 画像アップロード', async () => {
+    const mockFile = createReadStream('test/fixtures/valid-avatar.png');
+    const res = await request(app)
+      .patch('/users/profile/avatar')
+      .set('Authorization', `Bearer ${validToken}`)
+      .attach('avatar', mockFile);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty('url');
   });
 });
