@@ -12,14 +12,14 @@ import {
   UpdateUserProfileRequest,
   FileUploadResponse,
 } from '@kuripura/shared';
-import { BoxService } from './services/box.service';
+import { WasabiService } from './services/box.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private readonly wasabiService: BoxService,
+    private readonly wasabiService: WasabiService,
   ) { }
 
   async create(credentials: RegisterCredentials): Promise<User> {

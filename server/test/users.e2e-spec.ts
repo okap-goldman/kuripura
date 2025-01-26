@@ -1,9 +1,13 @@
+/**
+ * ユーザー関連のエンドツーエンドテスト
+ * 主にプロフィール更新やアバター画像のアップロード機能をテスト
+ */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../src/users/users.service';
-import { BoxService } from '../src/users/services/box.service';
+import { WasabiService } from '../src/users/services/box.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../src/users/entities/user.entity';
 import { Post } from '../src/posts/entities/post.entity';
@@ -20,8 +24,9 @@ describe('Users Controller (e2e)', () => {
   let app: INestApplication;
   let jwtService: JwtService;
   let usersService: UsersService;
-  let boxService: BoxService;
+  let WasabiService: WasabiService;
 
+  // テスト用のモックユーザーデータ
   const mockUser = {
     id: '1',
     email: 'test@example.com',
@@ -29,18 +34,23 @@ describe('Users Controller (e2e)', () => {
     password: 'hashedPassword',
   };
 
+  // リポジトリのモック設定
   const mockRepository = {
     create: jest.fn(),
     save: jest.fn(),
     findOne: jest.fn(),
   };
 
+  // Box APIサービスのモック設定
+  // プロフィール画像のアップロードをシミュレート
   const mockBoxService = {
     uploadProfileImage: jest.fn().mockImplementation(async (fileBuffer: Buffer, fileName: string) => {
       return `https://example.com/avatar.jpg`;
     }),
   };
 
+  // ユーザーサービスのモック設定
+  // 各種ユーザー操作をシミュレート
   const mockUsersService = {
     findOne: jest.fn().mockResolvedValue(mockUser),
     updateProfile: jest.fn().mockResolvedValue(mockUser),
@@ -86,7 +96,7 @@ describe('Users Controller (e2e)', () => {
           useValue: mockRepository,
         },
         {
-          provide: BoxService,
+          provide: WasabiService,
           useValue: mockBoxService,
         },
         {
@@ -116,7 +126,7 @@ describe('Users Controller (e2e)', () => {
     app = moduleFixture.createNestApplication();
     jwtService = moduleFixture.get<JwtService>(JwtService);
     usersService = moduleFixture.get<UsersService>(UsersService);
-    boxService = moduleFixture.get<BoxService>(BoxService);
+    WasabiService = moduleFixture.get<WasabiService>(WasabiService);
 
     await app.init();
 
@@ -129,6 +139,11 @@ describe('Users Controller (e2e)', () => {
   });
 
   describe('/users/profile/avatar (POST)', () => {
+    /**
+     * プロフィール画像アップロードの正常系テスト
+     * - 認証済みユーザーが画像をアップロードできることを確認
+     * - アップロード後のURLが正しく返却されることを確認
+     */
     it('should upload avatar successfully', async () => {
       const token = jwtService.sign({ sub: mockUser.id, email: mockUser.email });
       const buffer = Buffer.from('fake image data');
@@ -145,6 +160,10 @@ describe('Users Controller (e2e)', () => {
       expect(mockUsersService.uploadProfileImage).toHaveBeenCalled();
     });
 
+    /**
+     * プロフィール画像アップロードの異常系テスト：ファイル未指定
+     * - 画像ファイルが添付されていない場合のエラー処理を確認
+     */
     it('should return 400 when no file is provided', async () => {
       const token = jwtService.sign({ sub: mockUser.id, email: mockUser.email });
 
@@ -156,6 +175,10 @@ describe('Users Controller (e2e)', () => {
       expect(response.body.message).toBe('画像ファイルが必要です');
     });
 
+    /**
+     * プロフィール画像アップロードの異常系テスト：未認証
+     * - 認証トークンなしでのアクセスが拒否されることを確認
+     */
     it('should return 403 when no token is provided', async () => {
       await request(app.getHttpServer())
         .post('/users/profile/avatar')

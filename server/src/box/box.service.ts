@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import BoxSDK from 'box-node-sdk';
 
 @Injectable()
-export class BoxService {
+export class WasabiService {
   private client: any;
 
   constructor() {

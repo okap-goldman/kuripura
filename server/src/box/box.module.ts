@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { BoxService } from './box.service';
+import { WasabiService } from './box.service';
 
 @Module({
-  providers: [BoxService],
-  exports: [BoxService],
+  providers: [WasabiService],
+  exports: [WasabiService],
 })
 export class BoxModule {} 

@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import { BoxService } from './services/box.service';
+import { WasabiService } from './services/box.service';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -12,7 +12,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, BoxService],
+  providers: [UsersService, WasabiService],
   exports: [UsersService],
 })
 export class UsersModule {}

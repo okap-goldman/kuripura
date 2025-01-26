@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
 
 @Injectable()
-export class BoxService {
+export class WasabiService {
   private s3: AWS.S3;
   private bucketName: string;
 
