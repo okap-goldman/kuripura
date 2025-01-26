@@ -40,5 +40,7 @@ COPY server/src ./src
 # ビルドコマンドを追加
 RUN yarn build
 
+EXPOSE 4000
+
 # 開発環境用のコマンドを設定
 CMD ["yarn", "start:dev"]

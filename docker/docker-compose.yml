@@ -5,7 +5,7 @@ services:
       context: ..
       dockerfile: server/Dockerfile
     ports:
-      - "4000:3000"
+      - "4000:4000"
     env_file:
       - ../server/.env.development
     volumes:
@@ -17,7 +17,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: sh -c "sleep 10 && yarn build && yarn start:dev"
+    command: sh -c "yarn build && node /app/server/dist/main.js"
     restart: always
 
   # データベース
