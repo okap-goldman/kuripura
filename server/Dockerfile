@@ -11,32 +11,34 @@ RUN apt-get update && apt-get install -y \
 RUN corepack enable && corepack prepare yarn@4.5.1 --activate
 RUN yarn set version 4.5.1
 
+# NestJSのCLIをグローバルにインストール
+RUN npm install -g @nestjs/cli
+
 # ルートのワークスペース設定ファイルのコピー
 COPY package.json .
 COPY .yarnrc.yml .
 
-# ワークスペース設定ファイルのコピー
+# 共有パッケージのコピーとビルド
 COPY packages/shared/package.json ./packages/shared/
 COPY packages/shared/src ./packages/shared/src
 COPY packages/shared/tsconfig.json ./packages/shared/
-COPY server/package.json ./server/
+WORKDIR /app/packages/shared
+RUN yarn install
+RUN yarn build
 
-# 依存関係のインストール
+# サーバーパッケージのコピーとビルド
+WORKDIR /app/server
+COPY server/package.json .
+COPY server/tsconfig.json .
+COPY server/tsconfig.build.json .
+COPY server/nest-cli.json .
 RUN yarn install
 
-# Nest CLIのインストール（dlxを使用）
-RUN yarn dlx @nestjs/cli
-
 # ソースコードのコピー
-COPY server/src ./server/src
-COPY server/tsconfig.json ./server/
-COPY server/tsconfig.build.json ./server/
-COPY server/nest-cli.json ./server/
-
-WORKDIR /app/server
+COPY server/src ./src
 
 # ビルドコマンドを追加
 RUN yarn build
 
 # 開発環境用のコマンドを設定
-CMD ["sh", "-c", "yarn build && yarn start:dev"]
+CMD ["yarn", "start:dev"]

@@ -17,7 +17,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: sh -c "yarn build && yarn start:dev"
+    command: sh -c "sleep 10 && yarn build && yarn start:dev"
+    restart: always
 
   # データベース
   db:
@@ -33,10 +34,12 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=app
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
+      interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
+    restart: always
 
   # Expo開発サーバー
   mobile:
