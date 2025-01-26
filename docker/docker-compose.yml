@@ -50,7 +50,7 @@ services:
       - "19000:19000"  # Expo開発サーバー
       - "19001:19001"  # Metro bundler
       - "19002:19002"  # Expo DevTools
-      - "8081:8081"    # Web mode
+      - "19006:19006"  # Web mode
     env_file:
       - ../mobile/.env.development
     environment:
@@ -58,7 +58,7 @@ services:
       - REACT_NATIVE_PACKAGER_HOSTNAME=localhost
       - EXPO_DEBUG=true
       - NODE_ENV=development
-      - CI=1
+      - CI=false
     volumes:
       - ../mobile:/app/mobile
       - ../packages:/app/packages
@@ -68,7 +68,7 @@ services:
       - ../yarn.lock:/app/yarn.lock:cached
     depends_on:
       - api
-    command: yarn expo start --web --host localhost
+    command: yarn expo start --web --host lan
     restart: always
 
 volumes:
