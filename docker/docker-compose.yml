@@ -50,6 +50,7 @@ services:
       - "19000:19000"
       - "19001:19001"
       - "19002:19002"
+      - "8081:8081"
     env_file:
       - ../mobile/.env.development
     volumes:
