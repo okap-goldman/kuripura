@@ -67,12 +67,12 @@ describe('AuthService', () => {
       expect(mockUsersService.findByEmail).toHaveBeenCalledWith(email);
     });
 
-    it('should return null if user is not found', async () => {
+    it('should throw UnauthorizedException if user is not found', async () => {
       mockUsersService.findByEmail.mockResolvedValue(null);
 
-      const result = await service.validateUser('test@example.com', 'password');
-
-      expect(result).toBeNull();
+      await expect(service.validateUser('test@example.com', 'password'))
+        .rejects
+        .toThrow(new UnauthorizedException('Invalid credentials - user not found'));
     });
   });
 

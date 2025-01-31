@@ -1,0 +1,62 @@
+<svg width="375" height="812" viewBox="0 0 375 812" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- 背景 -->
+  <rect x="0" y="0" width="375" height="812" fill="#ffffff" />
+
+  <!-- ヘッダー -->
+  <rect x="0" y="0" width="375" height="60" fill="#f0f0f0" />
+  <text x="16" y="35" font-size="18" fill="#333333" font-family="sans-serif">
+    KaNushi (ファミリー)
+  </text>
+  <!-- ウォッチ切り替えボタン -->
+  <rect x="300" y="15" width="60" height="30" rx="5" fill="#cccccc" />
+  <text x="310" y="35" font-size="14" fill="#333333" font-family="sans-serif">
+    ウォッチ
+  </text>
+
+  <!-- ストーリーズアイコン（丸が並んでいるイメージ） -->
+  <circle cx="35" cy="100" r="25" fill="#dddddd" />
+  <circle cx="95" cy="100" r="25" fill="#dddddd" />
+  <circle cx="155" cy="100" r="25" fill="#dddddd" />
+  <circle cx="215" cy="100" r="25" fill="#dddddd" />
+  <circle cx="275" cy="100" r="25" fill="#dddddd" />
+  <circle cx="335" cy="100" r="25" fill="#dddddd" />
+  <text x="25" y="105" font-size="10" fill="#555555" font-family="sans-serif">
+    Story
+  </text>
+
+  <!-- 投稿一覧（カード風）1つ目 -->
+  <rect x="16" y="150" width="343" height="120" rx="8" fill="#fafafa" stroke="#dddddd" />
+  <text x="26" y="170" font-size="14" fill="#333333" font-family="sans-serif">
+    ユーザーアイコン + ユーザー名
+  </text>
+  <text x="26" y="195" font-size="12" fill="#666666" font-family="sans-serif">
+    タイトル（テキスト投稿の場合）
+  </text>
+  <text x="26" y="215" font-size="12" fill="#666666" font-family="sans-serif">
+    ここに投稿の概要やサムネイルなど
+  </text>
+  <!-- いいね・コメント・ハイライトアイコン例 -->
+  <text x="26" y="245" font-size="12" fill="#999999" font-family="sans-serif">♡ 12</text>
+  <text x="70" y="245" font-size="12" fill="#999999" font-family="sans-serif">💬 5</text>
+  <text x="120" y="245" font-size="12" fill="#999999" font-family="sans-serif">🔥</text>
+
+  <!-- 投稿一覧（カード風）2つ目 -->
+  <rect x="16" y="280" width="343" height="120" rx="8" fill="#fafafa" stroke="#dddddd" />
+  <text x="26" y="300" font-size="14" fill="#333333" font-family="sans-serif">
+    ユーザーアイコン + ユーザー名
+  </text>
+  <text x="26" y="325" font-size="12" fill="#666666" font-family="sans-serif">
+    (画像投稿のサムネイル等)
+  </text>
+  <text x="26" y="355" font-size="12" fill="#666666" font-family="sans-serif">
+    いいね・コメント・ハイライトボタン
+  </text>
+
+  <!-- 画面下部 ナビゲーションバー -->
+  <rect x="0" y="752" width="375" height="60" fill="#f0f0f0" />
+  <text x="40" y="790" font-size="14" fill="#333333" font-family="sans-serif">タイムライン</text>
+  <text x="160" y="790" font-size="14" fill="#333333" font-family="sans-serif">検索</text>
+  <text x="280" y="790" font-size="14" fill="#333333" font-family="sans-serif">発見</text>
+
+</svg>

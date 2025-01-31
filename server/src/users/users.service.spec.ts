@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
+import { WasabiService } from './services/wasabi.service';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -24,6 +25,10 @@ describe('UsersService', () => {
     remove: jest.fn(),
   };
 
+  const mockWasabiService = {
+    uploadProfileImage: jest.fn().mockResolvedValue('https://example.com/avatar.jpg'),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -31,6 +36,10 @@ describe('UsersService', () => {
         {
           provide: getRepositoryToken(User),
           useValue: mockRepository,
+        },
+        {
+          provide: WasabiService,
+          useValue: mockWasabiService,
         },
       ],
     }).compile();
@@ -52,14 +61,17 @@ describe('UsersService', () => {
       };
 
       mockRepository.findOne.mockResolvedValue(null);
-      mockRepository.create.mockReturnValue(mockUser);
       mockRepository.save.mockResolvedValue(mockUser);
 
       const result = await service.create(createUserDto);
 
       expect(result).toEqual(mockUser);
-      expect(mockRepository.create).toHaveBeenCalledWith(createUserDto);
-      expect(mockRepository.save).toHaveBeenCalledWith(mockUser);
+      expect(mockRepository.save).toHaveBeenCalledWith(expect.objectContaining({
+        email: createUserDto.email,
+        password: createUserDto.password,
+        name: createUserDto.name,
+        isEmailVerified: false,
+      }));
     });
 
     it('should throw ConflictException if email already exists', async () => {

@@ -12,7 +12,7 @@ import {
   UpdateUserProfileRequest,
   FileUploadResponse,
 } from '@kuripura/shared';
-import { WasabiService } from './services/box.service';
+import { WasabiService } from './services/wasabi.service';
 
 @Injectable()
 export class UsersService {

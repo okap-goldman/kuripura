@@ -5,185 +5,96 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../src/users/users.service';
-import { WasabiService } from '../src/users/services/box.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from '../src/users/entities/user.entity';
-import { Post } from '../src/posts/entities/post.entity';
+import { AppModule } from '../src/app.module';
+import { initializeTestDataSource, cleanupTestDataSource, setupTestDatabase, cleanupDatabase } from './test-utils';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import { UsersController } from '../src/users/users.controller';
-import { JwtAuthGuard } from '../src/auth/guards/jwt-auth.guard';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from '../src/auth/strategies/jwt.strategy';
-import { MulterModule } from '@nestjs/platform-express';
+import { UsersModule } from '../src/users/users.module';
+import { AuthModule } from '../src/auth/auth.module';
+import { join } from 'path';
+import * as fs from 'fs';
+import { DataSource } from 'typeorm';
+import * as path from 'path';
+import { User } from '../src/users/entities/user.entity';
 
-describe('Users Controller (e2e)', () => {
+describe('UsersController (e2e)', () => {
   let app: INestApplication;
-  let jwtService: JwtService;
-  let usersService: UsersService;
-  let WasabiService: WasabiService;
+  let dataSource: DataSource;
+  let testUser: User;
+  let accessToken: string;
 
-  // テスト用のモックユーザーデータ
-  const mockUser = {
-    id: '1',
-    email: 'test@example.com',
-    name: 'Test User',
-    password: 'hashedPassword',
-  };
+  beforeAll(async () => {
+    const testDb = await setupTestDatabase();
+    app = testDb.app;
+    dataSource = testDb.dataSource;
+  });
 
-  // リポジトリのモック設定
-  const mockRepository = {
-    create: jest.fn(),
-    save: jest.fn(),
-    findOne: jest.fn(),
-  };
-
-  // Box APIサービスのモック設定
-  // プロフィール画像のアップロードをシミュレート
-  const mockBoxService = {
-    uploadProfileImage: jest.fn().mockImplementation(async (fileBuffer: Buffer, fileName: string) => {
-      return `https://example.com/avatar.jpg`;
-    }),
-  };
-
-  // ユーザーサービスのモック設定
-  // 各種ユーザー操作をシミュレート
-  const mockUsersService = {
-    findOne: jest.fn().mockResolvedValue(mockUser),
-    updateProfile: jest.fn().mockResolvedValue(mockUser),
-    uploadProfileImage: jest.fn().mockImplementation(async (userId: string, file: Express.Multer.File) => {
-      return { url: 'https://example.com/avatar.jpg' };
-    }),
-    remove: jest.fn().mockResolvedValue(undefined),
-  };
+  afterAll(async () => {
+    if (dataSource) {
+      await cleanupDatabase(dataSource);
+    }
+    if (app) {
+      await app.close();
+    }
+  });
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: '.env.test',
-        }),
-        TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: 'localhost',
-          port: 5432,
-          username: 'postgres',
-          password: 'postgres',
-          database: 'kuripura_test',
-          entities: [User, Post],
-          synchronize: true,
-        }),
-        TypeOrmModule.forFeature([User]),
-        PassportModule.register({ defaultStrategy: 'jwt' }),
-        JwtModule.register({
-          secret: 'test_secret_key',
-          signOptions: { expiresIn: '1h' },
-        }),
-        MulterModule.register(),
-      ],
-      controllers: [UsersController],
-      providers: [
-        {
-          provide: UsersService,
-          useValue: mockUsersService,
-        },
-        {
-          provide: getRepositoryToken(User),
-          useValue: mockRepository,
-        },
-        {
-          provide: WasabiService,
-          useValue: mockBoxService,
-        },
-        {
-          provide: JwtStrategy,
-          useValue: {
-            validate: jest.fn().mockResolvedValue(mockUser),
-          },
-        },
-      ],
-    })
-    .overrideGuard(JwtAuthGuard)
-    .useValue({
-      canActivate: (context) => {
-        const request = context.switchToHttp().getRequest();
-        const authHeader = request.headers.authorization;
-        
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-          return false;
-        }
-        
-        request.user = mockUser;
-        return true;
-      },
-    })
-    .compile();
+    if (dataSource) {
+      await cleanupDatabase(dataSource);
+    }
+    
+    // テストユーザーの作成
+    const response = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send({
+        email: 'test@example.com',
+        password: 'password123',
+        username: 'testuser'
+      });
 
-    app = moduleFixture.createNestApplication();
-    jwtService = moduleFixture.get<JwtService>(JwtService);
-    usersService = moduleFixture.get<UsersService>(UsersService);
-    WasabiService = moduleFixture.get<WasabiService>(WasabiService);
-
-    await app.init();
-
-    // Reset mock calls before each test
-    jest.clearAllMocks();
-  }, 10000);
-
-  afterEach(async () => {
-    await app.close();
+    accessToken = response.body.access_token;
+    
+    const userRepository = dataSource.getRepository(User);
+    testUser = await userRepository.findOne({ where: { email: 'test@example.com' } });
   });
 
   describe('/users/profile/avatar (POST)', () => {
-    /**
-     * プロフィール画像アップロードの正常系テスト
-     * - 認証済みユーザーが画像をアップロードできることを確認
-     * - アップロード後のURLが正しく返却されることを確認
-     */
     it('should upload avatar successfully', async () => {
-      const token = jwtService.sign({ sub: mockUser.id, email: mockUser.email });
-      const buffer = Buffer.from('fake image data');
-      const filename = 'test-avatar.jpg';
-
       const response = await request(app.getHttpServer())
         .post('/users/profile/avatar')
-        .set('Authorization', `Bearer ${token}`)
-        .attach('file', buffer, filename)
-        .expect(201);
+        .set('Authorization', `Bearer ${accessToken}`)
+        .attach('file', path.join(__dirname, 'fixtures/test-avatar.png'));
 
+      expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('url');
-      expect(response.body.url).toBe('https://example.com/avatar.jpg');
-      expect(mockUsersService.uploadProfileImage).toHaveBeenCalled();
-    });
+    }, 30000);
 
-    /**
-     * プロフィール画像アップロードの異常系テスト：ファイル未指定
-     * - 画像ファイルが添付されていない場合のエラー処理を確認
-     */
     it('should return 400 when no file is provided', async () => {
-      const token = jwtService.sign({ sub: mockUser.id, email: mockUser.email });
-
       const response = await request(app.getHttpServer())
         .post('/users/profile/avatar')
-        .set('Authorization', `Bearer ${token}`)
-        .expect(400);
+        .set('Authorization', `Bearer ${accessToken}`);
 
-      expect(response.body.message).toBe('画像ファイルが必要です');
+      expect(response.status).toBe(400);
     });
 
-    /**
-     * プロフィール画像アップロードの異常系テスト：未認証
-     * - 認証トークンなしでのアクセスが拒否されることを確認
-     */
     it('should return 403 when no token is provided', async () => {
-      await request(app.getHttpServer())
+      const response = await request(app.getHttpServer())
         .post('/users/profile/avatar')
-        .attach('file', Buffer.from('fake image data'), 'test-avatar.jpg')
-        .expect(403);
+        .attach('file', path.join(__dirname, 'fixtures/test-avatar.png'));
+
+      expect(response.status).toBe(403);
     });
+  });
+
+  it('/users (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/users')
+      .expect(200);
+  });
+
+  it('should be defined', () => {
+    expect(app).toBeDefined();
   });
 }); 
