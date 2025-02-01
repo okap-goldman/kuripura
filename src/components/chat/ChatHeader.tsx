@@ -1,23 +1,16 @@
-import { ArrowLeft, Phone, Lightbulb, MoreVertical } from "lucide-react";
+import { ArrowLeft, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-
-type CommonPoint = {
-  text: string;
-  type: "hobby" | "personality" | "lifestyle" | "location";
-};
 
 type ChatHeaderProps = {
   user: {
     name: string;
     avatarUrl?: string;
   };
-  commonPoints?: CommonPoint[];
   onBack: () => void;
 };
 
-export const ChatHeader = ({ user, commonPoints, onBack }: ChatHeaderProps) => {
+export const ChatHeader = ({ user, onBack }: ChatHeaderProps) => {
   return (
     <div className="border-b">
       <div className="flex items-center gap-2 p-4">
@@ -31,30 +24,10 @@ export const ChatHeader = ({ user, commonPoints, onBack }: ChatHeaderProps) => {
         <span className="font-medium">{user.name}</span>
         <div className="ml-auto flex items-center gap-2">
           <Button variant="ghost" size="icon">
-            <Phone className="w-5 h-5" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <Lightbulb className="w-5 h-5" />
-          </Button>
-          <Button variant="ghost" size="icon">
             <MoreVertical className="w-5 h-5" />
           </Button>
         </div>
       </div>
-      <div className="px-4 pb-4">
-        <div className="text-sm text-muted-foreground mb-2">話題になりそうな共通点</div>
-        <div className="flex flex-wrap gap-2">
-          {commonPoints?.map((point, index) => (
-            <Badge
-              key={index}
-              variant="secondary"
-              className="rounded-full px-3 py-1 text-sm"
-            >
-              {point.text}
-            </Badge>
-          ))}
-        </div>
-      </div>
     </div>
   );
-}; 
+};
