@@ -4,7 +4,7 @@ import { PostHeader } from "./post/PostHeader";
 import { PostContent } from "./post/PostContent";
 import { PostActions } from "./post/PostActions";
 import { PostComments } from "./post/PostComments";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog";
 
 interface PostProps {
   author: {
@@ -45,7 +45,10 @@ export function Post({ author, content, caption, mediaType }: PostProps) {
       />
 
       <Dialog open={showComments} onOpenChange={setShowComments}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
+          <DialogDescription className="sr-only">
+            コメントセクション
+          </DialogDescription>
           <PostComments
             postId="1"
             comments={[
@@ -65,6 +68,9 @@ export function Post({ author, content, caption, mediaType }: PostProps) {
 
       <Dialog open={showFullPost} onOpenChange={setShowFullPost}>
         <DialogContent className="max-w-3xl">
+          <DialogDescription className="sr-only">
+            投稿の詳細
+          </DialogDescription>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <PostContent
               content={content}

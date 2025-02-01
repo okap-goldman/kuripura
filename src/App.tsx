@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 import Discover from "./pages/Discover";
 import { FooterNav } from "./components/FooterNav";
+import EventsPage from "@/pages/events";
 
 function App() {
   const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/search" element={<Search />} />
             <Route path="/discover" element={<Discover />} />
+            <Route path="/events" element={<EventsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <FooterNav />
