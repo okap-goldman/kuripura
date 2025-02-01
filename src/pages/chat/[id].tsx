@@ -1,45 +1,77 @@
-import { MessageInput } from "@/components/chat/MessageInput";
+import { useParams, useNavigate } from "react-router-dom";
+import { ChatHeader } from "@/components/chat/ChatHeader";
 import { MessageList } from "@/components/chat/MessageList";
-import { useParams } from "react-router-dom";
+import { MessageInput } from "@/components/chat/MessageInput";
+
+// モックデータ（実際の実装では適切なデータフェッチを行う）
+const mockUser = {
+  name: "田中さん",
+  avatarUrl: "/avatars/user1.jpg",
+};
+
+const mockCommonPoints = [
+  { text: "スイーツ大好き", type: "hobby" },
+  { text: "コミュ力診断で相性◎", type: "personality" },
+  { text: "恋愛スタイル診断で相性◎", type: "personality" },
+  { text: "タバコ吸わない", type: "lifestyle" },
+  { text: "東京出身", type: "location" },
+  { text: "東京勤務", type: "lifestyle" },
+  { text: "お酒飲まない", type: "lifestyle" },
+  { text: "一人暮らし同士", type: "lifestyle" },
+];
 
 const mockMessages = [
   {
     id: "1",
-    content: "こんにちは",
+    content: "はじめまして！",
     sender: {
       id: "user1",
       name: "田中",
-      age: 24,
-      location: "東京",
+      avatarUrl: "/avatars/user1.jpg",
     },
     createdAt: new Date().toISOString(),
     isRead: true,
   },
   {
     id: "2",
-    content: "はじめまして！",
+    content: "こんにちは！よろしくお願いします！",
     sender: {
-      id: "user2",
-      name: "佐藤",
-      age: 25,
-      location: "千葉",
+      id: "current",
+      name: "鈴木",
+      avatarUrl: "/avatars/current.jpg",
     },
     createdAt: new Date().toISOString(),
-    isRead: false,
+    isRead: true,
   },
 ];
 
 export const ChatPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
-  const currentUserId = "user1"; // TODO: 認証情報から取得
+
+  const handleBack = () => {
+    navigate("/messages");
+  };
+
+  const handleSend = (message: string) => {
+    console.log("Send message:", message);
+  };
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <header className="p-4 border-b">
-        <h1 className="text-lg font-semibold">トーク</h1>
-      </header>
-      <MessageList messages={mockMessages} currentUserId={currentUserId} />
-      <MessageInput />
+      <ChatHeader
+        user={mockUser}
+        commonPoints={mockCommonPoints}
+        onBack={handleBack}
+      />
+      <div className="flex-1 overflow-hidden">
+        <MessageList
+          messages={mockMessages}
+          currentUserId="current"
+          onMessageSelect={() => {}}
+        />
+      </div>
+      <MessageInput onSend={handleSend} />
     </div>
   );
 }; 
