@@ -9,17 +9,6 @@ const mockUser = {
   avatarUrl: "/avatars/user1.jpg",
 };
 
-const mockCommonPoints = [
-  { text: "スイーツ大好き", type: "hobby" },
-  { text: "コミュ力診断で相性◎", type: "personality" },
-  { text: "恋愛スタイル診断で相性◎", type: "personality" },
-  { text: "タバコ吸わない", type: "lifestyle" },
-  { text: "東京出身", type: "location" },
-  { text: "東京勤務", type: "lifestyle" },
-  { text: "お酒飲まない", type: "lifestyle" },
-  { text: "一人暮らし同士", type: "lifestyle" },
-];
-
 const mockMessages = [
   {
     id: "1",
@@ -58,20 +47,21 @@ export const ChatPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-[calc(100vh-4rem)] bg-background">
       <ChatHeader
         user={mockUser}
-        commonPoints={mockCommonPoints}
         onBack={handleBack}
       />
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-y-auto">
         <MessageList
           messages={mockMessages}
           currentUserId="current"
           onMessageSelect={() => {}}
         />
       </div>
-      <MessageInput onSend={handleSend} />
+      <div className="sticky bottom-16 border-t bg-background">
+        <MessageInput onSend={handleSend} />
+      </div>
     </div>
   );
 }; 

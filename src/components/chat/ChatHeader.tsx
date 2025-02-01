@@ -13,7 +13,7 @@ type ChatHeaderProps = {
     name: string;
     avatarUrl?: string;
   };
-  commonPoints: CommonPoint[];
+  commonPoints?: CommonPoint[];
   onBack: () => void;
 };
 
@@ -44,7 +44,7 @@ export const ChatHeader = ({ user, commonPoints, onBack }: ChatHeaderProps) => {
       <div className="px-4 pb-4">
         <div className="text-sm text-muted-foreground mb-2">話題になりそうな共通点</div>
         <div className="flex flex-wrap gap-2">
-          {commonPoints.map((point, index) => (
+          {commonPoints?.map((point, index) => (
             <Badge
               key={index}
               variant="secondary"
