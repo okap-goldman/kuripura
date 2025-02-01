@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Camera, Mic, Square, Play, Pause, ChevronRight } from 'lucide-react';
+import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -109,20 +110,35 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-background">
       {/* ヘッダー */}
-      <div className="flex justify-between items-center px-4 py-3 border-b">
-        <Button variant="ghost" onClick={onCancel}>
-          キャンセル
-        </Button>
-        <h1 className="text-lg font-semibold">プロフィールを編集</h1>
-        <Button variant="ghost" onClick={handleSubmit}>
-          完了
-        </Button>
-      </div>
+      <DialogHeader className="border-b px-4 py-3">
+        <div className="flex justify-between items-center">
+          <Button
+            variant="ghost"
+            className="text-base font-normal hover:bg-transparent"
+            onClick={onCancel}
+          >
+            キャンセル
+          </Button>
+          <DialogTitle className="text-lg font-semibold">
+            プロフィールを編集
+          </DialogTitle>
+          <Button
+            variant="ghost"
+            className="text-blue-500 text-base font-normal hover:bg-transparent"
+            onClick={handleSubmit}
+          >
+            完了
+          </Button>
+        </div>
+        <DialogDescription className="sr-only">
+          プロフィール情報の編集フォーム
+        </DialogDescription>
+      </DialogHeader>
 
       <div className="flex-1 overflow-auto">
-        <div className="p-4 space-y-6">
+        <div className="p-4 space-y-8">
           {/* プロフィール画像 */}
           <div className="flex flex-col items-center space-y-2">
             <Avatar className="h-24 w-24">
@@ -132,10 +148,10 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
             <Button
               type="button"
               variant="link"
-              className="text-blue-500"
+              className="text-blue-500 font-normal"
               onClick={() => fileInputRef.current?.click()}
             >
-              写真やアバターを編集
+              写真やアバターを変更
             </Button>
             <input
               ref={fileInputRef}
@@ -147,7 +163,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
           </div>
 
           {/* 名前とユーザーネーム */}
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name">名前</Label>
               <Input
@@ -155,6 +171,8 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 maxLength={50}
+                className="border-0 border-b rounded-none focus-visible:ring-0 px-0"
+                placeholder="名前を入力"
               />
             </div>
 
@@ -165,6 +183,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 maxLength={15}
+                className="border-0 border-b rounded-none focus-visible:ring-0 px-0"
                 placeholder="@username"
               />
             </div>
@@ -174,8 +193,11 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
           <div className="space-y-2">
             <Label htmlFor="pronouns">代名詞の性別</Label>
             <Select value={pronouns} onValueChange={setPronouns}>
-              <SelectTrigger id="pronouns" className="w-full">
-                <SelectValue placeholder="代名詞の性別" />
+              <SelectTrigger
+                id="pronouns"
+                className="border-0 border-b rounded-none focus:ring-0 px-0"
+              >
+                <SelectValue placeholder="代名詞の性別を選択" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="he">彼 (he/him)</SelectItem>
@@ -193,10 +215,10 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               maxLength={280}
-              className="min-h-[100px]"
-              placeholder="自己紹介を入力"
+              className="min-h-[100px] border-0 border-b rounded-none focus-visible:ring-0 resize-none px-0"
+              placeholder="自己紹介を入力してください"
             />
-            <p className="text-sm text-gray-500 text-right">
+            <p className="text-sm text-muted-foreground text-right">
               {bio.length}/280文字
             </p>
           </div>
@@ -204,16 +226,16 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
           {/* リンク */}
           <div className="space-y-2">
             <Label htmlFor="external-link">リンク</Label>
-            <div className="flex items-center space-x-2 border rounded-md px-3 py-2" onClick={() => document.getElementById('external-link')?.focus()}>
+            <div className="relative border-b">
               <Input
                 id="external-link"
                 type="url"
                 value={externalLink}
                 onChange={(e) => setExternalLink(e.target.value)}
                 placeholder="リンクを追加"
-                className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
+                className="border-0 focus-visible:ring-0 pr-8 px-0"
               />
-              <ChevronRight className="h-4 w-4 text-gray-400" />
+              <ChevronRight className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             </div>
           </div>
 
@@ -266,8 +288,8 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
           <div className="pt-4">
             <Button
               type="button"
-              variant="outline"
-              className="w-full text-blue-500"
+              variant="ghost"
+              className="w-full text-blue-500 justify-start px-0 font-normal hover:bg-transparent"
               onClick={() => {/* TODO: Implement pro account switch */}}
             >
               プロアカウントに切り替える
@@ -278,8 +300,8 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
           <div className="pt-2">
             <Button
               type="button"
-              variant="outline"
-              className="w-full text-blue-500"
+              variant="ghost"
+              className="w-full text-blue-500 justify-start px-0 font-normal hover:bg-transparent"
               onClick={() => {/* TODO: Implement personal info settings */}}
             >
               個人の情報の設定
