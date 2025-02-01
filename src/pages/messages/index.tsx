@@ -134,6 +134,12 @@ export const MessagesPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-background">
+      <header className="flex items-center justify-between px-4 py-3 border-b bg-background">
+        <h1 className="text-lg font-bold">トーク</h1>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">9</span>
+        </div>
+      </header>
       <div className="flex-1 overflow-y-auto">
         {mockMessages.map((message) => (
           <button

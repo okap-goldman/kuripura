@@ -1,70 +1,38 @@
-import { Home, Search, PlusSquare, Compass, User, MessageCircle, Heart, Card } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, Search, PlusSquare, Compass, User, MessageCircle } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { CreatePostDialog } from "./CreatePostDialog";
-import { cn } from "@/lib/utils";
 
-const navItems = [
-  {
-    label: "さがす",
-    icon: Search,
-    path: "/search",
-  },
-  {
-    label: "いいね",
-    icon: Heart,
-    path: "/likes",
-  },
-  {
-    label: "トーク",
-    icon: MessageCircle,
-    path: "/messages",
-  },
-  {
-    label: "好みカード",
-    icon: Card,
-    path: "/cards",
-  },
-  {
-    label: "マイページ",
-    icon: User,
-    path: "/profile",
-  },
-];
-
-export const FooterNav = () => {
+export function FooterNav() {
   const location = useLocation();
-  const navigate = useNavigate();
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <>
-      <nav className="flex items-center justify-around p-4 border-t bg-background">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <button
-              key={item.path}
-              onClick={() => navigate(item.path)}
-              className="flex flex-col items-center gap-1"
-            >
-              <item.icon
-                className={cn(
-                  "w-6 h-6",
-                  isActive ? "text-primary" : "text-muted-foreground"
-                )}
-              />
-              <span
-                className={cn(
-                  "text-xs",
-                  isActive ? "text-primary" : "text-muted-foreground"
-                )}
-              >
-                {item.label}
-              </span>
-            </button>
-          );
-        })}
+      <nav className="fixed bottom-0 left-0 right-0 bg-background border-t flex justify-around items-center p-3 z-50">
+        <Link to="/" className={`${isActive('/') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <Home className="w-6 h-6" />
+        </Link>
+        <Link to="/search" className={`${isActive('/search') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <Search className="w-6 h-6" />
+        </Link>
+        <button 
+          onClick={() => setIsCreatePostOpen(true)}
+          className="text-muted-foreground hover:text-primary transition-colors"
+        >
+          <PlusSquare className="w-6 h-6" />
+        </button>
+        <Link to="/discover" className={`${isActive('/discover') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <Compass className="w-6 h-6" />
+        </Link>
+        <Link to="/messages" className={`${isActive('/messages') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <MessageCircle className="w-6 h-6" />
+        </Link>
+        <Link to="/profile" className={`${isActive('/profile') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <User className="w-6 h-6" />
+        </Link>
       </nav>
 
       <CreatePostDialog 
@@ -73,4 +41,4 @@ export const FooterNav = () => {
       />
     </>
   );
-};
+}
