@@ -10,11 +10,12 @@ import {
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useNavigate } from "react-router-dom";
 
 export function Navbar() {
   const { toast } = useToast();
   const [showNotifications, setShowNotifications] = useState(false);
-  const [showMessages, setShowMessages] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     toast({
@@ -42,7 +43,7 @@ export function Navbar() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setShowMessages(true)}
+            onClick={() => navigate("/messages")}
           >
             <MessageCircle className="h-5 w-5" />
           </Button>
@@ -70,30 +71,6 @@ export function Navbar() {
                   <div>
                     <p className="text-sm">ユーザー{i}があなたの投稿にいいねしました</p>
                     <p className="text-xs text-muted-foreground">1時間前</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={showMessages} onOpenChange={setShowMessages}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>メッセージ</DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="h-[400px]">
-            <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-3 p-2 hover:bg-accent rounded-lg cursor-pointer">
-                  <Avatar>
-                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} />
-                    <AvatarFallback>UN</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium">ユーザー{i}</p>
-                    <p className="text-sm text-muted-foreground">最新のメッセージ...</p>
                   </div>
                 </div>
               ))}

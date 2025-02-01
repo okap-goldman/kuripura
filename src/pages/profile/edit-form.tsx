@@ -4,27 +4,40 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera, Mic, Square, Play, Pause, Upload } from 'lucide-react';
+import { Camera, Mic, Square, Play, Pause, ChevronRight } from 'lucide-react';
+import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ProfileEditFormProps {
   profile: {
     name: string;
+    username: string;
     image: string;
     bio: string;
     bioAudioUrl: string;
     externalLink?: string;
+    pronouns?: string;
   };
   onSubmit: () => void;
+  onCancel: () => void;
 }
 
-export default function ProfileEditForm({ profile, onSubmit }: ProfileEditFormProps) {
+export default function ProfileEditForm({ profile, onSubmit, onCancel }: ProfileEditFormProps) {
   const [name, setName] = useState(profile.name);
+  const [username, setUsername] = useState(profile.username);
   const [bio, setBio] = useState(profile.bio);
   const [externalLink, setExternalLink] = useState(profile.externalLink || '');
   const [imagePreview, setImagePreview] = useState(profile.image);
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(profile.bioAudioUrl);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [pronouns, setPronouns] = useState(profile.pronouns || '');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -92,122 +105,210 @@ export default function ProfileEditForm({ profile, onSubmit }: ProfileEditFormPr
     }
 
     // TODO: Implement profile update
-    console.log({ name, bio, externalLink, imagePreview, audioUrl });
+    console.log({ name, username, bio, externalLink, imagePreview, audioUrl, pronouns });
     onSubmit();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* プロフィール画像 */}
-      <div className="flex flex-col items-center space-y-4">
-        <Avatar className="h-24 w-24">
-          <AvatarImage src={imagePreview} />
-          <AvatarFallback>{name[0]}</AvatarFallback>
-        </Avatar>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <Camera className="h-4 w-4 mr-2" />
-          画像を変更
-        </Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleImageSelect}
-        />
-      </div>
-
-      {/* 名前入力 */}
-      <div className="space-y-2">
-        <Label htmlFor="name">名前</Label>
-        <Input
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          maxLength={50}
-        />
-      </div>
-
-      {/* 自己紹介文 */}
-      <div className="space-y-2">
-        <Label htmlFor="bio">自己紹介文</Label>
-        <Textarea
-          id="bio"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          maxLength={280}
-          className="min-h-[100px]"
-        />
-        <p className="text-sm text-gray-500 text-right">
-          {bio.length}/280文字
-        </p>
-      </div>
-
-      {/* 自己紹介音声 */}
-      <div className="space-y-4">
-        <Label>自己紹介音声</Label>
-        <div className="flex justify-center space-x-4">
-          {!audioUrl ? (
-            <Button
-              type="button"
-              size="lg"
-              variant={isRecording ? 'destructive' : 'default'}
-              className="w-16 h-16 rounded-full"
-              onClick={isRecording ? stopRecording : startRecording}
-            >
-              {isRecording ? (
-                <Square className="h-6 w-6" />
-              ) : (
-                <Mic className="h-6 w-6" />
-              )}
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              size="lg"
-              variant="outline"
-              className="w-16 h-16 rounded-full"
-              onClick={togglePlayback}
-            >
-              {isPlaying ? (
-                <Pause className="h-6 w-6" />
-              ) : (
-                <Play className="h-6 w-6" />
-              )}
-            </Button>
-          )}
+    <div className="flex flex-col h-full bg-background">
+      {/* ヘッダー */}
+      <DialogHeader className="border-b px-4 py-3">
+        <div className="flex justify-between items-center">
+          <Button
+            variant="ghost"
+            className="text-base font-normal hover:bg-transparent"
+            onClick={onCancel}
+          >
+            キャンセル
+          </Button>
+          <DialogTitle className="text-lg font-semibold">
+            プロフィールを編集
+          </DialogTitle>
+          <Button
+            variant="ghost"
+            className="text-blue-500 text-base font-normal hover:bg-transparent"
+            onClick={handleSubmit}
+          >
+            完了
+          </Button>
         </div>
+        <DialogDescription className="sr-only">
+          プロフィール情報の編集フォーム
+        </DialogDescription>
+      </DialogHeader>
 
-        {audioUrl && (
-          <audio
-            ref={audioElementRef}
-            src={audioUrl}
-            onEnded={() => setIsPlaying(false)}
-            className="hidden"
-          />
-        )}
+      <div className="flex-1 overflow-auto">
+        <div className="p-4 space-y-8">
+          {/* プロフィール画像 */}
+          <div className="flex flex-col items-center space-y-2">
+            <Avatar className="h-24 w-24">
+              <AvatarImage src={imagePreview} />
+              <AvatarFallback>{name[0]}</AvatarFallback>
+            </Avatar>
+            <Button
+              type="button"
+              variant="link"
+              className="text-blue-500 font-normal"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              写真やアバターを変更
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageSelect}
+            />
+          </div>
+
+          {/* 名前とユーザーネーム */}
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="name">名前</Label>
+              <Input
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                maxLength={50}
+                className="border-0 border-b rounded-none focus-visible:ring-0 px-0"
+                placeholder="名前を入力"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="username">ユーザーネーム</Label>
+              <Input
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                maxLength={15}
+                className="border-0 border-b rounded-none focus-visible:ring-0 px-0"
+                placeholder="@username"
+              />
+            </div>
+          </div>
+
+          {/* 代名詞の性別 */}
+          <div className="space-y-2">
+            <Label htmlFor="pronouns">代名詞の性別</Label>
+            <Select value={pronouns} onValueChange={setPronouns}>
+              <SelectTrigger
+                id="pronouns"
+                className="border-0 border-b rounded-none focus:ring-0 px-0"
+              >
+                <SelectValue placeholder="代名詞の性別を選択" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="he">彼 (he/him)</SelectItem>
+                <SelectItem value="she">彼女 (she/her)</SelectItem>
+                <SelectItem value="they">その他 (they/them)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* 自己紹介文 */}
+          <div className="space-y-2">
+            <Label htmlFor="bio">自己紹介</Label>
+            <Textarea
+              id="bio"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              maxLength={280}
+              className="min-h-[100px] border-0 border-b rounded-none focus-visible:ring-0 resize-none px-0"
+              placeholder="自己紹介を入力してください"
+            />
+            <p className="text-sm text-muted-foreground text-right">
+              {bio.length}/280文字
+            </p>
+          </div>
+
+          {/* リンク */}
+          <div className="space-y-2">
+            <Label htmlFor="external-link">リンク</Label>
+            <div className="relative border-b">
+              <Input
+                id="external-link"
+                type="url"
+                value={externalLink}
+                onChange={(e) => setExternalLink(e.target.value)}
+                placeholder="リンクを追加"
+                className="border-0 focus-visible:ring-0 pr-8 px-0"
+              />
+              <ChevronRight className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            </div>
+          </div>
+
+          {/* 自己紹介音声 */}
+          <div className="space-y-4">
+            <Label>自己紹介音声</Label>
+            <div className="flex justify-center space-x-4">
+              {!audioUrl ? (
+                <Button
+                  type="button"
+                  size="lg"
+                  variant={isRecording ? 'destructive' : 'default'}
+                  className="w-16 h-16 rounded-full"
+                  onClick={isRecording ? stopRecording : startRecording}
+                >
+                  {isRecording ? (
+                    <Square className="h-6 w-6" />
+                  ) : (
+                    <Mic className="h-6 w-6" />
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  size="lg"
+                  variant="outline"
+                  className="w-16 h-16 rounded-full"
+                  onClick={togglePlayback}
+                >
+                  {isPlaying ? (
+                    <Pause className="h-6 w-6" />
+                  ) : (
+                    <Play className="h-6 w-6" />
+                  )}
+                </Button>
+              )}
+            </div>
+
+            {audioUrl && (
+              <audio
+                ref={audioElementRef}
+                src={audioUrl}
+                onEnded={() => setIsPlaying(false)}
+                className="hidden"
+              />
+            )}
+          </div>
+
+          {/* プロアカウントへの切り替え */}
+          <div className="pt-4">
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full text-blue-500 justify-start px-0 font-normal hover:bg-transparent"
+              onClick={() => {/* TODO: Implement pro account switch */}}
+            >
+              プロアカウントに切り替える
+            </Button>
+          </div>
+
+          {/* 個人の情報の設定 */}
+          <div className="pt-2">
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full text-blue-500 justify-start px-0 font-normal hover:bg-transparent"
+              onClick={() => {/* TODO: Implement personal info settings */}}
+            >
+              個人の情報の設定
+            </Button>
+          </div>
+        </div>
       </div>
-
-      {/* 外部リンク */}
-      <div className="space-y-2">
-        <Label htmlFor="external-link">ショップ/外部リンク（任意）</Label>
-        <Input
-          id="external-link"
-          type="url"
-          value={externalLink}
-          onChange={(e) => setExternalLink(e.target.value)}
-          placeholder="https://example.com"
-        />
-      </div>
-
-      {/* 保存ボタン */}
-      <Button type="submit" className="w-full">
-        保存する
-      </Button>
-    </form>
+    </div>
   );
-} 
+}

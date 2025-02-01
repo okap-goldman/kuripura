@@ -2,7 +2,7 @@ export const SAMPLE_POSTS = [
   {
     author: {
       name: "かずぴー⭐︎ 【泉谷 和久】",
-      image: "https://scontent-nrt1-2.cdninstagram.com/v/t51.2885-19/468126137_550646691160354_2965217826538139290_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_ht=scontent-nrt1-2.cdninstagram.com&_nc_cat=110&_nc_ohc=nAY3A92S-3AQ7kNvgE1YaUJ&_nc_gid=90caed4e6a1e4fa9972be8df42bad836&edm=AHzjunoBAAAA&ccb=7-5&oh=00_AYDfpayQHQFTDFpZ9AnPyDzebobzVOYneF01XEEOUM055g&oe=6776458A&_nc_sid=ba8368",
+      image: "https://picsum.photos/567",
       id: "@kazu993_ascensionlife"
     },
     content: `11/22は婚姻のみの予定でしたが、
@@ -25,7 +25,7 @@ export const SAMPLE_POSTS = [
   {
     author: {
       name: "かずぴー⭐︎ 【泉谷 和久】",
-      image: "https://scontent-nrt1-2.cdninstagram.com/v/t51.2885-19/468126137_550646691160354_2965217826538139290_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_ht=scontent-nrt1-2.cdninstagram.com&_nc_cat=110&_nc_ohc=nAY3A92S-3AQ7kNvgE1YaUJ&_nc_gid=90caed4e6a1e4fa9972be8df42bad836&edm=AHzjunoBAAAA&ccb=7-5&oh=00_AYDfpayQHQFTDFpZ9AnPyDzebobzVOYneF01XEEOUM055g&oe=6776458A&_nc_sid=ba8368",
+      image: "https://picsum.photos/678",
       id: "@kazu993_ascensionlife"
     },
     content: "https://mcdn.podbean.com/mf/web/5i9agca8msffjcfv/6b592.m4a",
@@ -35,10 +35,10 @@ export const SAMPLE_POSTS = [
   {
     author: {
       name: "かずぴー⭐︎ 【泉谷 和久】",
-      image: "https://scontent-nrt1-2.cdninstagram.com/v/t51.2885-19/468126137_550646691160354_2965217826538139290_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_ht=scontent-nrt1-2.cdninstagram.com&_nc_cat=110&_nc_ohc=nAY3A92S-3AQ7kNvgE1YaUJ&_nc_gid=90caed4e6a1e4fa9972be8df42bad836&edm=AHzjunoBAAAA&ccb=7-5&oh=00_AYDfpayQHQFTDFpZ9AnPyDzebobzVOYneF01XEEOUM055g&oe=6776458A&_nc_sid=ba8368",
+      image: "https://picsum.photos/678",
       id: "@kazu993_ascensionlife"
     },
-    content: "https://images.unsplash.com/photo-1532798442725-41036acc7489",
+    content: "https://picsum.photos/890",
     caption: `今日の瞑想風景🌟 
 
 宇宙とつながる特別な時間を過ごしました。
@@ -55,7 +55,7 @@ export const WATCH_POSTS = [
   {
     author: {
       name: "スピリチュアルヒーラー | 美咲",
-      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=1",
+      image: "https://picsum.photos/654",
       id: "@misaki_healer"
     },
     content: `瞑想の効果について、科学的な視点から解説します📚
@@ -77,10 +77,10 @@ export const WATCH_POSTS = [
   {
     author: {
       name: "心理カウンセラー | 山田太郎",
-      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=2",
+      image: "https://picsum.photos/765",
       id: "@yamada_counselor"
     },
-    content: "https://images.unsplash.com/photo-1506126613408-eca07ce68773",
+    content: "https://picsum.photos/876",
     caption: `今日のワークショップの様子です🌿
 
 「自己肯定感を高める」をテーマに、
@@ -98,7 +98,7 @@ export const WATCH_POSTS = [
   {
     author: {
       name: "ヨガインストラクター | 佐藤美咲",
-      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
+      image: "https://picsum.photos/543",
       id: "@misaki_yoga"
     },
     content: "https://mcdn.podbean.com/mf/web/example123/yoga_meditation.m4a",
@@ -122,12 +122,12 @@ export const HIGHLIGHTS = [
     title: "瞑想ワークショップ",
     date: "2024年3月15日",
     description: "心の平安を見つける瞑想の基礎を学ぶワークショップを開催しました。",
-    image: "https://images.unsplash.com/photo-1532798442725-41036acc7489"
+    image: "https://picsum.photos/987"
   },
   {
     title: "風の時代学校",
     date: "2024年2月20日",
     description: "仲間たちと共に学び、成長する特別な時間を過ごしました。",
-    image: "https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83"
+    image: "https://picsum.photos/654"
   }
 ];

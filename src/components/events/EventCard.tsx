@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CalendarIcon, MapPinIcon, YenIcon } from "lucide-react"
+import { CalendarIcon, MapPinIcon, Currency } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 interface EventCardProps {
@@ -50,7 +50,7 @@ export function EventCard({
             <span className="text-sm">{location}</span>
           </div>
           <div className="flex items-center gap-2">
-            <YenIcon className="w-4 h-4" />
+            <Currency className="w-4 h-4" />
             <span className="text-sm">{price === 0 ? '無料' : `¥${price.toLocaleString()}`}</span>
           </div>
         </div>
