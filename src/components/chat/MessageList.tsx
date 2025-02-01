@@ -4,6 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 type Message = {
   id: string;
   content: string;
+  imageUrl?: string;
+  imageType?: "story" | "normal";
   sender: {
     id: string;
     name: string;
@@ -49,11 +51,25 @@ export const MessageList = ({ messages, currentUserId, onMessageSelect }: Messag
             )}
             <div
               className={cn(
-                "max-w-[70%] rounded-2xl px-4 py-2",
+                "max-w-[70%] rounded-2xl",
                 isCurrentUser ? "bg-primary text-primary-foreground" : "bg-muted"
               )}
             >
-              <p className="text-sm break-words">{message.content}</p>
+              {message.imageUrl && (
+                <div className="relative">
+                  <img
+                    src={message.imageUrl}
+                    alt=""
+                    className={cn(
+                      "rounded-t-2xl w-full object-cover",
+                      message.imageType === "story" ? "max-h-[400px]" : "max-h-[200px]"
+                    )}
+                  />
+                </div>
+              )}
+              <div className="px-4 py-2">
+                <p className="text-sm break-words">{message.content}</p>
+              </div>
             </div>
             <span className="text-xs text-muted-foreground">
               {getTimeAgo(message.createdAt)}
