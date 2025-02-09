@@ -1,0 +1,1785 @@
+openapi: 3.0.0
+info:
+  title: 目醒め人のためのSNS API
+  version: 1.0.0
+  description: 目醒め人のためのSNSのAPI仕様書
+
+servers:
+  - url: /api/v1
+    description: 開発環境
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWTによる認証。Authorizationヘッダーに`Bearer {JWT}`をセットする。
+  schemas:
+    User:
+      type: object
+      description: ユーザー情報
+      properties:
+        user_id:
+          type: integer
+          description: ユーザーID
+        user_name:
+          type: string
+          description: ユーザー名
+        email:
+          type: string
+          description: メールアドレス
+        profile_icon_url:
+          type: string
+          description: プロフィールアイコンのURL
+        profile_audio_url:
+          type: string
+          description: プロフィール音声のURL
+        shop_link_url:
+          type: string
+          description: ショップへのリンクURL
+        is_shop_link:
+          type: boolean
+          description: ショップリンクかどうか (trueの場合ショップ, falseの場合外部リンク)
+        introduction:
+          type: string
+          description: 自己紹介文
+        created_at:
+          type: string
+          format: date-time
+          description: 作成日時
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新日時
+    Follow:
+      type: object
+      description: フォロー情報
+      properties:
+        follow_id:
+          type: integer
+          description: フォローID
+        follower_id:
+          type: integer
+          description: フォローするユーザーのID
+        followee_id:
+          type: integer
+          description: フォローされるユーザーのID
+        follow_type:
+          type: string
+          enum: ["family", "watch"]
+          description: フォローの種類 (family: ファミリー, watch: ウォッチ)
+        reason:
+          type: string
+          description: フォロー理由 (ファミリーの場合のみ)
+        created_at:
+          type: string
+          format: date-time
+          description: フォロー日時
+    Post:
+      type: object
+      description: 投稿情報
+      properties:
+        post_id:
+          type: integer
+          description: 投稿ID
+        user_id:
+          type: integer
+          description: 投稿者のユーザーID
+        post_type:
+          type: string
+          enum: ["video", "image", "audio", "text"]
+          description: 投稿の種類 (video: 動画, image: 画像, audio: 音声, text: テキスト)
+        title:
+          type: string
+          description: 投稿のタイトル
+        text_content:
+          type: string
+          description: 投稿の本文 (テキスト投稿の場合)
+        youtube_url:
+          type: string
+          description: YouTube動画のURL (動画投稿の場合)
+        image_urls:
+          type: array
+          items:
+            type: string
+          description: 画像のURLの配列 (画像投稿の場合)
+        audio_url:
+          type: string
+          description: 音声のURL (音声投稿の場合)
+        event_id:
+          type: integer
+          description: 関連イベントのID
+        created_at:
+          type: string
+          format: date-time
+          description: 投稿日時
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新日時
+    Comment:
+      type: object
+      description: コメント情報
+      properties:
+        comment_id:
+          type: integer
+          description: コメントID
+        post_id:
+          type: integer
+          description: 投稿ID
+        user_id:
+          type: integer
+          description: コメントしたユーザーのID
+        content:
+          type: string
+          description: コメント本文
+        created_at:
+          type: string
+          format: date-time
+          description: コメント日時
+    Like:
+      type: object
+      description: いいね情報
+      properties:
+        like_id:
+          type: integer
+          description: いいねID
+        post_id:
+          type: integer
+          description: 投稿ID
+        user_id:
+          type: integer
+          description: いいねしたユーザーのID
+        created_at:
+          type: string
+          format: date-time
+          description: いいね日時
+    Highlight:
+      type: object
+      description: ハイライト情報
+      properties:
+        highlight_id:
+          type: integer
+          description: ハイライトID
+        post_id:
+          type: integer
+          description: 投稿ID
+        user_id:
+          type: integer
+          description: ハイライトしたユーザーのID
+        highlight_reason:
+          type: string
+          description: ハイライト理由
+        created_at:
+          type: string
+          format: date-time
+          description: ハイライト日時
+    Story:
+      type: object
+      description: ストーリー情報
+      properties:
+        story_id:
+          type: integer
+          description: ストーリーID
+        user_id:
+          type: integer
+          description: ストーリー投稿者のユーザーID
+        media_url:
+          type: string
+          description: メディアのURL (Box, YouTube, PodBean)
+        story_type:
+          type: string
+          enum: ["video", "image", "audio"]
+          description: ストーリーの種類 (video: 動画, image: 画像, audio: 音声)
+        expire_at:
+          type: string
+          format: date-time
+          description: ストーリーの有効期限
+        created_at:
+          type: string
+          format: date-time
+          description: ストーリー作成日時
+    Event:
+      type: object
+      description: イベント情報
+      properties:
+        event_id:
+          type: integer
+          description: イベントID
+        organizer_id:
+            type: integer
+            description: イベント作成者のID
+        event_name:
+          type: string
+          description: イベント名
+        content:
+          type: string
+          description: イベント内容
+        capacity:
+          type: integer
+          description: 定員
+        price:
+          type: number
+          description: 参加費
+        recruit_start:
+          type: string
+          format: date-time
+          description: 募集開始日時
+        recruit_end:
+          type: string
+          format: date-time
+          description: 募集終了日時
+        location:
+          type: string
+          description: 開催場所
+        event_start:
+          type: string
+          format: date-time
+          description: イベント開始日時
+        event_end:
+          type: string
+          format: date-time
+          description: イベント終了日時
+        created_at:
+          type: string
+          format: date-time
+          description: イベント作成日時
+    EventParticipant:
+      type: object
+      description: イベント参加者情報
+      properties:
+        event_participant_id:
+          type: integer
+          description: イベント参加者ID
+        event_id:
+          type: integer
+          description: イベントID
+        user_id:
+          type: integer
+          description: 参加者のユーザーID
+        is_organizer:
+          type: boolean
+          description: 主催者かどうか
+        created_at:
+          type: string
+          format: date-time
+          description: 参加日時
+    Shop:
+      type: object
+      description: ショップ情報
+      properties:
+        shop_id:
+          type: integer
+          description: ショップID
+        user_id:
+          type: integer
+          description: ショップオーナーのユーザーID
+        shop_name:
+          type: string
+          description: ショップ名
+        description:
+          type: string
+          description: ショップ説明
+    Product:
+      type: object
+      description: 商品情報
+      properties:
+        product_id:
+          type: integer
+          description: 商品ID
+        shop_id:
+          type: integer
+          description: ショップID
+        product_name:
+          type: string
+          description: 商品名
+        description:
+          type: string
+          description: 商品説明
+        price:
+          type: number
+          description: 商品価格
+        image_url:
+          type: string
+          description: 商品画像のURL
+    Transaction:
+      type: object
+      description: 取引情報
+      properties:
+        transaction_id:
+          type: integer
+          description: 取引ID
+        buyer_id:
+          type: integer
+          description: 購入者のユーザーID
+        seller_id:
+          type: integer
+          description: 販売者のユーザーID
+        product_id:
+          type: integer
+          description: 商品ID (商品購入の場合)
+        event_id:
+          type: integer
+          description: イベントID (イベント参加の場合)
+        amount:
+          type: number
+          description: 取引金額
+        status:
+          type: string
+          enum: ["pending", "completed", "failed"]
+          description: 取引ステータス (pending: 処理中, completed: 完了, failed: 失敗)
+        created_at:
+          type: string
+          format: date-time
+          description: 取引日時
+    Notification:
+      type: object
+      description: 通知情報
+      properties:
+        notification_id:
+          type: integer
+          description: 通知ID
+        user_id:
+          type: integer
+          description: 通知を受け取るユーザーのID
+        notification_type:
+          type: string
+          description: 通知の種類 (例: comment, highlight, follow, event, purchase)
+        from_user_id:
+          type: integer
+          description: 通知元のユーザーID
+        post_id:
+          type: integer
+          description: 関連する投稿のID (コメント、ハイライトの場合)
+        event_id:
+          type: integer
+          description: 関連するイベントのID (イベント関連通知の場合)
+        product_id:
+          type: integer
+          description: 関連する商品のID (商品購入通知の場合)
+        message:
+          type: string
+          description: 通知メッセージ
+        is_read:
+          type: boolean
+          description: 既読かどうか
+        created_at:
+          type: string
+          format: date-time
+          description: 通知日時
+    Report:
+      type: object
+      description: 違反報告
+      properties:
+        report_id:
+          type: integer
+          description: 違反報告ID
+        reporter_id:
+          type: integer
+          description: 報告者のユーザーID
+        reported_user_id:
+           type: integer
+           description: 報告されたユーザーのID
+        report_type:
+          type: string
+          description: 報告の種類(user, post, comment, event)
+        content:
+          type: string
+          description: 報告内容
+        created_at:
+          type: string
+          format: date-time
+          description: 報告日時
+    Error:
+      type: object
+      description: エラーレスポンス
+      properties:
+        statusCode:
+          type: integer
+          description: HTTPステータスコード
+        message:
+          type: string
+          description: エラーメッセージ
+        error:
+          type: string
+          description: エラー詳細 (オプション)
+
+paths:
+  /auth/google/login:
+    post:
+      summary: Googleログイン
+      description: Google OAuth 2.0を使用してログインし、JWTトークンを取得する。
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  description: Google OAuth 2.0の認証コード
+      responses:
+        '200':
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: JWTアクセス トークン
+                  refresh_token:
+                    type: string
+                    description: JWTリフレッシュトークン
+                  user:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/google/refresh:
+    post:
+      summary: JWTトークン更新
+      description: JWTリフレッシュトークンを使用して、新しいJWTアクセス トークンを取得する。
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  description: JWTリフレッシュトークン
+      responses:
+        '200':
+          description: トークン更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: 新しいJWTアクセス トークン
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{user_id}:
+    get:
+      summary: ユーザー情報取得
+      description: 指定されたユーザーIDのユーザー情報を取得する。
+      tags: [Users]
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: ユーザーID
+      responses:
+        '200':
+          description: ユーザー情報取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: ユーザーが見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: ユーザー情報更新
+      description: 指定されたユーザーIDのユーザー情報を更新する。
+      tags: [Users]
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: ユーザーID
+      requestBody:
+        description: 更新するユーザー情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_name:
+                  type: string
+                  description: ユーザー名
+                profile_icon_url:
+                  type: string
+                  description: プロフィールアイコンのURL
+                profile_audio_url:
+                  type: string
+                  description: プロフィール音声のURL
+                shop_link_url:
+                  type: string
+                  description: ショップへのリンクURL
+                is_shop_link:
+                  type: boolean
+                  description: ショップリンクかどうか
+                introduction:
+                  type: string
+                  description: 自己紹介文
+      responses:
+        '200':
+          description: ユーザー情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{user_id}/followers:
+    get:
+      summary: フォロワー一覧取得
+      description: 指定されたユーザーIDのフォロワー一覧を取得する。
+      tags: [Users]
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: ユーザーID
+      responses:
+        '200':
+          description: フォロワー一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  followers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Follow'
+  /users/{user_id}/following:
+    get:
+      summary: フォロー一覧取得
+      description: 指定されたユーザーIDのフォロー一覧を取得する。
+      tags: [Users]
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: ユーザーID
+      responses:
+        '200':
+          description: フォロー一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  following:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Follow'
+
+  /follows:
+    post:
+      summary: フォロー
+      description: 指定されたユーザーをフォローする。
+      tags: [Follows]
+      requestBody:
+        required: true
+        description: フォロー情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followee_id:
+                  type: integer
+                  description: フォロー対象のユーザーID
+                follow_type:
+                  type: string
+                  enum: ["family", "watch"]
+                  description: フォローの種類 (family: ファミリー, watch: ウォッチ)
+                reason:
+                  type: string
+                  description: フォロー理由 (ファミリーの場合のみ)
+      responses:
+        '201':
+          description: フォロー成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Follow'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /follows/{follow_id}:
+    delete:
+      summary: アンフォロー
+      description: 指定されたフォローIDのフォローを解除する。
+      tags: [Follows]
+      parameters:
+        - in: path
+          name: follow_id
+          required: true
+          schema:
+            type: integer
+          description: フォローID
+      responses:
+        '204':
+          description: アンフォロー成功
+
+  /posts:
+    post:
+      summary: 投稿作成
+      description: 新しい投稿を作成する。
+      tags: [Posts]
+      requestBody:
+        required: true
+        description: 投稿内容
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                post_type:
+                  type: string
+                  enum: ["video", "image", "audio", "text"]
+                  description: 投稿の種類 (video: 動画, image: 画像, audio: 音声, text: テキスト)
+                title:
+                  type: string
+                  description: 投稿のタイトル
+                text_content:
+                  type: string
+                  description: 投稿の本文 (テキスト投稿の場合)
+                youtube_url:
+                  type: string
+                  description: YouTube動画のURL (動画投稿の場合)
+                image_urls:
+                  type: array
+                  items:
+                    type: string
+                  description: 画像のURLの配列 (画像投稿の場合)
+                audio_url:
+                  type: string
+                  description: 音声のURL (音声投稿の場合)
+                event_id:
+                  type: integer
+                  description: 関連イベントのID
+                visibility:
+                  type: string
+                  enum: ["public", "unlisted"]
+                  description: 動画の公開範囲 (動画投稿で、public: 公開, unlisted: 限定公開)
+      responses:
+        '201':
+          description: 投稿作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: タイムライン取得
+      description: タイムラインの投稿一覧を取得する。
+      tags: [Posts]
+      parameters:
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: string
+            enum: ["family", "watch"]
+          description: タイムラインの種類 (family: ファミリー, watch: ウォッチ)
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: 取得開始位置 (ページネーション用)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+          description: 取得件数 (ページネーション用)
+      responses:
+        '200':
+          description: タイムライン取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+  /posts/{post_id}:
+    get:
+      summary: 投稿詳細取得
+      description: 指定された投稿IDの投稿詳細を取得する。
+      tags: [Posts]
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+          description: 投稿ID
+      responses:
+        '200':
+          description: 投稿詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: 投稿が見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: 投稿削除
+      description: 指定された投稿IDの投稿を削除する。
+      tags: [Posts]
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+          description: 投稿ID
+      responses:
+        '204':
+          description: 投稿削除成功
+
+  /posts/{post_id}/comments:
+    post:
+      summary: コメント投稿
+      description: 指定された投稿にコメントを投稿する。
+      tags: [Comments]
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+          description: 投稿ID
+      requestBody:
+        required: true
+        description: コメント内容
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: コメント本文
+      responses:
+        '201':
+          description: コメント投稿成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: コメント一覧取得
+      description: 指定された投稿のコメント一覧を取得する。
+      tags: [Comments]
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+          description: 投稿ID
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: 取得開始位置 (ページネーション用)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+          description: 取得件数 (ページネーション用)
+      responses:
+        '200':
+          description: コメント一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Comment'
+  /posts/{post_id}/comments/{comment_id}:
+    delete:
+      summary: コメント削除
+      description: 指定された投稿のコメントを削除する
+      tags: [Comments]
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          description: 投稿ID
+          schema:
+            type: integer
+        - in: path
+          name: comment_id
+          required: true
+          description: コメントID
+          schema:
+            type: integer
+      responses:
+        '204':
+            description: コメント削除成功
+
+  /posts/{post_id}/likes:
+    post:
+      summary: いいね
+      description: 指定された投稿にいいねする。
+      tags: [Likes]
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+          description: 投稿ID
+      responses:
+        '201':
+          description: いいね成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Like'
+    delete:
+      summary: いいね取り消し
+      description: 指定された投稿のいいねを取り消す。
+      tags: [Likes]
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+          description: 投稿ID
+      responses:
+        '204':
+          description: いいね取り消し成功
+
+  /posts/{post_id}/highlights:
+    post:
+      summary: ハイライト
+      description: 指定された投稿にハイライトを付ける。
+      tags: [Highlights]
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+          description: 投稿ID
+      requestBody:
+        required: true
+        description: ハイライト情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                highlight_reason:
+                  type: string
+                  description: ハイライト理由
+      responses:
+        '201':
+          description: ハイライト成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Highlight'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: ハイライト一覧取得
+      description: 指定された投稿のハイライト一覧を取得する
+      tags: [Highlights]
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+            description: 投稿ID
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            description: 取得開始位置
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            description: 取得件数
+      responses:
+        '200':
+          description: ハイライト取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  highlights:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Highlight'
+
+  /stories:
+    post:
+      summary: ストーリー作成
+      description: 新しいストーリーを作成する。
+      tags: [Stories]
+      requestBody:
+        required: true
+        description: ストーリー情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                media_url:
+                  type: string
+                  description: メディアのURL (Box, YouTube, PodBean)
+                story_type:
+                  type: string
+                  enum: ["video", "image", "audio"]
+                  description: ストーリーの種類 (video: 動画, image: 画像, audio: 音声)
+      responses:
+        '201':
+          description: ストーリー作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Story'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: ストーリー一覧取得
+      description: 指定されたユーザのストーリー一覧を取得
+      tags: [Stories]
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: ユーザーID
+      responses:
+        '200':
+          description: ストーリー一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Story'
+
+  /events:
+    post:
+      summary: イベント作成
+      description: 新しいイベントを作成する (プレミアムユーザーのみ)。
+      tags: [Events]
+      requestBody:
+        required: true
+        description: イベント情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_name:
+                  type: string
+                  description: イベント名
+                content:
+                  type: string
+                  description: イベント内容
+                capacity:
+                  type: integer
+                  description: 定員
+                price:
+                  type: number
+                  description: 参加費
+                recruit_start:
+                  type: string
+                  format: date-time
+                  description: 募集開始日時
+                recruit_end:
+                  type: string
+                  format: date-time
+                  description: 募集終了日時
+                location:
+                  type: string
+                  description: 開催場所
+                event_start:
+                  type: string
+                  format: date-time
+                  description: イベント開始日時
+                event_end:
+                  type: string
+                  format: date-time
+                  description: イベント終了日時
+                organizer_id:
+                  type: integer
+                  description: イベント作成者のID
+      responses:
+        '201':
+          description: イベント作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: イベント一覧取得
+      description: イベント一覧を取得する。
+      tags: [Events]
+      parameters:
+        - in: query
+          name: location
+          schema:
+            type: string
+          description: 開催場所 (部分一致)
+        - in: query
+          name: min_price
+          schema:
+            type: number
+          description: 参加費 (下限)
+        - in: query
+          name: max_price
+          schema:
+            type: number
+          description: 参加費 (上限)
+        - in: query
+          name: start_date
+          schema:
+            type: string
+            format: date-time
+          description: イベント開始日時 (以降)
+        - in: query
+          name: end_date
+          schema:
+            type: string
+            format: date-time
+          description: イベント終了日時 (以前)
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: 取得開始位置 (ページネーション用)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+          description: 取得件数 (ページネーション用)
+      responses:
+        '200':
+          description: イベント一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+
+  /events/{event_id}:
+    get:
+      summary: イベント詳細取得
+      description: 指定されたイベントIDのイベント詳細を取得する。
+      tags: [Events]
+      parameters:
+        - in: path
+          name: event_id
+          required: true
+          schema:
+            type: integer
+          description: イベントID
+      responses:
+        '200':
+          description: イベント詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: イベントが見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /events/{event_id}/participants:
+    post:
+      summary: イベント参加
+      description: 指定されたイベントに参加する。
+      tags: [Events]
+      parameters:
+        - in: path
+          name: event_id
+          required: true
+          schema:
+            type: integer
+          description: イベントID
+      requestBody:
+        required: true
+        description: 参加者情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: 参加者のユーザーID
+      responses:
+        '201':
+          description: イベント参加成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventParticipant'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /events/{event_id}/participants/{user_id}:
+    delete:
+      summary: イベント参加キャンセル
+      description: イベントへの参加をキャンセルする
+      tags: [Events]
+      parameters:
+        - in: path
+          name: event_id
+          required: true
+          description: イベントID
+          schema:
+            type: integer
+        - in: path
+          name: user_id
+          required: true
+          description: ユーザーID
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: イベント参加キャンセル成功
+
+  /events/{event_id}/posts:
+    get:
+      summary: イベント関連投稿一覧取得
+      description: イベントに紐づけられた投稿一覧を取得する
+      tags: [Events]
+      parameters:
+        - in: path
+          name: event_id
+          required: true
+          description: イベントID
+          schema:
+            type: integer
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            description: 取得開始位置
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            description: 取得件数
+      responses:
+        '200':
+          description: 投稿一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+  /shops:
+    post:
+      summary: ショップ作成
+      description: 新しいショップを作成する。
+      tags: [Shops]
+      requestBody:
+        required: true
+        description: ショップ情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                shop_name:
+                  type: string
+                  description: ショップ名
+                description:
+                  type: string
+                  description: ショップ説明
+      responses:
+        '201':
+          description: ショップ作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /shops/{shop_id}:
+    get:
+      summary: ショップ情報取得
+      description: 指定されたショップIDのショップ情報を取得する。
+      tags: [Shops]
+      parameters:
+        - in: path
+          name: shop_id
+          required: true
+          schema:
+            type: integer
+          description: ショップID
+      responses:
+        '200':
+          description: ショップ情報取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+        '404':
+          description: ショップが見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /shops/{shop_id}/products:
+    post:
+      summary: 商品登録
+      description: 指定されたショップに商品を登録する。
+      tags: [Shops]
+      parameters:
+        - in: path
+          name: shop_id
+          required: true
+          schema:
+            type: integer
+          description: ショップID
+      requestBody:
+        required: true
+        description: 商品情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_name:
+                  type: string
+                  description: 商品名
+                description:
+                  type: string
+                  description: 商品説明
+                price:
+                  type: number
+                  description: 商品価格
+                image_url:
+                  type: string
+                  description: 商品画像のURL
+      responses:
+        '201':
+          description: 商品登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: 商品一覧取得
+      description: 指定されたショップの商品一覧を取得する。
+      tags: [Shops]
+      parameters:
+        - in: path
+          name: shop_id
+          required: true
+          schema:
+            type: integer
+          description: ショップID
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: 取得開始位置 (ページネーション用)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+          description: 取得件数 (ページネーション用)
+      responses:
+        '200':
+          description: 商品一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+
+  /products/{product_id}:
+    get:
+      summary: 商品詳細取得
+      description: 指定された商品IDの商品詳細を取得する。
+      tags: [Shops]
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+          description: 商品ID
+      responses:
+        '200':
+          description: 商品詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: 商品が見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /products/{product_id}/purchase:
+    post:
+      summary: 商品購入
+      description: 商品を購入し、Stripeでの決済を行う
+      tags: [Shops]
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            description: 商品ID
+      requestBody:
+        required: true
+        description: 購入情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: 購入者のユーザーID
+      responses:
+        '201':
+          description: 購入処理成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /search:
+    get:
+      summary: 検索
+      description: ユーザー、投稿、イベントをキーワード検索する。
+      tags: [Search]
+      parameters:
+        - in: query
+          name: keyword
+          required: true
+          schema:
+            type: string
+          description: 検索キーワード
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: 取得開始位置 (ページネーション用)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+          description: 取得件数 (ページネーション用)
+      responses:
+        '200':
+          description: 検索成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                    description: ユーザー検索結果
+                  posts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+                    description: 投稿検索結果
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+                    description: イベント検索結果
+
+  /ai/chat:
+    post:
+      summary: AIチャット
+      description: AIとチャット形式で対話する。
+      tags: [AI]
+      requestBody:
+        required: true
+        description: 質問内容
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                  description: 質問
+      responses:
+        '200':
+          description: AIチャット成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer:
+                    type: string
+                    description: AIからの回答
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /notifications:
+    get:
+      summary: 通知一覧取得
+      description: ユーザーの通知一覧を取得する。
+      tags: [Notifications]
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            description: ユーザーID
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+          description: 取得開始位置 (ページネーション用)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+          description: 取得件数 (ページネーション用)
+      responses:
+        '200':
+          description: 通知一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+  /notifications/{notification_id}/read:
+    put:
+      summary: 通知を既読にする
+      description: 指定された通知IDの通知を既読にする
+      tags: [Notifications]
+      parameters:
+        - in: path
+          name: notification_id
+          required: true
+          schema:
+            type: integer
+            description: 通知ID
+      responses:
+        '204':
+          description: 既読化成功
+
+  /admin/users:
+    get:
+      summary: ユーザー一覧取得(管理者)
+      description: 全ユーザーの一覧を取得する(管理者権限が必要)
+      tags: [Admin]
+      security:
+        - bearerAuth: []
+      parameters:
+       - in: query
+         name: offset
+         schema:
+            type: integer
+            default: 0
+            description: 取得開始位置(ページネーション)
+       - in: query
+         name: limit
+         schema:
+            type: integer
+            default: 20
+            description: 取得件数(ページネーション)
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '403':
+          description: 権限なし
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /admin/users/{user_id}/block:
+    put:
+      summary: ユーザー停止(管理者)
+      description: 指定されたユーザーIDのアカウントを停止する(管理者権限が必要)
+      tags: [Admin]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            description: ユーザーID
+      responses:
+        '204':
+          description: ユーザー停止成功
+        '403':
+          description: 権限なし
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /admin/users/{user_id}:
+    delete:
+      summary: ユーザー削除(管理者)
+      description: 指定されたユーザーIDのアカウントを削除する(管理者権限が必要)
+      tags: [Admin]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            description: ユーザーID
+      responses:
+        '204':
+          description: ユーザー削除成功
+        '403':
+          description: 権限なし
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /admin/reports:
+    get:
+      summary: 違反報告一覧取得(管理者)
+      description: 違反報告の一覧を取得する(管理者権限が必要)
+      tags: [Admin]
+      security:
+        - bearerAuth: []
+      parameters:
+       - in: query
+         name: offset
+         schema:
+            type: integer
+            default: 0
+            description: 取得開始位置
+       - in: query
+         name: limit
+         schema:
+            type: integer
+            default: 20
+            description: 取得件数
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reports:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Report'
+        '403':
+          description: 権限なし
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /admin/posts/{post_id}/moderate:
+    put:
+      summary: 投稿モデレーション(管理者)
+      description: 指定された投稿IDの投稿をモデレーション(削除など)する(管理者権限が必要)
+      tags: [Admin]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+            description: 投稿ID
+      responses:
+        '204':
+          description: モデレーション成功
+        '403':
+          description: 権限なし
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /admin/events/{event_id}/moderate:
+    put:
+      summary: イベント削除(管理者)
+      description: 指定されたイベントIDのイベントを削除する(管理者権限が必要)
+      tags: [Admin]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: event_id
+          required: true
+          schema:
+            type: integer
+            description: イベントID
+      responses:
+        '204':
+          description: イベント削除成功
+        '403':
+          description: 権限なし
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

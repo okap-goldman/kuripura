@@ -1,4 +1,5 @@
 erDiagram
+
     %% Users テーブル
     USERS {
         bigint user_id PK
