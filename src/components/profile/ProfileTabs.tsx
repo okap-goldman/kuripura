@@ -5,8 +5,8 @@ import { SAMPLE_POSTS } from "@/lib/data";
 
 interface ProfileTabsProps {
   selectedTab: string;
-  setSelectedPost: (post: any) => void;
-  setSelectedShopItem?: (item: any) => void;
+  setSelectedPost: (post: PostType) => void;
+  setSelectedShopItem?: (item: PostType) => void;
 }
 
 // Define the post type to match the data structure

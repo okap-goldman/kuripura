@@ -1,4 +1,4 @@
-import { Home, Search, PlusSquare, Compass, User, MessageCircle } from "lucide-react";
+import { Home, Search, PlusSquare, Compass, User, Calendar } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { CreatePostDialog } from "./CreatePostDialog";
@@ -27,8 +27,8 @@ export function FooterNav() {
         <Link to="/discover" className={`${isActive('/discover') ? 'text-primary' : 'text-muted-foreground'}`}>
           <Compass className="w-6 h-6" />
         </Link>
-        <Link to="/messages" className={`${isActive('/messages') ? 'text-primary' : 'text-muted-foreground'}`}>
-          <MessageCircle className="w-6 h-6" />
+        <Link to="/events" className={`${isActive('/events') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <Calendar className="w-6 h-6" />
         </Link>
         <Link to="/profile" className={`${isActive('/profile') ? 'text-primary' : 'text-muted-foreground'}`}>
           <User className="w-6 h-6" />

@@ -40,7 +40,7 @@ export default function Search() {
 
   const handleQuestionClick = (question: string) => {
     setSearchQuery(question);
-    handleSearch(new Event('submit') as any);
+    handleSearch(new Event('submit') as React.FormEvent);
   };
 
   if (isChatMode) {

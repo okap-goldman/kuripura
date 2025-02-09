@@ -4,12 +4,20 @@ import { FooterNav } from "@/components/FooterNav";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileTabs } from "@/components/profile/ProfileTabs";
 import { Post } from "@/components/Post";
+import { PostType } from "@/types/post";
+
+interface ShopItem {
+  image: string;
+  name: string;
+  description: string;
+  price: number;
+}
 
 const Profile = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedTab, setSelectedTab] = useState("media");
-  const [selectedPost, setSelectedPost] = useState<any | null>(null);
-  const [selectedShopItem, setSelectedShopItem] = useState<any | null>(null);
+  const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
+  const [selectedShopItem, setSelectedShopItem] = useState<ShopItem | null>(null);
 
   const handlePlayVoice = () => {
     setIsPlaying(!isPlaying);
