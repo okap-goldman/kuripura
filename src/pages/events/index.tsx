@@ -16,6 +16,14 @@ interface Event {
   imageUrl?: string
 }
 
+interface EventFilters {
+  keyword?: string;
+  location?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  date?: Date;
+}
+
 // モックデータ
 const mockEvents: Event[] = [
   {
@@ -56,7 +64,7 @@ const mockEvents: Event[] = [
 export default function EventsPage() {
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(mockEvents)
 
-  const handleFilterChange = (filters: any) => {
+  const handleFilterChange = (filters: EventFilters) => {
     // 実際のアプリケーションではAPIコールなどで検索を行う
     let filtered = mockEvents
 

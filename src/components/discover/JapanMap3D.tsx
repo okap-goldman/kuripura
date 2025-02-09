@@ -9,15 +9,16 @@ export function JapanMap3D({ onRegionSelect }: JapanMap3DProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
     // Scene setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, containerRef.current.clientWidth / containerRef.current.clientHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     
-    renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
-    containerRef.current.appendChild(renderer.domElement);
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
 
     // Add lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -57,7 +58,7 @@ export function JapanMap3D({ onRegionSelect }: JapanMap3DProps) {
     const mouse = new THREE.Vector2();
 
     function onMouseMove(event: MouseEvent) {
-      const rect = containerRef.current?.getBoundingClientRect();
+      const rect = container.getBoundingClientRect();
       if (!rect) return;
       
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -68,18 +69,18 @@ export function JapanMap3D({ onRegionSelect }: JapanMap3DProps) {
 
       scene.children.forEach(child => {
         if (child instanceof THREE.Mesh) {
-          child.material.opacity = 0.8;
+          (child.material as THREE.MeshPhongMaterial).opacity = 0.8;
         }
       });
 
       if (intersects.length > 0) {
         const mesh = intersects[0].object as THREE.Mesh;
-        mesh.material.opacity = 1;
+        (mesh.material as THREE.MeshPhongMaterial).opacity = 1;
       }
     }
 
     function onClick(event: MouseEvent) {
-      const rect = containerRef.current?.getBoundingClientRect();
+      const rect = container.getBoundingClientRect();
       if (!rect) return;
       
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -94,12 +95,13 @@ export function JapanMap3D({ onRegionSelect }: JapanMap3DProps) {
       }
     }
 
-    containerRef.current.addEventListener('mousemove', onMouseMove);
-    containerRef.current.addEventListener('click', onClick);
+    container.addEventListener('mousemove', onMouseMove);
+    container.addEventListener('click', onClick);
 
     // Animation
+    let animationFrameId: number;
     function animate() {
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
       scene.rotation.y += 0.001;
       renderer.render(scene, camera);
     }
@@ -107,11 +109,10 @@ export function JapanMap3D({ onRegionSelect }: JapanMap3DProps) {
 
     // Cleanup
     return () => {
-      if (containerRef.current) {
-        containerRef.current.removeEventListener('mousemove', onMouseMove);
-        containerRef.current.removeEventListener('click', onClick);
-        containerRef.current.removeChild(renderer.domElement);
-      }
+      container.removeEventListener('mousemove', onMouseMove);
+      container.removeEventListener('click', onClick);
+      container.removeChild(renderer.domElement);
+      cancelAnimationFrame(animationFrameId);
     };
   }, [onRegionSelect]);
 
