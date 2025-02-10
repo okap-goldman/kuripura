@@ -1,7 +1,14 @@
 import { createMockRequest, createMockResponse } from '../utils/test-utils';
 import { createFollow } from '../../controllers/follows';
 
+/**
+ * フォロー作成のテストケース
+ * - ファミリーフォロー（理由必須）
+ * - ウォッチフォロー（理由不要）
+ * - バリデーションエラー
+ */
 describe('Create Follow', () => {
+  // ファミリーフォローを理由付きで作成できることを確認
   it('should create family follow with reason successfully', async () => {
     const req = createMockRequest({
       body: {
@@ -27,6 +34,7 @@ describe('Create Follow', () => {
     );
   });
 
+  // ウォッチフォローを作成できることを確認（理由は不要）
   it('should create watch follow successfully', async () => {
     const req = createMockRequest({
       body: {
@@ -50,6 +58,7 @@ describe('Create Follow', () => {
     );
   });
 
+  // フォロー対象のユーザーIDが不正な場合は400エラーを返すことを確認
   it('should return 400 for invalid followee_id', async () => {
     const req = createMockRequest({
       body: {
@@ -70,6 +79,7 @@ describe('Create Follow', () => {
     );
   });
 
+  // フォロータイプが不正な場合は400エラーを返すことを確認
   it('should return 400 for invalid follow_type', async () => {
     const req = createMockRequest({
       body: {
@@ -90,6 +100,7 @@ describe('Create Follow', () => {
     );
   });
 
+  // 必須フィールドが欠けている場合は400エラーを返すことを確認
   it('should return 400 for missing required fields', async () => {
     const req = createMockRequest({
       body: {
@@ -109,6 +120,7 @@ describe('Create Follow', () => {
     );
   });
 
+  // ファミリーフォローで理由が欠けている場合は400エラーを返すことを確認
   it('should return 400 for missing reason in family follow', async () => {
     const req = createMockRequest({
       body: {
@@ -129,6 +141,7 @@ describe('Create Follow', () => {
     );
   });
 
+  // ファミリーフォローで理由が空文字の場合は400エラーを返すことを確認
   it('should return 400 for empty reason in family follow', async () => {
     const req = createMockRequest({
       body: {
@@ -150,6 +163,7 @@ describe('Create Follow', () => {
     );
   });
 
+  // レスポンスのスキーマが全ての必須フィールドを含んでいることを確認
   it('should validate all required fields in the response schema', async () => {
     const req = createMockRequest({
       body: {
