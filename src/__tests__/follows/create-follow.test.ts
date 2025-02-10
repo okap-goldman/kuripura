@@ -1,5 +1,7 @@
+import { jest, describe, it, expect } from '@jest/globals';
 import { createMockRequest, createMockResponse } from '../utils/test-utils';
 import { createFollow } from '../../controllers/follows';
+import { prismaMock } from '../utils/mock-db';
 
 /**
  * フォロー作成のテストケース
@@ -10,52 +12,59 @@ import { createFollow } from '../../controllers/follows';
 describe('Create Follow', () => {
   // ファミリーフォローを理由付きで作成できることを確認
   it('should create family follow with reason successfully', async () => {
+    const mockFollow = {
+      id: 1,
+      followerId: 1,
+      followeeId: 123,
+      followType: 'family',
+      reason: 'Great content creator',
+      createdAt: new Date().toISOString()
+    };
+
+    prismaMock.follow.create.mockResolvedValue(mockFollow);
+
     const req = createMockRequest({
       body: {
         followee_id: 123,
         follow_type: 'family',
         reason: 'Great content creator'
-      }
+      },
+      user: { id: 1 }
     });
     const res = createMockResponse();
 
     await createFollow(req as any, res as any);
 
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({
-        follow_id: expect.any(Number),
-        follower_id: expect.any(Number),
-        followee_id: 123,
-        follow_type: 'family',
-        reason: 'Great content creator',
-        created_at: expect.any(String)
-      })
-    );
+    expect(res.json).toHaveBeenCalledWith(mockFollow);
   });
 
   // ウォッチフォローを作成できることを確認（理由は不要）
   it('should create watch follow successfully', async () => {
+    const mockFollow = {
+      id: 2,
+      followerId: 1,
+      followeeId: 456,
+      followType: 'watch',
+      reason: null,
+      createdAt: new Date().toISOString()
+    };
+
+    prismaMock.follow.create.mockResolvedValue(mockFollow);
+
     const req = createMockRequest({
       body: {
         followee_id: 456,
         follow_type: 'watch'
-      }
+      },
+      user: { id: 1 }
     });
     const res = createMockResponse();
 
     await createFollow(req as any, res as any);
 
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({
-        follow_id: expect.any(Number),
-        follower_id: expect.any(Number),
-        followee_id: 456,
-        follow_type: 'watch',
-        created_at: expect.any(String)
-      })
-    );
+    expect(res.json).toHaveBeenCalledWith(mockFollow);
   });
 
   // フォロー対象のユーザーIDが不正な場合は400エラーを返すことを確認
