@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { uploadProfileImage } from '@/lib/storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -96,17 +98,30 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
     }
   };
 
+  const { updateProfile } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name.trim() || !bio.trim()) {
-      alert('名前と自己紹介文を入力してください。');
-      return;
-    }
+    try {
+      let profileImageUrl = imagePreview;
+      if (fileInputRef.current?.files?.[0]) {
+        profileImageUrl = await uploadProfileImage(fileInputRef.current.files[0]);
+      }
 
-    // TODO: Implement profile update
-    console.log({ name, username, bio, externalLink, imagePreview, audioUrl, pronouns });
-    onSubmit();
+      await updateProfile({
+        user_name: name,
+        profile_icon_url: profileImageUrl,
+        introduction: bio,
+        shop_link_url: externalLink || null,
+        is_shop_link: !!externalLink,
+      });
+
+      onSubmit();
+    } catch (error) {
+      console.error('プロフィールの更新に失敗しました:', error);
+      alert('プロフィールの更新に失敗しました。もう一度お試しください。');
+    }
   };
 
   return (
