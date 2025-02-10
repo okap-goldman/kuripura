@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Image, Video, Mic, BookText, History } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface CreatePostDialogProps {
   isOpen: boolean;
@@ -15,9 +16,12 @@ export function CreatePostDialog({ isOpen, onClose }: CreatePostDialogProps) {
     { icon: History, label: "ストーリーズ", value: "story" },
   ];
 
+  const navigate = useNavigate();
+
   const handlePostTypeSelect = (type: string) => {
-    console.log("Selected post type:", type);
-    // TODO: Implement post creation logic
+    if (type === 'text') {
+      navigate('/post/text');
+    }
     onClose();
   };
 
