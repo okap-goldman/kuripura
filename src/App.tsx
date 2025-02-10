@@ -24,21 +24,22 @@ function App() {
         <AuthProvider>
           <TooltipProvider>
             <Toaster />
-          <Sonner />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/discover" element={<Discover />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/messages" element={<MessagesPage />} />
-            <Route path="/chat/:id" element={<ChatPage />} />
-            <Route path="/notifications" element={<NotificationsPage />} />
-            <Route path="/auth/login" element={<LoginPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-          <FooterNav />
-        </TooltipProvider>
+            <Sonner />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/discover" element={<Discover />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/messages" element={<MessagesPage />} />
+              <Route path="/chat/:id" element={<ChatPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/auth/login" element={<LoginPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+            <FooterNav />
+          </TooltipProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </BrowserRouter>
   );
