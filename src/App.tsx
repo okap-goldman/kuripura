@@ -3,6 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import LoginPage from "@/pages/auth/login";
 import Index from "./pages/Index";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
@@ -19,8 +21,9 @@ function App() {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
           <Sonner />
           <Routes>
             <Route path="/" element={<Index />} />
@@ -31,6 +34,7 @@ function App() {
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/chat/:id" element={<ChatPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/auth/login" element={<LoginPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <FooterNav />
