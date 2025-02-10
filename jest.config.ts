@@ -5,7 +5,7 @@ export default {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  testMatch: ['**/__tests__/**/*.test.ts'],
+  testMatch: ['**/__tests__/**/*.test.{ts,tsx}'],
   moduleFileExtensions: ['ts', 'js', 'json'],
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts']
 };
