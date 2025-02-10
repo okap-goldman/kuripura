@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: [
+      "google-login-app-tunnel-iru0eesc.devinapps.com"
+    ],
   },
   plugins: [
     react(),
