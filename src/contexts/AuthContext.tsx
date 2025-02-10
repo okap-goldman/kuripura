@@ -39,6 +39,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
+    if (import.meta.env.VITE_DEV_MODE === 'true') {
+      const mockUser: User = {
+        user_id: 1,
+        user_name: 'テストユーザー',
+        email: 'test@example.com',
+        profile_icon_url: null,
+        profile_audio_url: null,
+        shop_link_url: null,
+        is_shop_link: false,
+        introduction: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        notification_settings: {
+          comments: true,
+          highlights: true,
+          new_followers: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      };
+      setUser(mockUser);
+      setIsInitialized(true);
+      setIsLoading(false);
+      return;
+    }
+
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
