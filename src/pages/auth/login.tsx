@@ -25,9 +25,15 @@ export default function LoginPage() {
     try {
       // Google OAuth URLへリダイレクト
       const redirectUri = `${window.location.origin}/auth/callback`;
-      const oauthUrl = `/api/v1/auth/google?redirect_uri=${encodeURIComponent(redirectUri)}`;
-      window.location.href = oauthUrl;
+      const oauthUrl = new URL('/api/v1/auth/google', window.location.origin);
+      oauthUrl.searchParams.append('redirect_uri', redirectUri);
+      
+      // デバッグ用にURLをコンソールに出力
+      console.log('Redirecting to:', oauthUrl.toString());
+      
+      window.location.href = oauthUrl.toString();
     } catch (error) {
+      console.error('Google login error:', error);
       toast({
         title: 'エラー',
         description: 'ログインに失敗しました',
@@ -100,4 +106,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}        
+}                
