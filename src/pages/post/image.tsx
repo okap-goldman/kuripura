@@ -25,6 +25,7 @@ export default function ImagePostPage() {
   const [selectedLayout, setSelectedLayout] = useState(LAYOUT_OPTIONS[0]);
   const [images, setImages] = useState<ImagePreview[]>([]);
   const [description, setDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -52,6 +53,7 @@ export default function ImagePostPage() {
       return;
     }
 
+    setIsLoading(true);
     try {
       const uploadedUrls = await Promise.all(
         images.map(image => uploadImage(image.file))
@@ -81,6 +83,8 @@ export default function ImagePostPage() {
       } else {
         alert('画像のアップロードに失敗しました。もう一度お試しください。');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -99,9 +103,9 @@ export default function ImagePostPage() {
           <h1 className="text-lg font-semibold">画像投稿</h1>
           <Button
             onClick={handleSubmit}
-            disabled={images.length === 0}
+            disabled={images.length === 0 || isLoading}
           >
-            投稿する
+            {isLoading ? '投稿中...' : '投稿する'}
           </Button>
         </div>
 
@@ -203,4 +207,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}  
+}    
