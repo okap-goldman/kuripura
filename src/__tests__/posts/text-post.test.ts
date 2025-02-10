@@ -89,7 +89,7 @@ describe('Text Post Feature', () => {
 
   test('should require authentication', async () => {
     // 未認証状態をシミュレート
-    (auth as any).currentUser = null;
+    (auth as typeof auth).currentUser = null;
 
     const postData = {
       userId: mockUser.uid,
