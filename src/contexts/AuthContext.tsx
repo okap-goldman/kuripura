@@ -1,74 +1,63 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { User } from '@/types/user';
+import { auth } from '@/lib/firebase';
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, type User as FirebaseUser } from 'firebase/auth';
 
 type AuthContextType = {
   user: User | null;
   isLoading: boolean;
-  login: (code: string) => Promise<void>;
-  logout: () => void;
+  login: () => Promise<void>;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const convertFirebaseUser = (firebaseUser: FirebaseUser): User => {
+  return {
+    id: firebaseUser.uid,
+    email: firebaseUser.email || '',
+    name: firebaseUser.displayName || '',
+    photoUrl: firebaseUser.photoURL || '',
+  };
+};
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const login = async (code: string) => {
+  const login = async () => {
     try {
-      const response = await fetch('/api/v1/auth/google/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code }),
-      });
-      
-      if (!response.ok) throw new Error('認証に失敗しました');
-      
-      const data = await response.json();
-      setUser(data.user);
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('refresh_token', data.refresh_token);
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      setUser(convertFirebaseUser(result.user));
     } catch (error) {
       console.error('Login error:', error);
       throw error;
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+      throw error;
+    }
   };
 
   useEffect(() => {
-    // トークンの有効性チェックと自動更新
-    const checkAuth = async () => {
-      const token = localStorage.getItem('refresh_token');
-      if (!token) {
-        setIsLoading(false);
-        return;
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setIsLoading(true);
+      if (firebaseUser) {
+        setUser(convertFirebaseUser(firebaseUser));
+      } else {
+        setUser(null);
       }
+      setIsLoading(false);
+    });
 
-      try {
-        const response = await fetch('/api/v1/auth/google/refresh', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refresh_token: token }),
-        });
-        
-        if (!response.ok) throw new Error('トークンの更新に失敗しました');
-        
-        const data = await response.json();
-        localStorage.setItem('access_token', data.access_token);
-      } catch (error) {
-        console.error('Token refresh error:', error);
-        logout();
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
+    return () => unsubscribe();
   }, []);
 
   return (
