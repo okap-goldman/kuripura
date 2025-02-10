@@ -11,15 +11,15 @@ const mockCurrentUser = {
 };
 
 jest.mock('@/lib/firebase', () => ({
-  createTextPost: jest.fn().mockImplementation((data) => {
+  createTextPost: jest.fn().mockImplementation(async (data) => {
     if (!mockCurrentUser) {
-      throw new Error('ログインが必要です。');
+      return Promise.reject(new Error('ログインが必要です。'));
     }
     if (!data.title.trim() || !data.content.trim()) {
-      throw new Error('タイトルと本文を入力してください。');
+      return Promise.reject(new Error('タイトルと本文を入力してください。'));
     }
     if (data.content.length > 10000) {
-      throw new Error('本文は10,000文字以内で入力してください。');
+      return Promise.reject(new Error('本文は10,000文字以内で入力してください。'));
     }
     return Promise.resolve({ id: 'test-post-id' });
   }),
