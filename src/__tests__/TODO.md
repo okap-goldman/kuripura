@@ -10,9 +10,9 @@
 - [x] GET /users/{user_id}/followers - Get user followers
 - [x] GET /users/{user_id}/following - Get user following
 
-## Follows [0/2]
-- [ ] POST /follows - Follow a user
-- [ ] DELETE /follows/{follow_id} - Unfollow a user
+## Follows [2/2]
+- [x] POST /follows - Follow a user
+- [x] DELETE /follows/{follow_id} - Unfollow a user
 
 ## Posts [0/4]
 - [ ] POST /posts - Create post
