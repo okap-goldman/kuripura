@@ -7,18 +7,12 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   base: '',
   server: {
-    host: "::",
+    host: true,
     port: 8080,
+    strictPort: false,
     hmr: {
-      clientPort: 443,
-      protocol: 'wss',
-      host: "google-login-app-tunnel-iru0eesc.devinapps.com",
-      path: "/@vite/client",
-      timeout: 30000
-    },
-    allowedHosts: [
-      "google-login-app-tunnel-iru0eesc.devinapps.com"
-    ]
+      overlay: true
+    }
   },
   plugins: [
     react(),

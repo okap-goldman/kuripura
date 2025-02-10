@@ -6,6 +6,7 @@ import { auth } from '@/lib/firebase';
 type AuthContextType = {
   user: User | null;
   isLoading: boolean;
+  isInitialized: boolean;
   login: () => Promise<void>;
   logout: () => Promise<void>;
 };
@@ -28,9 +29,35 @@ const createUserFromFirebase = (firebaseUser: any): User => ({
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setIsLoading(true);
+      try {
+        if (firebaseUser) {
+          const appUser = createUserFromFirebase(firebaseUser);
+          setUser(appUser);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Auth state change error:', error);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+        setIsInitialized(true);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const login = async () => {
     try {
+      setIsLoading(true);
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const appUser = createUserFromFirebase(result.user);
@@ -38,37 +65,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Login error:', error);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const logout = async () => {
     try {
+      setIsLoading(true);
       await signOut(auth);
       setUser(null);
     } catch (error) {
       console.error('Logout error:', error);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setIsLoading(true);
-      if (firebaseUser) {
-        const appUser = createUserFromFirebase(firebaseUser);
-        setUser(appUser);
-      } else {
-        setUser(null);
-      }
-      setIsLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ user, isLoading, isInitialized, login, logout }}>
+      {isInitialized ? children : null}
     </AuthContext.Provider>
   );
 }
