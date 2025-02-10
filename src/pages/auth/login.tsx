@@ -12,6 +12,9 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  
+  const isDevelopment = import.meta.env.MODE === 'development';
+  const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
 
   useEffect(() => {
     if (isInitialized && user) {
@@ -60,6 +63,11 @@ export default function LoginPage() {
         </div>
 
         <div className="space-y-6">
+          {isDevelopment && testingEmail && (
+            <div className="text-sm text-gray-500 text-center">
+              開発環境: {testingEmail} でログイン
+            </div>
+          )}
           <Button
             onClick={handleGoogleLogin}
             variant="outline"
@@ -92,4 +100,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}                
+}                                
