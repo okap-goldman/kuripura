@@ -2,15 +2,24 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import ProfileEditForm from '@/pages/profile/edit-form';
 import { useAuth } from '@/contexts/AuthContext';
 import { uploadProfileImage } from '@/lib/storage';
+import type { User } from '@/types/user';
 
 jest.mock('@/contexts/AuthContext');
 jest.mock('@/lib/storage');
 
-const mockUseAuth = useAuth as jest.Mock;
-const mockUploadProfileImage = uploadProfileImage as jest.Mock;
+const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
+const mockUploadProfileImage = uploadProfileImage as jest.MockedFunction<typeof uploadProfileImage>;
 
 describe('ProfileEditForm', () => {
-  const mockProfile = {
+  const mockProfile: {
+    name: string;
+    username: string;
+    image: string;
+    bio: string;
+    bioAudioUrl: string;
+    externalLink?: string;
+    pronouns?: string;
+  } = {
     name: 'Test User',
     username: 'testuser',
     image: 'https://example.com/test.jpg',
@@ -20,13 +29,18 @@ describe('ProfileEditForm', () => {
     pronouns: '',
   };
 
-  const mockUpdateProfile = jest.fn();
+  const mockUpdateProfile = jest.fn() as jest.MockedFunction<(data: Partial<User>) => Promise<void>>;
   const mockOnSubmit = jest.fn();
   const mockOnCancel = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseAuth.mockReturnValue({
+      user: null,
+      isLoading: false,
+      isInitialized: true,
+      login: jest.fn(),
+      logout: jest.fn(),
       updateProfile: mockUpdateProfile,
     });
   });
