@@ -5,9 +5,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 
 export default function Header() {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  if (!user) {
+    return null;
+  }
 
   const handleLogout = async () => {
     try {
