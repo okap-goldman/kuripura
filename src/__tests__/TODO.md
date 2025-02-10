@@ -14,8 +14,8 @@
 - [x] POST /follows - Follow a user
 - [x] DELETE /follows/{follow_id} - Unfollow a user
 
-## Posts [0/4]
-- [ ] POST /posts - Create post
+## Posts [1/4]
+- [x] POST /posts - Create post
 - [ ] GET /posts - Get timeline
 - [ ] GET /posts/{post_id} - Get post details
 - [ ] DELETE /posts/{post_id} - Delete post
