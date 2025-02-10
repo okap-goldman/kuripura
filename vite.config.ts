@@ -9,11 +9,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    hmr: {
-      host: "google-login-app-tunnel-iru0eesc.devinapps.com",
-      clientPort: 443,
-      protocol: 'wss'
-    },
+    hmr: false,
     allowedHosts: [
       "google-login-app-tunnel-iru0eesc.devinapps.com"
     ]
