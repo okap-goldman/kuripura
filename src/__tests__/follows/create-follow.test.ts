@@ -26,7 +26,7 @@ describe('Create Follow', () => {
     const mockFollow = {
       id: 1,
       followerId: 1,
-      followeeId: 123,
+      followeeId: parseInt("123"),
       followType: 'family',
       reason: 'Great content creator',
       createdAt: new Date()
@@ -66,7 +66,7 @@ describe('Create Follow', () => {
     const mockFollow = {
       id: 2,
       followerId: 1,
-      followeeId: 456,
+      followeeId: parseInt("456"),
       followType: 'watch',
       reason: null,
       createdAt: new Date()

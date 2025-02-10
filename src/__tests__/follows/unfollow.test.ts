@@ -36,7 +36,7 @@ describe('Unfollow', () => {
 
     const req = createMockRequest({
       params: {
-        follow_id: '123'
+        follow_id: 123
       },
       body: {
         reason: 'No longer interested'
@@ -55,7 +55,7 @@ describe('Unfollow', () => {
 
     const req = createMockRequest({
       params: {
-        follow_id: '999999'
+        follow_id: 999999
       },
       body: {
         reason: 'No longer interested'
@@ -78,7 +78,7 @@ describe('Unfollow', () => {
   it('should return 400 for invalid follow_id format', async () => {
     const req = createMockRequest({
       params: {
-        follow_id: 'invalid-id'
+        follow_id: 'abc'
       },
       body: {
         reason: 'No longer interested'
