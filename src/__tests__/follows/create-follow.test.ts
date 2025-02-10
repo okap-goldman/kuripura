@@ -2,6 +2,13 @@ import { jest, describe, it, expect } from '@jest/globals';
 import { createMockRequest, createMockResponse } from '../utils/test-utils';
 import { createFollow } from '../../controllers/follows';
 import { prismaMock } from '../utils/mock-db';
+import { NotificationService } from '../../services/notification';
+
+jest.mock('../../services/notification', () => ({
+  NotificationService: {
+    create: jest.fn()
+  }
+}));
 
 /**
  * フォロー作成のテストケース
