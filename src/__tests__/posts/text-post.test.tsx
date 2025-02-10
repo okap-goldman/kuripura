@@ -11,7 +11,18 @@ const mockCurrentUser = {
 };
 
 jest.mock('@/lib/firebase', () => ({
-  createTextPost: jest.fn(),
+  createTextPost: jest.fn().mockImplementation((data) => {
+    if (!mockCurrentUser) {
+      throw new Error('ログインが必要です。');
+    }
+    if (!data.title.trim() || !data.content.trim()) {
+      throw new Error('タイトルと本文を入力してください。');
+    }
+    if (data.content.length > 10000) {
+      throw new Error('本文は10,000文字以内で入力してください。');
+    }
+    return Promise.resolve({ id: 'test-post-id' });
+  }),
   auth: {
     get currentUser() {
       return mockCurrentUser;
