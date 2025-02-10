@@ -8,6 +8,9 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { useToast } from '@/components/ui/use-toast';
+import { createTextPost } from '@/lib/firebase';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function TextPostPage() {
   const navigate = useNavigate();
@@ -16,22 +19,61 @@ export default function TextPostPage() {
   const [view, setView] = useState<'edit' | 'preview'>('edit');
   const [isPublic, setIsPublic] = useState(true);
 
+  const { toast } = useToast();
+  const { user } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!user) {
+      toast({
+        title: 'エラー',
+        description: 'ログインが必要です。',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     if (!title.trim() || !content.trim()) {
-      alert('タイトルと本文を入力してください。');
+      toast({
+        title: 'エラー',
+        description: 'タイトルと本文を入力してください。',
+        variant: 'destructive',
+      });
       return;
     }
 
     if (content.length > 10000) {
-      alert('本文は10,000文字以内で入力してください。');
+      toast({
+        title: 'エラー',
+        description: '本文は10,000文字以内で入力してください。',
+        variant: 'destructive',
+      });
       return;
     }
 
-    // TODO: Implement post submission
-    console.log({ title, content, isPublic });
-    navigate('/');
+    try {
+      await createTextPost({
+        userId: user.uid,
+        title,
+        content,
+        isPublic,
+      });
+      
+      toast({
+        title: '投稿完了',
+        description: '投稿が完了しました。',
+      });
+      
+      navigate('/timeline');
+    } catch (error) {
+      console.error('Post creation error:', error);
+      toast({
+        title: 'エラー',
+        description: '投稿に失敗しました。',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (
@@ -121,4 +163,4 @@ export default function TextPostPage() {
       </div>
     </div>
   );
-} 
+}  
