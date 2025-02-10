@@ -15,6 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const createUserFromFirebase = (firebaseUser: any): User => ({
   user_id: parseInt(firebaseUser.uid.slice(0, 8), 16), // UIDの最初の8文字を数値に変換
+  uid: firebaseUser.uid, // Firebase UIDを保持
   user_name: firebaseUser.displayName || '名称未設定',
   email: firebaseUser.email || '',
   profile_icon_url: firebaseUser.photoURL,
