@@ -6,9 +6,11 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { ArrowLeft, Video as VideoIcon, Upload, Play, Pause } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useYouTubeUpload } from '@/hooks/use-youtube-upload';
 
 export default function VideoPostPage() {
   const navigate = useNavigate();
+  const { uploadVideo, progress, error: uploadError, isUploading } = useYouTubeUpload();
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -89,9 +91,40 @@ export default function VideoPostPage() {
       return;
     }
 
-    // TODO: Implement video upload and post submission
-    console.log({ videoBlob, description, isPublic });
-    navigate('/');
+    try {
+      const videoFile = new File([videoBlob], 'video.webm', { type: 'video/webm' });
+      const videoUrl = await uploadVideo(videoFile, description || '無題', isPublic);
+
+      if (uploadError) {
+        alert(uploadError);
+        return;
+      }
+
+      if (videoUrl) {
+        // バックエンドAPIを呼び出して投稿を作成
+        // TODO: createPost APIの実装後に統合
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('投稿の作成に失敗しました:', error);
+      alert(error instanceof Error ? error.message : '投稿の作成に失敗しました。');
+    }
+  };
+
+  // アップロード進捗の表示
+  const renderProgress = () => {
+    if (!isUploading) return null;
+    return (
+      <div className="mt-4">
+        <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-blue-500 transition-all"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <p className="text-sm text-gray-500 mt-1">アップロード中... {progress}%</p>
+      </div>
+    );
   };
 
   return (
@@ -109,13 +142,15 @@ export default function VideoPostPage() {
           <h1 className="text-lg font-semibold">動画投稿</h1>
           <Button
             onClick={handleSubmit}
-            disabled={!videoBlob}
+            disabled={!videoBlob || isUploading}
           >
-            投稿する
+            {isUploading ? 'アップロード中...' : '投稿する'}
           </Button>
         </div>
 
         <div className="py-6 space-y-6">
+          {/* アップロード進捗 */}
+          {renderProgress()}
           {/* 公開設定 */}
           <div className="flex items-center justify-between">
             <Label htmlFor="public-switch">公開設定</Label>
@@ -140,7 +175,7 @@ export default function VideoPostPage() {
                 muted
                 playsInline
                 className="w-full aspect-video rounded-lg bg-black"
-                srcObject={streamRef.current}
+                {...{ srcObject: streamRef.current }}
               />
             )}
             
@@ -225,4 +260,4 @@ export default function VideoPostPage() {
       </div>
     </div>
   );
-} 
+}        
