@@ -9,6 +9,15 @@ import { useState, useEffect } from "react";
 import { getNotificationSettings, updateNotificationSettings } from "../../controllers/settings";
 import type { NotificationSettings } from "../../types/user";
 
+// 開発環境用のモックデータ
+const mockSettings: NotificationSettings = {
+  comments: true,
+  highlights: true,
+  new_followers: true,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString()
+};
+
 export default function SettingsPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -16,9 +25,13 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (user) {
-      getNotificationSettings(user.user_id.toString())
-        .then(setSettings)
-        .catch(console.error);
+      if (import.meta.env.VITE_DEV_MODE === 'true') {
+        setSettings(mockSettings);
+      } else {
+        getNotificationSettings(user.user_id.toString())
+          .then(setSettings)
+          .catch(console.error);
+      }
     }
   }, [user]);
 
