@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { FcGoogle } from 'react-icons/fc';
@@ -8,9 +8,17 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const { login } = useAuth();
+  const { user, isInitialized, login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (isInitialized && user) {
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
+    }
+  }, [user, isInitialized, navigate, location]);
 
   const handleGoogleLogin = async () => {
     if (!agreedToTerms) {
@@ -24,7 +32,6 @@ export default function LoginPage() {
 
     try {
       await login();
-      navigate('/');
       toast({
         title: 'ログイン成功',
         description: 'ようこそ！',
@@ -39,7 +46,11 @@ export default function LoginPage() {
     }
   };
 
-  // Firebase認証を使用するため、コールバック処理は不要
+  if (!isInitialized) {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-rose-500"></div>
+    </div>;
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-4">
