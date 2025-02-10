@@ -7,12 +7,18 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   base: '',
   server: {
-    host: true,
+    host: "::",
     port: 8080,
-    strictPort: false,
     hmr: {
-      overlay: true
-    }
+      clientPort: 443,
+      protocol: 'wss',
+      host: "kanushi-da5a2.firebaseapp.com",
+      path: "/@vite/client",
+      timeout: 30000
+    },
+    allowedHosts: [
+      "kanushi-da5a2.firebaseapp.com"
+    ]
   },
   plugins: [
     react(),
