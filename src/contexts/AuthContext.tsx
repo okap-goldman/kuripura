@@ -39,18 +39,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsInitialized(true);
+      setIsLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setIsLoading(true);
       try {
         if (firebaseUser) {
           const appUser = createUserFromFirebase(firebaseUser);
           setUser(appUser);
+          localStorage.setItem('user', JSON.stringify(appUser));
         } else {
           setUser(null);
+          localStorage.removeItem('user');
         }
       } catch (error) {
         console.error('Auth state change error:', error);
         setUser(null);
+        localStorage.removeItem('user');
       } finally {
         setIsLoading(false);
         setIsInitialized(true);
