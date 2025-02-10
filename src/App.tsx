@@ -15,6 +15,7 @@ import EventsPage from "@/pages/events";
 import { ChatPage } from "@/pages/chat/[id]";
 import { MessagesPage } from "@/pages/messages";
 import NotificationsPage from "@/pages/notifications";
+import SettingsPage from "@/pages/settings";
 
 function AppContent() {
   const location = useLocation();
@@ -35,6 +36,7 @@ function AppContent() {
             <Route path="/messages" element={<PrivateRoute><MessagesPage /></PrivateRoute>} />
             <Route path="/chat/:id" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
             <Route path="/notifications" element={<PrivateRoute><NotificationsPage /></PrivateRoute>} />
+            <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
