@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { User } from '@/types/user';
-import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, updateProfile as firebaseUpdateProfile } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 type AuthContextType = {
@@ -9,6 +9,7 @@ type AuthContextType = {
   isInitialized: boolean;
   login: () => Promise<void>;
   logout: () => Promise<void>;
+  updateProfile: (data: Partial<User>) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -83,8 +84,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateProfile = async (data: Partial<User>) => {
+    if (!user) throw new Error('ユーザーが認証されていません');
+    
+    try {
+      setIsLoading(true);
+      // Firebaseユーザー情報の更新
+      if (auth.currentUser) {
+        await firebaseUpdateProfile(auth.currentUser, {
+          displayName: data.user_name,
+          photoURL: data.profile_icon_url,
+        });
+      }
+      
+      // アプリのユーザー情報を更新
+      setUser({ ...user, ...data, updated_at: new Date().toISOString() });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, isInitialized, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, isInitialized, login, logout, updateProfile }}>
       {isInitialized ? children : null}
     </AuthContext.Provider>
   );
