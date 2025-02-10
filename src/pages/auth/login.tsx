@@ -65,9 +65,6 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">目醒め人のためのSNS</h1>
-          <p className="text-gray-600 text-sm">
-            本当に深い繋がりを重視し、「目醒め」をテーマにした、共感・学び合い・自己表現ができるコミュニティSNS
-          </p>
         </div>
 
         <div className="space-y-6">
@@ -92,18 +89,15 @@ export default function LoginPage() {
                 htmlFor="terms"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                利用規約とプライバシーポリシーに同意する
-              </label>
-              <p className="text-sm text-muted-foreground">
                 <a href="/terms" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">利用規約</a>
-                {' '}と{' '}
+                と
                 <a href="/privacy" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>
-                {' '}をご確認ください。
-              </p>
+                に同意する
+              </label>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-}      
+}        
