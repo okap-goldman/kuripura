@@ -1,18 +1,64 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { FcGoogle } from 'react-icons/fc';
+import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     if (!agreedToTerms) {
-      alert('利用規約とプライバシーポリシーに同意してください。');
+      toast({
+        title: 'エラー',
+        description: '利用規約とプライバシーポリシーに同意してください',
+        variant: 'destructive',
+      });
       return;
     }
-    // TODO: Implement Google login
+
+    try {
+      // Google OAuth URLへリダイレクト
+      const redirectUri = `${window.location.origin}/auth/callback`;
+      const oauthUrl = `/api/v1/auth/google?redirect_uri=${encodeURIComponent(redirectUri)}`;
+      window.location.href = oauthUrl;
+    } catch (error) {
+      toast({
+        title: 'エラー',
+        description: 'ログインに失敗しました',
+        variant: 'destructive',
+      });
+    }
   };
+
+  // URLからcodeパラメータを取得
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    
+    if (code) {
+      login(code)
+        .then(() => {
+          navigate('/');
+          toast({
+            title: 'ログイン成功',
+            description: 'ようこそ！',
+          });
+        })
+        .catch(() => {
+          toast({
+            title: 'エラー',
+            description: 'ログインに失敗しました',
+            variant: 'destructive',
+          });
+        });
+    }
+  }, [login, navigate, toast]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-4">
@@ -49,9 +95,9 @@ export default function LoginPage() {
                 利用規約とプライバシーポリシーに同意する
               </label>
               <p className="text-sm text-muted-foreground">
-                <a href="/terms" className="text-primary hover:underline">利用規約</a>
+                <a href="/terms" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">利用規約</a>
                 {' '}と{' '}
-                <a href="/privacy" className="text-primary hover:underline">プライバシーポリシー</a>
+                <a href="/privacy" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>
                 {' '}をご確認ください。
               </p>
             </div>
@@ -60,4 +106,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-} 
+}      
