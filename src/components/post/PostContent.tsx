@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ReactMarkdown from "react-markdown";
 
 interface PostContentProps {
   content: string;
@@ -90,12 +91,18 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
   };
 
   const renderTruncatedText = (text: string) => {
-    if (text.length <= 140 || isExpanded) {
-      return <p className="text-sm whitespace-pre-wrap">{text}</p>;
+    if (text.length <= 280 || isExpanded) {
+      return (
+        <div className="prose dark:prose-invert max-w-none text-sm">
+          <ReactMarkdown>{text}</ReactMarkdown>
+        </div>
+      );
     }
     return (
       <div>
-        <p className="text-sm whitespace-pre-wrap">{text.slice(0, 140)}...</p>
+        <div className="prose dark:prose-invert max-w-none text-sm">
+          <ReactMarkdown>{text.slice(0, 280)}...</ReactMarkdown>
+        </div>
         <button
           className="text-sm text-muted-foreground hover:underline"
           onClick={() => setIsExpanded(true)}
