@@ -178,12 +178,12 @@ describe('Create Follow', () => {
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
-      follow_id: expect.any(Number),
-      follower_id: expect.any(Number),
-      followee_id: 123,
-      follow_type: 'family',
+      id: expect.any(Number),
+      followerId: expect.any(Number),
+      followeeId: 123,
+      followType: 'family',
       reason: 'Great content creator',
-      created_at: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
+      createdAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
     });
   });
 });

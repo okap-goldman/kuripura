@@ -33,13 +33,13 @@ export const createFollow = async (req: Request, res: Response) => {
   }
 
   try {
-    const follow = await db.follows.create({
+    const follow = await db.follow.create({
       data: {
-        follower_id: req.user.id,
-        followee_id,
-        follow_type,
+        followerId: req.user.id,
+        followeeId: followee_id,
+        followType: follow_type,
         reason: follow_type === 'family' ? reason : null,
-        created_at: new Date()
+        createdAt: new Date()
       }
     });
 
@@ -80,8 +80,8 @@ export const unfollow = async (req: Request, res: Response) => {
 
   try {
     // フォロー情報の取得（存在確認のため）
-    const follow = await db.follows.findUnique({
-      where: { follow_id: parseInt(follow_id) }
+    const follow = await db.follow.findUnique({
+      where: { id: parseInt(follow_id) }
     });
 
     if (!follow) {
@@ -92,16 +92,16 @@ export const unfollow = async (req: Request, res: Response) => {
     }
 
     // フォロー情報の削除
-    await db.follows.delete({
-      where: { follow_id: parseInt(follow_id) }
+    await db.follow.delete({
+      where: { id: parseInt(follow_id) }
     });
 
     // アンフォロー理由をログに保存
-    await db.unfollowLogs.create({
+    await db.unfollowLog.create({
       data: {
-        follow_id: parseInt(follow_id),
+        followId: parseInt(follow_id),
         reason,
-        created_at: new Date()
+        createdAt: new Date()
       }
     });
 
