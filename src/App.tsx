@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import AuthCallback from "@/pages/auth/callback";
 import LoginPage from "@/pages/auth/login";
 import { PrivateRoute } from "@/components/PrivateRoute";
 import Index from "./pages/Index";
@@ -36,6 +37,7 @@ function App() {
               <Route path="/chat/:id" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
               <Route path="/notifications" element={<PrivateRoute><NotificationsPage /></PrivateRoute>} />
               <Route path="/auth/login" element={<LoginPage />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             <FooterNav />
