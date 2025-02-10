@@ -8,7 +8,7 @@
 - [x] GET /users/{user_id} - Get user info
 - [x] PUT /users/{user_id} - Update user info
 - [x] GET /users/{user_id}/followers - Get user followers
-- [ ] GET /users/{user_id}/following - Get user following
+- [x] GET /users/{user_id}/following - Get user following
 
 ## Follows [0/2]
 - [ ] POST /follows - Follow a user
