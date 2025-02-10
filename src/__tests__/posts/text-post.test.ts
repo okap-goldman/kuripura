@@ -4,16 +4,27 @@ import { auth } from '@/lib/firebase';
 import { User } from '@/types/user';
 
 // モックの設定
+const mockCurrentUser = {
+  uid: 'test-uid',
+  displayName: 'Test User',
+  email: 'test@example.com',
+};
+
 jest.mock('@/lib/firebase', () => ({
   createTextPost: jest.fn(),
   auth: {
-    currentUser: {
-      uid: 'test-uid',
-      displayName: 'Test User',
-      email: 'test@example.com',
+    get currentUser() {
+      return mockCurrentUser;
     },
   },
 }));
+
+// テスト用にモックユーザーを変更する関数
+const setMockCurrentUser = (user: typeof mockCurrentUser | null) => {
+  Object.defineProperty(jest.requireMock('@/lib/firebase').auth, 'currentUser', {
+    get: () => user,
+  });
+};
 
 describe('Text Post Feature', () => {
   let mockUser: User;
@@ -89,7 +100,7 @@ describe('Text Post Feature', () => {
 
   test('should require authentication', async () => {
     // 未認証状態をシミュレート
-    (auth as typeof auth).currentUser = null;
+    setMockCurrentUser(null);
 
     const postData = {
       userId: mockUser.uid,
