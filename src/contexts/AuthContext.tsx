@@ -14,10 +14,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const convertFirebaseUser = (firebaseUser: FirebaseUser): User => {
   return {
-    id: firebaseUser.uid,
+    user_id: parseInt(firebaseUser.uid, 10),
+    user_name: firebaseUser.displayName || '',
     email: firebaseUser.email || '',
-    name: firebaseUser.displayName || '',
-    photoUrl: firebaseUser.photoURL || '',
+    profile_icon_url: firebaseUser.photoURL,
+    profile_audio_url: null,
+    shop_link_url: null,
+    is_shop_link: false,
+    introduction: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   };
 };
 
