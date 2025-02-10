@@ -64,8 +64,12 @@
 
 ## フォロー機能
 ### ファミリー/ウォッチ
-- [ ] フォロー機能の基本実装
-  - API: 仕様定義のみ（`/follows`, `/follows/{follow_id}`, `/users/{user_id}/followers`, `/users/{user_id}/following`）
+- [x] フォロー機能の基本実装
+  - API: テスト実装完了（`/follows`, `/follows/{follow_id}`, `/users/{user_id}/followers`, `/users/{user_id}/following`）
+    - POST /follows: ファミリー/ウォッチフォロー作成
+    - DELETE /follows/{follow_id}: アンフォロー
+    - GET /users/{user_id}/followers: フォロワー一覧取得
+    - GET /users/{user_id}/following: フォロー一覧取得
   - データベーススキーマ: `FOLLOWS`テーブル定義のみ
     - follow_type (family/watch)
     - reason (ファミリーの場合の理由)
