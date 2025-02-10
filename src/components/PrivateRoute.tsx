@@ -13,6 +13,10 @@ export function PrivateRoute({ children }: { children: ReactNode }) {
   }
 
   if (!user) {
+    // 開発環境の場合、モックユーザーを使用
+    if (import.meta.env.VITE_DEV_MODE === 'true') {
+      return <>{children}</>;
+    }
     return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
 
