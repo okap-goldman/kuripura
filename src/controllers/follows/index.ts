@@ -38,7 +38,7 @@ export const createFollow = async (req: Request, res: Response) => {
     if (isNaN(followeeId)) {
       return res.status(400).json({
         statusCode: 400,
-        message: 'followee_idは数値である必要があります'
+        message: 'フォロー対象のユーザーIDが不正です'
       });
     }
 
@@ -51,17 +51,12 @@ export const createFollow = async (req: Request, res: Response) => {
         reason: follow_type === 'family' ? reason : null,
         createdAt: new Date()
       }
-    }).catch(error => {
-      if (error.message.includes('Invalid')) {
-        throw new Error('Invalid followee_id');
-      }
-      throw error;
     });
 
     // 通知の作成（ファミリーの場合のみ）
     if (follow_type === 'family') {
       await NotificationService.create({
-        user_id: followeeId,
+        user_id: follow.followeeId,
         from_user_id: req.user.id,
         notification_type: 'follow',
         message: reason
@@ -71,10 +66,11 @@ export const createFollow = async (req: Request, res: Response) => {
     res.status(201).json(follow);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === 'Invalid followee_id') {
+      const message = error.message.toLowerCase();
+      if (message.includes('invalid') || message.includes('parse')) {
         return res.status(400).json({
           statusCode: 400,
-          message: 'フォロー対象のユーザーが見つかりません'
+          message: 'フォロー対象のユーザーIDが不正です'
         });
       }
     }
