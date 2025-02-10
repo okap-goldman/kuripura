@@ -10,28 +10,6 @@ import { NotificationService } from '@/services/notification';
 export const createFollow = async (req: Request, res: Response) => {
   const { followee_id, follow_type, reason } = req.body;
   
-  // バリデーション
-  if (!followee_id || !follow_type) {
-    return res.status(400).json({
-      statusCode: 400,
-      message: 'followee_idとfollow_typeは必須です'
-    });
-  }
-
-  if (follow_type === 'family' && !reason) {
-    return res.status(400).json({
-      statusCode: 400,
-      message: 'ファミリーフォローには理由が必要です'
-    });
-  }
-
-  if (follow_type !== 'family' && follow_type !== 'watch') {
-    return res.status(400).json({
-      statusCode: 400,
-      message: 'follow_typeはfamilyまたはwatchである必要があります'
-    });
-  }
-
   try {
     // followee_idが数値であることを確認
     const followeeId = parseInt(followee_id);
@@ -39,6 +17,28 @@ export const createFollow = async (req: Request, res: Response) => {
       return res.status(400).json({
         statusCode: 400,
         message: 'フォロー対象のユーザーIDが不正です'
+      });
+    }
+
+    // バリデーション
+    if (!followee_id || !follow_type) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: 'followee_idとfollow_typeは必須です'
+      });
+    }
+
+    if (follow_type !== 'family' && follow_type !== 'watch') {
+      return res.status(400).json({
+        statusCode: 400,
+        message: 'follow_typeはfamilyまたはwatchである必要があります'
+      });
+    }
+
+    if (follow_type === 'family' && (!reason || reason.trim() === '')) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: 'ファミリーフォローには理由が必要です'
       });
     }
 
@@ -98,7 +98,7 @@ export const unfollow = async (req: Request, res: Response) => {
   }
 
   try {
-    const followId = parseInt(follow_id);
+    const followId = typeof follow_id === 'number' ? follow_id : parseInt(follow_id);
     if (isNaN(followId)) {
       return res.status(400).json({
         statusCode: 400,
@@ -135,7 +135,8 @@ export const unfollow = async (req: Request, res: Response) => {
     res.status(200).json({ message: 'アンフォローしました' });
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message.includes('Invalid')) {
+      const message = error.message.toLowerCase();
+      if (message.includes('invalid') || message.includes('parse')) {
         return res.status(400).json({
           statusCode: 400,
           message: 'フォローIDが不正です'
