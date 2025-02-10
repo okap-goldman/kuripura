@@ -4,41 +4,39 @@ import { auth } from '@/lib/firebase';
 import { User } from '@/types/user';
 
 // モックの設定
-let currentMockUser = {
+const mockUser = {
   uid: 'test-uid',
   displayName: 'Test User',
   email: 'test@example.com',
 };
 
-const mockCreateTextPost = jest.fn().mockImplementation(async (data) => {
-  if (!currentMockUser) {
-    return Promise.reject(new Error('ログインが必要です。'));
-  }
-  if (!data.title.trim() || !data.content.trim()) {
-    return Promise.reject(new Error('タイトルと本文を入力してください。'));
-  }
-  if (data.content.length > 10000) {
-    return Promise.reject(new Error('本文は10,000文字以内で入力してください。'));
-  }
-  return Promise.resolve({ id: 'test-post-id' });
+const mockAuth = {
+  currentUser: mockUser,
+};
+
+jest.mock('@/lib/firebase', () => {
+  const mockCreateTextPost = jest.fn().mockImplementation(async (data) => {
+    if (!mockAuth.currentUser) {
+      return Promise.reject(new Error('ログインが必要です。'));
+    }
+    if (!data.title.trim() || !data.content.trim()) {
+      return Promise.reject(new Error('タイトルと本文を入力してください。'));
+    }
+    if (data.content.length > 10000) {
+      return Promise.reject(new Error('本文は10,000文字以内で入力してください。'));
+    }
+    return Promise.resolve({ id: 'test-post-id' });
+  });
+
+  return {
+    createTextPost: mockCreateTextPost,
+    auth: mockAuth,
+  };
 });
 
-jest.mock('@/lib/firebase', () => ({
-  createTextPost: mockCreateTextPost,
-  auth: {
-    get currentUser() {
-      return currentMockUser;
-    },
-  },
-}));
-
 beforeEach(() => {
-  currentMockUser = {
-    uid: 'test-uid',
-    displayName: 'Test User',
-    email: 'test@example.com',
-  };
-  mockCreateTextPost.mockClear();
+  mockAuth.currentUser = mockUser;
+  jest.clearAllMocks();
 });
 
 // テスト用にモックユーザーを変更する関数
@@ -118,7 +116,7 @@ describe('Text Post Feature', () => {
 
   test('should require authentication', async () => {
     // 未認証状態をシミュレート
-    currentMockUser = null;
+    mockAuth.currentUser = null;
 
     const postData = {
       userId: mockUser.uid,
