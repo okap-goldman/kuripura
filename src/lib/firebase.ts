@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 // TODO: Replace with actual Firebase config
 const firebaseConfig = {
@@ -14,3 +15,25 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+interface CreateTextPostData {
+  userId: string;
+  title: string;
+  content: string;
+  isPublic: boolean;
+}
+
+export const createTextPost = async (data: CreateTextPostData) => {
+  const post = {
+    userId: data.userId,
+    title: data.title,
+    text_content: data.content,
+    post_type: 'text' as const,
+    visibility: data.isPublic ? 'public' : 'private' as const,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+  
+  return await addDoc(collection(db, 'posts'), post);
+};
