@@ -101,7 +101,7 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
     return (
       <div>
         <div className="prose dark:prose-invert max-w-none text-sm">
-          <ReactMarkdown>{text.slice(0, 280)}...</ReactMarkdown>
+          <ReactMarkdown>{`${text.slice(0, 280)}...`}</ReactMarkdown>
         </div>
         <button
           className="text-sm text-muted-foreground hover:underline"
