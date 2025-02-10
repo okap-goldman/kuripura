@@ -1,5 +1,5 @@
 export default {
-  preset: '@babel/preset-env',
+  preset: 'ts-jest',
   transform: {
     '^.+\\.(ts|tsx|js|jsx)$': ['babel-jest', { presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'] }]
   },
