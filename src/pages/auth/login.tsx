@@ -23,15 +23,12 @@ export default function LoginPage() {
     }
 
     try {
-      // Google OAuth URLへリダイレクト
-      const redirectUri = `${window.location.origin}/auth/callback`;
-      const oauthUrl = new URL('/api/v1/auth/google', window.location.origin);
-      oauthUrl.searchParams.append('redirect_uri', redirectUri);
-      
-      // デバッグ用にURLをコンソールに出力
-      console.log('Redirecting to:', oauthUrl.toString());
-      
-      window.location.href = oauthUrl.toString();
+      await login();
+      navigate('/');
+      toast({
+        title: 'ログイン成功',
+        description: 'ようこそ！',
+      });
     } catch (error) {
       console.error('Google login error:', error);
       toast({
@@ -41,30 +38,6 @@ export default function LoginPage() {
       });
     }
   };
-
-  // URLからcodeパラメータを取得
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    
-    if (code) {
-      login(code)
-        .then(() => {
-          navigate('/');
-          toast({
-            title: 'ログイン成功',
-            description: 'ようこそ！',
-          });
-        })
-        .catch(() => {
-          toast({
-            title: 'エラー',
-            description: 'ログインに失敗しました',
-            variant: 'destructive',
-          });
-        });
-    }
-  }, [login, navigate, toast]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-4">
@@ -106,4 +79,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}                
+}                                
