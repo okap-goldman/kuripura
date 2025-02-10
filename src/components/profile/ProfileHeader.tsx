@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import ProfileEditForm from "@/pages/profile/edit-form";
+import { FollowButton } from "./FollowButton";
 
 interface ProfileHeaderProps {
   isPlaying: boolean;
@@ -99,6 +100,24 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
           <p className="text-muted-foreground max-w-md">
             {dummyProfile.bio}
           </p>
+          
+          <div className="flex justify-center mt-4">
+            <FollowButton
+              userId={123456789}
+              initialFollowStatus={{
+                isFollowing: false,
+                followType: "watch"
+              }}
+              onFollow={(followType, reason) => {
+                console.log("Follow:", { followType, reason });
+                // TODO: Implement follow API call
+              }}
+              onUnfollow={(reason) => {
+                console.log("Unfollow:", { reason });
+                // TODO: Implement unfollow API call
+              }}
+            />
+          </div>
         </div>
 
         <div className="flex gap-8 border rounded-lg p-4 w-full max-w-md justify-between">
