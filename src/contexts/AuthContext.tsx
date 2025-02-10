@@ -12,6 +12,19 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const createUserFromFirebase = (firebaseUser: any): User => ({
+  user_id: parseInt(firebaseUser.uid.slice(0, 8), 16), // UIDの最初の8文字を数値に変換
+  user_name: firebaseUser.displayName || '名称未設定',
+  email: firebaseUser.email || '',
+  profile_icon_url: firebaseUser.photoURL,
+  profile_audio_url: null,
+  shop_link_url: null,
+  is_shop_link: false,
+  introduction: null,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString()
+});
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,16 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-      const firebaseUser = result.user;
-      
-      // Firebaseのユーザー情報をアプリケーションのUser型に変換
-      const appUser: User = {
-        id: firebaseUser.uid,
-        name: firebaseUser.displayName || '名称未設定',
-        email: firebaseUser.email || '',
-        profileImage: firebaseUser.photoURL || undefined
-      };
-      
+      const appUser = createUserFromFirebase(result.user);
       setUser(appUser);
     } catch (error) {
       console.error('Login error:', error);
@@ -51,12 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setIsLoading(true);
       if (firebaseUser) {
-        const appUser: User = {
-          id: firebaseUser.uid,
-          name: firebaseUser.displayName || '名称未設定',
-          email: firebaseUser.email || '',
-          profileImage: firebaseUser.photoURL || undefined
-        };
+        const appUser = createUserFromFirebase(firebaseUser);
         setUser(appUser);
       } else {
         setUser(null);
@@ -65,52 +64,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, []);
-
-  return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-  useEffect(() => {
-    // トークンの有効性チェックと自動更新
-    const checkAuth = async () => {
-      const token = localStorage.getItem('refresh_token');
-      if (!token) {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const response = await fetch('/api/v1/auth/google/refresh', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refresh_token: token }),
-        });
-        
-        if (!response.ok) throw new Error('トークンの更新に失敗しました');
-        
-        const data = await response.json();
-        localStorage.setItem('access_token', data.access_token);
-      } catch (error) {
-        console.error('Token refresh error:', error);
-        logout();
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
   }, []);
 
   return (
