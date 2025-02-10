@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Image as ImageIcon, Plus, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { uploadImage, ImageUploadError } from '@/lib/storage';
 
 const LAYOUT_OPTIONS = [
   { id: 'single', label: '1枚', maxImages: 1 },
@@ -51,9 +52,36 @@ export default function ImagePostPage() {
       return;
     }
 
-    // TODO: Implement image upload and post submission
-    console.log({ images, description, layout: selectedLayout.id });
-    navigate('/');
+    try {
+      const uploadedUrls = await Promise.all(
+        images.map(image => uploadImage(image.file))
+      );
+
+      const response = await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: description,
+          post_type: 'image',
+          media_url: uploadedUrls[0],
+          additional_media_urls: uploadedUrls.slice(1),
+          visibility: 'public'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('投稿の作成に失敗しました');
+      }
+
+      navigate('/');
+    } catch (error) {
+      console.error('Error:', error);
+      if (error instanceof ImageUploadError) {
+        alert(error.message);
+      } else {
+        alert('画像のアップロードに失敗しました。もう一度お試しください。');
+      }
+    }
   };
 
   return (
@@ -175,4 +203,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-} 
+}  
