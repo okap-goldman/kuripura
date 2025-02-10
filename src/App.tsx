@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import LoginPage from "@/pages/auth/login";
+import { PrivateRoute } from "@/components/PrivateRoute";
 import Index from "./pages/Index";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
@@ -26,14 +27,14 @@ function App() {
             <Toaster />
             <Sonner />
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/discover" element={<Discover />} />
-              <Route path="/events" element={<EventsPage />} />
-              <Route path="/messages" element={<MessagesPage />} />
-              <Route path="/chat/:id" element={<ChatPage />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/" element={<PrivateRoute><Index /></PrivateRoute>} />
+              <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+              <Route path="/search" element={<PrivateRoute><Search /></PrivateRoute>} />
+              <Route path="/discover" element={<PrivateRoute><Discover /></PrivateRoute>} />
+              <Route path="/events" element={<PrivateRoute><EventsPage /></PrivateRoute>} />
+              <Route path="/messages" element={<PrivateRoute><MessagesPage /></PrivateRoute>} />
+              <Route path="/chat/:id" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
+              <Route path="/notifications" element={<PrivateRoute><NotificationsPage /></PrivateRoute>} />
               <Route path="/auth/login" element={<LoginPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
