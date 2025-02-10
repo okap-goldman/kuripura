@@ -23,7 +23,14 @@ const createUserFromFirebase = (firebaseUser: any): User => ({
   is_shop_link: false,
   introduction: null,
   created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString()
+  updated_at: new Date().toISOString(),
+  notification_settings: {
+    comments: true,
+    highlights: true,
+    new_followers: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -58,6 +65,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async () => {
     try {
       setIsLoading(true);
+      if (import.meta.env.VITE_DEV_MODE === 'true') {
+        // 開発環境用のモックユーザー
+        const mockUser: User = {
+          user_id: 1,
+          user_name: 'テストユーザー',
+          email: 'test@example.com',
+          profile_icon_url: null,
+          profile_audio_url: null,
+          shop_link_url: null,
+          is_shop_link: false,
+          introduction: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          notification_settings: {
+            comments: true,
+            highlights: true,
+            new_followers: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        };
+        setUser(mockUser);
+        return;
+      }
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const appUser = createUserFromFirebase(result.user);
