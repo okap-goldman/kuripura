@@ -11,7 +11,7 @@
 - [x] GET /users/{user_id}/following - Get user following
 
 ## Follows [0/2]
-- [ ] POST /follows - Follow a user
+- [x] POST /follows - Follow a user
 - [ ] DELETE /follows/{follow_id} - Unfollow a user
 
 ## Posts [0/4]
