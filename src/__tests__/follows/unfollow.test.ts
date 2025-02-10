@@ -1,7 +1,14 @@
 import { createMockRequest, createMockResponse } from '../utils/test-utils';
 import { unfollow } from '../../controllers/follows';
 
+/**
+ * アンフォロー機能のテストケース
+ * - 正常系：有効なフォローIDでアンフォロー
+ * - 異常系：存在しないフォローID
+ * - 異常系：不正なフォローIDフォーマット
+ */
 describe('Unfollow', () => {
+  // 有効なフォローIDでアンフォローできることを確認
   it('should successfully unfollow with valid follow_id', async () => {
     const req = createMockRequest({
       params: {
@@ -15,6 +22,7 @@ describe('Unfollow', () => {
     expect(res.status).toHaveBeenCalledWith(204);
   });
 
+  // 存在しないフォローIDの場合は404エラーを返すことを確認
   it('should return 404 for non-existent follow_id', async () => {
     const req = createMockRequest({
       params: {
@@ -34,6 +42,7 @@ describe('Unfollow', () => {
     );
   });
 
+  // フォローIDのフォーマットが不正な場合は400エラーを返すことを確認
   it('should return 400 for invalid follow_id format', async () => {
     const req = createMockRequest({
       params: {
