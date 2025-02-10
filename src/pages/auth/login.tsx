@@ -23,11 +23,14 @@ export default function LoginPage() {
     }
 
     try {
-      // Google OAuth URLへリダイレクト
-      const redirectUri = `${window.location.origin}/auth/callback`;
-      const oauthUrl = `/api/v1/auth/google?redirect_uri=${encodeURIComponent(redirectUri)}`;
-      window.location.href = oauthUrl;
+      await login();
+      navigate('/');
+      toast({
+        title: 'ログイン成功',
+        description: 'ようこそ！',
+      });
     } catch (error) {
+      console.error('Login error:', error);
       toast({
         title: 'エラー',
         description: 'ログインに失敗しました',
@@ -36,29 +39,7 @@ export default function LoginPage() {
     }
   };
 
-  // URLからcodeパラメータを取得
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    
-    if (code) {
-      login(code)
-        .then(() => {
-          navigate('/');
-          toast({
-            title: 'ログイン成功',
-            description: 'ようこそ！',
-          });
-        })
-        .catch(() => {
-          toast({
-            title: 'エラー',
-            description: 'ログインに失敗しました',
-            variant: 'destructive',
-          });
-        });
-    }
-  }, [login, navigate, toast]);
+  // Firebase認証を使用するため、コールバック処理は不要
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-4">
@@ -100,4 +81,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}        
+}                

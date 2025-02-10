@@ -39,15 +39,16 @@
 ## ユーザー管理機能
 ### アカウント作成/ログイン
 - [x] Google OAuth 2.0による認証
-  - API: 仕様定義のみ（`/auth/google/login`, `/auth/google/refresh`）
-  - データベーススキーマ: `USERS`テーブル定義のみ
+  - Firebase Authenticationを使用した実装
+    - Googleプロバイダーによるポップアップ認証
+    - ユーザー情報の自動同期
   - UI: 実装済み
     - ログイン/サインアップ画面のGoogleログインボタン
     - 利用規約・プライバシーポリシーへの同意チェック
     - エラーメッセージ表示
   - 認証状態管理: 実装済み
     - AuthContextによるグローバルな状態管理
-    - JWTトークンの管理（アクセストークン、リフレッシュトークン）
+    - Firebaseの認証状態監視（onAuthStateChanged）
     - PrivateRouteによるルート保護
     - ローディング状態の表示
 
