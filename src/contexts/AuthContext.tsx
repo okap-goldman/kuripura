@@ -58,6 +58,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async () => {
     try {
       setIsLoading(true);
+      const isDevelopment = import.meta.env.MODE === 'development';
+      const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
+      const testingPassword = import.meta.env.VITE_TESTING_GOOGLE_PASSWORD;
+
+      if (isDevelopment && testingEmail && testingPassword) {
+        // 開発環境でのバイパス
+        const mockUser = {
+          uid: '12345678',
+          displayName: 'Test User',
+          email: testingEmail,
+          photoURL: 'https://example.com/default-avatar.png'
+        };
+        const appUser = createUserFromFirebase(mockUser);
+        setUser(appUser);
+        return;
+      }
+
+      // 通常のGoogle認証フロー
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const appUser = createUserFromFirebase(result.user);
