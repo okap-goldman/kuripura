@@ -7,6 +7,11 @@ export function FooterNav() {
   const location = useLocation();
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
 
+  // ログイン画面ではフッターを表示しない
+  if (location.pathname.startsWith('/auth')) {
+    return null;
+  }
+
   const isActive = (path: string) => location.pathname === path;
 
   return (
