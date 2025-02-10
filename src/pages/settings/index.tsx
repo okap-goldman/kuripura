@@ -40,22 +40,34 @@ export default function SettingsPage() {
 
     const newSettings = {
       ...settings,
-      [key]: !settings[key]
+      [key]: !settings[key],
+      updated_at: new Date().toISOString()
     };
     setSettings(newSettings);
 
     try {
+      if (import.meta.env.VITE_DEV_MODE === 'true') {
+        console.log('Development mode: Settings updated', newSettings);
+        return;
+      }
       await updateNotificationSettings(user.user_id.toString(), {
-        [key]: newSettings[key]
+        [key]: newSettings[key],
+        updated_at: newSettings.updated_at
       });
     } catch (error) {
-      console.error(error);
+      console.error('Failed to update settings:', error);
       // エラー時は元の設定に戻す
       setSettings(settings);
     }
   };
 
-  if (!settings) return null;
+  if (!settings) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-rose-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,21 +85,30 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span>コメント通知</span>
+              <div>
+                <span className="font-medium">コメント通知</span>
+                <p className="text-sm text-gray-500">投稿へのコメントを通知します</p>
+              </div>
               <Switch
                 checked={settings.comments}
                 onCheckedChange={() => handleToggle('comments')}
               />
             </div>
             <div className="flex items-center justify-between">
-              <span>ハイライト通知</span>
+              <div>
+                <span className="font-medium">ハイライト通知</span>
+                <p className="text-sm text-gray-500">新しいハイライトを通知します</p>
+              </div>
               <Switch
                 checked={settings.highlights}
                 onCheckedChange={() => handleToggle('highlights')}
               />
             </div>
             <div className="flex items-center justify-between">
-              <span>新規フォロワー通知</span>
+              <div>
+                <span className="font-medium">新規フォロワー通知</span>
+                <p className="text-sm text-gray-500">新しいフォロワーを通知します</p>
+              </div>
               <Switch
                 checked={settings.new_followers}
                 onCheckedChange={() => handleToggle('new_followers')}
