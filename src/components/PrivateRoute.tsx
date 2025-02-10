@@ -1,9 +1,14 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { type ReactNode } from 'react';
+import Footer from '@/components/layout/footer';
 
 export function PrivateRoute({ children }: { children: ReactNode }) {
   const { user, isLoading } = useAuth();
+  const location = useLocation();
+
+  // ログイン画面ではフッターを表示しない
+  const showFooter = !location.pathname.startsWith('/auth');
 
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">
@@ -15,5 +20,10 @@ export function PrivateRoute({ children }: { children: ReactNode }) {
     return <Navigate to="/auth/login" />;
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      {showFooter && <Footer />}
+    </>
+  );
 }
