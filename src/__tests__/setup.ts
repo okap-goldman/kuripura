@@ -15,3 +15,4 @@ beforeEach(() => {
 afterEach(() => {
   // Test-specific cleanup
 });
+import '@testing-library/jest-dom';
