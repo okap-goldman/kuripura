@@ -71,11 +71,96 @@ components:
           description: フォローの種類 (family: ファミリー, watch: ウォッチ)
         reason:
           type: string
-          description: フォロー理由 (ファミリーの場合のみ)
+          description: フォロー理由 (ファミリーの場合のみ必須)
         created_at:
           type: string
           format: date-time
           description: フォロー日時
+
+  /follows:
+    post:
+      summary: フォロー作成
+      description: 指定したユーザーをフォローする
+      tags: [Follows]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - followee_id
+                - follow_type
+              properties:
+                followee_id:
+                  type: integer
+                  description: フォロー対象のユーザーID
+                follow_type:
+                  type: string
+                  enum: ["family", "watch"]
+                  description: フォローの種類
+                reason:
+                  type: string
+                  description: フォロー理由（ファミリーの場合は必須）
+      responses:
+        '201':
+          description: フォロー作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Follow'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /follows/{follow_id}:
+    delete:
+      summary: アンフォロー
+      description: 指定したフォローを解除する
+      tags: [Follows]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: follow_id
+          required: true
+          schema:
+            type: integer
+          description: フォローID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reason
+              properties:
+                reason:
+                  type: string
+                  description: アンフォロー理由（必須）
+      responses:
+        '200':
+          description: アンフォロー成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: 成功メッセージ
+        '404':
+          description: フォローが見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     Post:
       type: object
       description: 投稿情報
