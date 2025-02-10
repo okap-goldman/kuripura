@@ -5,16 +5,15 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: '',
+  base: mode === 'development' ? '' : '/kuripura/',
   server: {
     host: "::",
     port: 8080,
-    hmr: {
+    hmr: mode === 'development' ? {
       clientPort: 443,
       protocol: 'wss',
-      host: "google-login-app-tunnel-iru0eesc.devinapps.com",
-      path: "/@vite/client"
-    },
+      host: "google-login-app-tunnel-iru0eesc.devinapps.com"
+    } : false,
     allowedHosts: [
       "google-login-app-tunnel-iru0eesc.devinapps.com"
     ]
