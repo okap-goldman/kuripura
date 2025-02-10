@@ -49,13 +49,13 @@ export const useYouTubeUpload = () => {
         setVideoUrl(url);
         return url;
       }
-    } catch (err) {
-      const errorMessage = err.message === 'YouTubeアカウントの連携が必要です'
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error && err.message === 'YouTubeアカウントの連携が必要です'
         ? err.message
         : '動画のアップロードに失敗しました';
       setError(errorMessage);
       console.error('Upload error:', err);
-      throw err;
+      throw err instanceof Error ? err : new Error('動画のアップロードに失敗しました');
     } finally {
       setIsUploading(false);
     }
