@@ -24,7 +24,14 @@ const createUserFromFirebase = (firebaseUser: any): User => ({
   is_shop_link: false,
   introduction: null,
   created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString()
+  updated_at: new Date().toISOString(),
+  notification_settings: {
+    comments: true,
+    highlights: true,
+    new_followers: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -33,18 +40,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
+    const isDevelopment = import.meta.env.MODE === 'development';
+    const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
+    const testingPassword = import.meta.env.VITE_TESTING_GOOGLE_PASSWORD;
+
+    if (isDevelopment && testingEmail && testingPassword) {
+      const mockUser: User = {
+        user_id: 1,
+        uid: '12345678',
+        user_name: 'テストユーザー',
+        email: testingEmail,
+        profile_icon_url: null,
+        profile_audio_url: null,
+        shop_link_url: null,
+        is_shop_link: false,
+        introduction: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        notification_settings: {
+          comments: true,
+          highlights: true,
+          new_followers: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      };
+      setUser(mockUser);
+      setIsInitialized(true);
+      setIsLoading(false);
+      return;
+    }
+
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsInitialized(true);
+      setIsLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setIsLoading(true);
       try {
         if (firebaseUser) {
           const appUser = createUserFromFirebase(firebaseUser);
           setUser(appUser);
+          localStorage.setItem('user', JSON.stringify(appUser));
         } else {
           setUser(null);
+          localStorage.removeItem('user');
         }
       } catch (error) {
         console.error('Auth state change error:', error);
         setUser(null);
+        localStorage.removeItem('user');
       } finally {
         setIsLoading(false);
         setIsInitialized(true);

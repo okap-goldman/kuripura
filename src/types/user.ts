@@ -1,3 +1,11 @@
+export type NotificationSettings = {
+  comments: boolean;
+  highlights: boolean;
+  new_followers: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
 export type User = {
   user_id: number;
   uid: string;  // Firebase UID
@@ -10,4 +18,5 @@ export type User = {
   introduction: string | null;
   created_at: string;
   updated_at: string;
+  notification_settings: NotificationSettings;
 };

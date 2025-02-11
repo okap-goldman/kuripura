@@ -50,9 +50,11 @@ export default function Header() {
             <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />
           </Button>
           
-          <Button variant="ghost" size="icon">
-            <Settings className="h-5 w-5" />
-          </Button>
+          <Link to="/settings">
+            <Button variant="ghost" size="icon">
+              <Settings className="h-5 w-5" />
+            </Button>
+          </Link>
 
           <Button
             variant="ghost"
@@ -66,4 +68,4 @@ export default function Header() {
       </div>
     </header>
   );
-}
+}   
