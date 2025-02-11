@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { uploadProfileImage } from '@/lib/storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,28 +18,30 @@ import {
 
 interface ProfileEditFormProps {
   profile: {
-    name: string;
-    username: string;
-    image: string;
-    bio: string;
-    bioAudioUrl: string;
-    externalLink?: string;
-    pronouns?: string;
+    user_id: number;
+    uid: string;
+    user_name: string;
+    email: string;
+    profile_icon_url: string | null;
+    profile_audio_url: string | null;
+    shop_link_url: string | null;
+    is_shop_link: boolean;
+    introduction: string | null;
+    created_at: string;
+    updated_at: string;
   };
   onSubmit: () => void;
   onCancel: () => void;
 }
 
 export default function ProfileEditForm({ profile, onSubmit, onCancel }: ProfileEditFormProps) {
-  const [name, setName] = useState(profile.name);
-  const [username, setUsername] = useState(profile.username);
-  const [bio, setBio] = useState(profile.bio);
-  const [externalLink, setExternalLink] = useState(profile.externalLink || '');
-  const [imagePreview, setImagePreview] = useState(profile.image);
+  const [name, setName] = useState(profile.user_name);
+  const [bio, setBio] = useState(profile.introduction || '');
+  const [externalLink, setExternalLink] = useState(profile.shop_link_url || '');
+  const [imagePreview, setImagePreview] = useState(profile.profile_icon_url || '');
   const [isRecording, setIsRecording] = useState(false);
-  const [audioUrl, setAudioUrl] = useState<string | null>(profile.bioAudioUrl);
+  const [audioUrl, setAudioUrl] = useState<string | null>(profile.profile_audio_url);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [pronouns, setPronouns] = useState(profile.pronouns || '');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -96,17 +100,31 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
     }
   };
 
+  const { updateProfile } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name.trim() || !bio.trim()) {
-      alert('名前と自己紹介文を入力してください。');
-      return;
-    }
+    try {
+      let profileImageUrl = imagePreview;
+      if (fileInputRef.current?.files?.[0]) {
+        profileImageUrl = await uploadProfileImage(fileInputRef.current.files[0]);
+      }
 
-    // TODO: Implement profile update
-    console.log({ name, username, bio, externalLink, imagePreview, audioUrl, pronouns });
-    onSubmit();
+      await updateProfile({
+        user_name: name,
+        profile_icon_url: profileImageUrl,
+        introduction: bio,
+        shop_link_url: externalLink || null,
+        is_shop_link: !!externalLink,
+        profile_audio_url: audioUrl,
+      });
+
+      onSubmit();
+    } catch (error) {
+      console.error('プロフィールの更新に失敗しました:', error);
+      alert('プロフィールの更新に失敗しました。もう一度お試しください。');
+    }
   };
 
   return (
@@ -176,36 +194,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="username">ユーザーネーム</Label>
-              <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                maxLength={15}
-                className="border-0 border-b rounded-none focus-visible:ring-0 px-0"
-                placeholder="@username"
-              />
             </div>
-          </div>
-
-          {/* 代名詞の性別 */}
-          <div className="space-y-2">
-            <Label htmlFor="pronouns">代名詞の性別</Label>
-            <Select value={pronouns} onValueChange={setPronouns}>
-              <SelectTrigger
-                id="pronouns"
-                className="border-0 border-b rounded-none focus:ring-0 px-0"
-              >
-                <SelectValue placeholder="代名詞の性別を選択" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="he">彼 (he/him)</SelectItem>
-                <SelectItem value="she">彼女 (she/her)</SelectItem>
-                <SelectItem value="they">その他 (they/them)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
 
           {/* 自己紹介文 */}
           <div className="space-y-2">

@@ -53,9 +53,9 @@
     - ローディング状態の表示
 
 ### プロフィール設定
-- [ ] プロフィール情報の編集
-  - API: 仕様定義のみ（`/users/{user_id}`のGET/PUT）
-  - データベーススキーマ: `USERS`テーブル定義のみ
+- [x] プロフィール情報の編集
+  - API: 実装完了（Firebase Authentication + Wasabi S3）
+  - データベーススキーマ: `USERS`テーブル
     - user_name
     - profile_icon_url
     - profile_audio_url
@@ -63,6 +63,7 @@
     - is_shop_link
     - introduction
   - UI: 実装済み（プロフィール編集モーダル）
+  - 画像アップロード: Wasabi S3実装完了
 
 ### 通知設定
 - [ ] 通知設定の管理
