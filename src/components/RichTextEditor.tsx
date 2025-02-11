@@ -57,7 +57,10 @@ export const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
           斜体
         </button>
       </div>
-      <div className="h-[400px] overflow-y-auto">
+      <div 
+        className="h-[400px] overflow-y-auto cursor-text"
+        onClick={() => editor?.chain().focus().run()}
+      >
         <EditorContent editor={editor} className="prose max-w-none focus:outline-none h-full" />
       </div>
     </div>
