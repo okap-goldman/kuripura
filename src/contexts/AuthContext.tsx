@@ -40,12 +40,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    if (import.meta.env.VITE_DEV_MODE === 'true') {
+    const isDevelopment = import.meta.env.MODE === 'development';
+    const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
+    const testingPassword = import.meta.env.VITE_TESTING_GOOGLE_PASSWORD;
+
+    if (isDevelopment && testingEmail && testingPassword) {
       const mockUser: User = {
         user_id: 1,
         uid: '12345678',
         user_name: 'テストユーザー',
-        email: 'test@example.com',
+        email: testingEmail,
         profile_icon_url: null,
         profile_audio_url: null,
         shop_link_url: null,
