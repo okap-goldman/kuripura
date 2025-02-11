@@ -57,7 +57,9 @@ export const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
           斜体
         </button>
       </div>
-      <EditorContent editor={editor} className="prose max-w-none focus:outline-none min-h-[300px]" />
+      <div className="h-[400px] overflow-y-auto">
+        <EditorContent editor={editor} className="prose max-w-none focus:outline-none h-full" />
+      </div>
     </div>
   );
 };
