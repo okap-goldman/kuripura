@@ -15,6 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const createUserFromFirebase = (firebaseUser: any): User => ({
   user_id: parseInt(firebaseUser.uid.slice(0, 8), 16), // UIDの最初の8文字を数値に変換
+  uid: firebaseUser.uid, // Firebase UIDを保持
   user_name: firebaseUser.displayName || '名称未設定',
   email: firebaseUser.email || '',
   profile_icon_url: firebaseUser.photoURL,
@@ -42,6 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (import.meta.env.VITE_DEV_MODE === 'true') {
       const mockUser: User = {
         user_id: 1,
+        uid: '12345678',
         user_name: 'テストユーザー',
         email: 'test@example.com',
         profile_icon_url: null,
@@ -102,30 +104,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async () => {
     try {
       setIsLoading(true);
-      if (import.meta.env.VITE_DEV_MODE === 'true') {
-        // 開発環境用のモックユーザー
-        const mockUser: User = {
-          user_id: 1,
-          user_name: 'テストユーザー',
-          email: 'test@example.com',
-          profile_icon_url: null,
-          profile_audio_url: null,
-          shop_link_url: null,
-          is_shop_link: false,
-          introduction: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          notification_settings: {
-            comments: true,
-            highlights: true,
-            new_followers: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          }
+      const isDevelopment = import.meta.env.MODE === 'development';
+      const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
+      const testingPassword = import.meta.env.VITE_TESTING_GOOGLE_PASSWORD;
+
+      if (isDevelopment && testingEmail && testingPassword) {
+        // 開発環境でのバイパス
+        const mockUser = {
+          uid: '12345678',
+          displayName: 'Test User',
+          email: testingEmail,
+          photoURL: 'https://example.com/default-avatar.png'
         };
-        setUser(mockUser);
+        const appUser = createUserFromFirebase(mockUser);
+        setUser(appUser);
         return;
       }
+
+      // 通常のGoogle認証フロー
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const appUser = createUserFromFirebase(result.user);

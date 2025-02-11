@@ -8,6 +8,7 @@ export type NotificationSettings = {
 
 export type User = {
   user_id: number;
+  uid: string;  // Firebase UID
   user_name: string;
   email: string;
   profile_icon_url: string | null;

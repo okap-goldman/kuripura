@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Bell, MessageCircle, User } from "lucide-react";
+import { Bell, MessageCircle, User, LogOut } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -11,17 +11,29 @@ import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Navbar() {
   const { toast } = useToast();
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
-  const handleLogin = () => {
-    toast({
-      title: "お知らせ",
-      description: "次回のアップデートでGoogleログインを実装予定です。",
-    });
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast({
+        title: "ログアウトしました",
+        description: "ご利用ありがとうございました",
+      });
+      navigate('/auth/login');
+    } catch (error) {
+      toast({
+        title: "ログアウトに失敗しました",
+        description: "もう一度お試しください",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -48,10 +60,24 @@ export function Navbar() {
             <MessageCircle className="h-5 w-5" />
           </Button>
           
-          <Button onClick={handleLogin} className="gap-2">
-            <User className="h-4 w-4" />
-            ログイン
-          </Button>
+          {user ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="text-red-500 hover:text-red-600"
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
+          ) : (
+            <Button
+              onClick={() => navigate('/auth/login')}
+              className="gap-2"
+            >
+              <User className="h-4 w-4" />
+              ログイン
+            </Button>
+          )}
         </div>
       </div>
 
