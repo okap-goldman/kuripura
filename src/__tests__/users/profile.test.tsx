@@ -11,22 +11,18 @@ const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
 const mockUploadProfileImage = uploadProfileImage as jest.MockedFunction<typeof uploadProfileImage>;
 
 describe('ProfileEditForm', () => {
-  const mockProfile: {
-    name: string;
-    username: string;
-    image: string;
-    bio: string;
-    bioAudioUrl: string;
-    externalLink?: string;
-    pronouns?: string;
-  } = {
-    name: 'Test User',
-    username: 'testuser',
-    image: 'https://example.com/test.jpg',
-    bio: 'Test bio',
-    bioAudioUrl: '',
-    externalLink: '',
-    pronouns: '',
+  const mockProfile = {
+    user_id: 12345678,
+    uid: '12345678',
+    user_name: 'Test User',
+    email: 'test@example.com',
+    profile_icon_url: 'https://example.com/test.jpg',
+    profile_audio_url: null,
+    shop_link_url: null,
+    is_shop_link: false,
+    introduction: 'Test bio',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   };
 
   const mockUpdateProfile = jest.fn() as jest.MockedFunction<(data: Partial<User>) => Promise<void>>;
@@ -65,10 +61,11 @@ describe('ProfileEditForm', () => {
     await waitFor(() => {
       expect(mockUpdateProfile).toHaveBeenCalledWith({
         user_name: 'Updated Name',
-        profile_icon_url: mockProfile.image,
+        profile_icon_url: mockProfile.profile_icon_url,
         introduction: 'Updated bio',
         shop_link_url: 'https://example.com',
         is_shop_link: true,
+        profile_audio_url: mockProfile.profile_audio_url,
       });
       expect(mockOnSubmit).toHaveBeenCalled();
     });
@@ -96,9 +93,14 @@ describe('ProfileEditForm', () => {
 
     await waitFor(() => {
       expect(mockUploadProfileImage).toHaveBeenCalledWith(file);
-      expect(mockUpdateProfile).toHaveBeenCalledWith(expect.objectContaining({
+      expect(mockUpdateProfile).toHaveBeenCalledWith({
+        user_name: mockProfile.user_name,
         profile_icon_url: newImageUrl,
-      }));
+        introduction: mockProfile.introduction,
+        shop_link_url: mockProfile.shop_link_url,
+        is_shop_link: mockProfile.is_shop_link,
+        profile_audio_url: mockProfile.profile_audio_url,
+      });
       expect(mockOnSubmit).toHaveBeenCalled();
     });
   });
