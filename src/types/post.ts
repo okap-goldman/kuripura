@@ -4,7 +4,10 @@ export type PostType = {
     image: string;
     id: string;
   };
-  content: string;
-  caption?: string;
+  content: {
+    text: string;
+    html: string;
+  };
+  images?: string[];
   mediaType: "text" | "image" | "video" | "audio";
 }; 

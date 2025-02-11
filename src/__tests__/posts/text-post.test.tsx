@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach } from '@jest/globals';
-import { createTextPost } from '@/lib/firebase';
+import { createTextPost, uploadImage } from '@/lib/firebase';
 import { auth } from '@/lib/firebase';
 import { User } from '@/types/user';
 
@@ -19,17 +19,28 @@ jest.mock('@/lib/firebase', () => {
     if (!mockAuth.currentUser) {
       return Promise.reject(new Error('ログインが必要です。'));
     }
-    if (!data.title.trim() || !data.content.trim()) {
-      return Promise.reject(new Error('タイトルと本文を入力してください。'));
+    if (!data.content.text.trim()) {
+      return Promise.reject(new Error('本文を入力してください。'));
     }
-    if (data.content.length > 10000) {
+    if (data.content.text.length > 10000) {
       return Promise.reject(new Error('本文は10,000文字以内で入力してください。'));
+    }
+    if (data.images && data.images.length > 4) {
+      return Promise.reject(new Error('画像は最大4枚までです。'));
     }
     return Promise.resolve({ id: 'test-post-id' });
   });
 
+  const mockUploadImage = jest.fn().mockImplementation(async (file, userId) => {
+    if (!mockAuth.currentUser) {
+      return Promise.reject(new Error('ログインが必要です。'));
+    }
+    return Promise.resolve(`https://example.com/images/${userId}/${file.name}`);
+  });
+
   return {
     createTextPost: mockCreateTextPost,
+    uploadImage: mockUploadImage,
     auth: mockAuth,
   };
 });
@@ -67,13 +78,15 @@ describe('Text Post Feature', () => {
   test('should create a text post successfully', async () => {
     const postData = {
       userId: mockUser.uid,
-      title: 'Test Title',
-      content: 'Test Content',
+      content: {
+        text: 'Test Content',
+        html: '<p>Test Content</p>',
+      },
+      images: [],
       isPublic: true,
     };
 
     await createTextPost(postData);
-
     expect(createTextPost).toHaveBeenCalledWith(postData);
   });
 
@@ -81,68 +94,85 @@ describe('Text Post Feature', () => {
     const longContent = 'a'.repeat(10001);
     const postData = {
       userId: mockUser.uid,
-      title: 'Test Title',
-      content: longContent,
+      content: {
+        text: longContent,
+        html: `<p>${longContent}</p>`,
+      },
+      images: [],
       isPublic: true,
     };
 
     await expect(createTextPost(postData)).rejects.toThrow('本文は10,000文字以内で入力してください。');
   });
 
-  test('should handle markdown content correctly', async () => {
-    const markdownContent = '# Title\n\nThis is **bold** text';
+  test('should handle empty content', async () => {
     const postData = {
       userId: mockUser.uid,
-      title: 'Markdown Test',
-      content: markdownContent,
+      content: {
+        text: '',
+        html: '',
+      },
+      images: [],
       isPublic: true,
     };
 
-    await createTextPost(postData);
-
-    expect(createTextPost).toHaveBeenCalledWith(postData);
-  });
-
-  test('should handle empty title/content', async () => {
-    const postData = {
-      userId: mockUser.uid,
-      title: '',
-      content: '',
-      isPublic: true,
-    };
-
-    await expect(createTextPost(postData)).rejects.toThrow('タイトルと本文を入力してください。');
+    await expect(createTextPost(postData)).rejects.toThrow('本文を入力してください。');
   });
 
   test('should require authentication', async () => {
-    // 未認証状態をシミュレート
     mockAuth.currentUser = null;
 
     const postData = {
       userId: mockUser.uid,
-      title: 'Test Title',
-      content: 'Test Content',
+      content: {
+        text: 'Test Content',
+        html: '<p>Test Content</p>',
+      },
+      images: [],
       isPublic: true,
     };
 
     await expect(createTextPost(postData)).rejects.toThrow('ログインが必要です。');
   });
 
-  test('should handle markdown preview correctly', () => {
-    const markdownContent = '# Title\n\nThis is **bold** text';
-    const expectedHtml = '<h1>Title</h1>\n<p>This is <strong>bold</strong> text</p>';
-
-    // Note: ReactMarkdownのレンダリングテストは別途コンポーネントテストで実装
-    expect(markdownContent).toContain('**bold**');
+  test('should handle image upload successfully', async () => {
+    const file = new File(['test'], 'test.jpg', { type: 'image/jpeg' });
+    const url = await uploadImage(file, mockUser.uid);
+    expect(url).toBe(`https://example.com/images/${mockUser.uid}/test.jpg`);
   });
 
-  test('should truncate content to 280 characters in timeline view', () => {
-    const longContent = 'a'.repeat(300);
-    const truncatedContent = longContent.slice(0, 280) + '...';
+  test('should validate image upload limit', async () => {
+    const postData = {
+      userId: mockUser.uid,
+      content: {
+        text: 'Test Content',
+        html: '<p>Test Content</p>',
+      },
+      images: [
+        'https://example.com/1.jpg',
+        'https://example.com/2.jpg',
+        'https://example.com/3.jpg',
+        'https://example.com/4.jpg',
+        'https://example.com/5.jpg',
+      ],
+      isPublic: true,
+    };
 
-    // PostContentコンポーネントのレンダリングをテスト
-    // Note: このテストは実際のコンポーネントテストとして実装する必要があります
-    // ここではロジックの例示のみを行っています
-    expect(truncatedContent.length).toBe(283); // 280 + '...'
+    await expect(createTextPost(postData)).rejects.toThrow('画像は最大4枚までです。');
+  });
+
+  test('should handle rich text content correctly', async () => {
+    const postData = {
+      userId: mockUser.uid,
+      content: {
+        text: 'This is bold and italic text',
+        html: '<p>This is <strong>bold</strong> and <em>italic</em> text</p>',
+      },
+      images: [],
+      isPublic: true,
+    };
+
+    await createTextPost(postData);
+    expect(createTextPost).toHaveBeenCalledWith(postData);
   });
 });
