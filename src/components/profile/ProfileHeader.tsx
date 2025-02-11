@@ -14,13 +14,17 @@ interface ProfileHeaderProps {
 }
 
 const dummyProfile = {
-  name: "心の探求者",
-  username: "seeker_of_heart",
-  image: "https://api.dicebear.com/7.x/avataaars/svg?seed=1",
-  bio: "地球での使命:人々の心に光を灯し、内なる平安への道を示すこと",
-  bioAudioUrl: "https://s328.podbean.com/pb/4b3e15298687315db3070972aaa50fee/676f0aab/data1/fs91/20007750/uploads/6b592.m4a?pbss=abbaab44-f1dd-5725-bf73-452199e42c01",
-  externalLink: "https://example.com/shop",
-  pronouns: "they"
+  user_id: 12345678,
+  uid: '12345678',
+  user_name: "心の探求者",
+  email: "seeker@example.com",
+  profile_icon_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=1",
+  profile_audio_url: "https://s328.podbean.com/pb/4b3e15298687315db3070972aaa50fee/676f0aab/data1/fs91/20007750/uploads/6b592.m4a?pbss=abbaab44-f1dd-5725-bf73-452199e42c01",
+  shop_link_url: "https://example.com/shop",
+  is_shop_link: true,
+  introduction: "地球での使命:人々の心に光を灯し、内なる平安への道を示すこと",
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString()
 };
 
 export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps) {
@@ -31,7 +35,7 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
 
   const toggleAudio = () => {
     if (!audioRef.current) {
-      audioRef.current = new Audio(dummyProfile.bioAudioUrl);
+      audioRef.current = new Audio(dummyProfile.profile_audio_url);
     }
 
     if (isAudioPlaying) {
@@ -66,7 +70,7 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
           </Button>
 
           <Avatar className="h-24 w-24">
-            <AvatarImage src={dummyProfile.image} />
+            <AvatarImage src={dummyProfile.profile_icon_url} />
             <AvatarFallback>UN</AvatarFallback>
           </Avatar>
 
@@ -83,7 +87,7 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
 
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2">
-            <h1 className="text-2xl font-bold">{dummyProfile.name}</h1>
+            <h1 className="text-2xl font-bold">{dummyProfile.user_name}</h1>
             <Button
               variant="ghost"
               size="icon"
@@ -94,10 +98,10 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
               <span className="sr-only">プロフィールを編集</span>
             </Button>
           </div>
-          <p className="text-sm text-muted-foreground">@{dummyProfile.username}</p>
-          <p className="text-sm text-muted-foreground">ID: 123456789</p>
+          <p className="text-sm text-muted-foreground">@{dummyProfile.email.split('@')[0]}</p>
+          <p className="text-sm text-muted-foreground">ID: {dummyProfile.user_id}</p>
           <p className="text-muted-foreground max-w-md">
-            {dummyProfile.bio}
+            {dummyProfile.introduction}
           </p>
         </div>
 
