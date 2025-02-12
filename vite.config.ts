@@ -15,8 +15,7 @@ export default defineConfig({
     watch: {
       usePolling: true
     },
-    middlewareMode: false,
-    force: true
+    middlewareMode: false
   },
   plugins: [
     react()

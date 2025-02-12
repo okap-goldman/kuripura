@@ -3,19 +3,20 @@ import { Link } from 'expo-router';
 import { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleLogin = () => {
-    // TODO: Implement login logic
-    console.log('Login:', { email, password });
+  const handleRegister = () => {
+    // TODO: Implement register logic
+    console.log('Register:', { email, password, confirmPassword });
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        Login
+        Register
       </Text>
       
       <TextInput
@@ -36,19 +37,28 @@ export default function LoginPage() {
         onChangeText={setPassword}
         secureTextEntry
       />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm Password"
+        placeholderTextColor="#666"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+      />
       
       <TouchableOpacity
         style={styles.button}
-        onPress={handleLogin}
+        onPress={handleRegister}
       >
         <Text style={styles.buttonText}>
-          Login
+          Register
         </Text>
       </TouchableOpacity>
       
-      <Link href="/auth/register">
+      <Link href="/auth/login">
         <Text style={styles.linkText}>
-          Don't have an account? Register
+          Already have an account? Login
         </Text>
       </Link>
     </View>
