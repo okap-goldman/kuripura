@@ -6,8 +6,8 @@ export default {
 	content: [
 		"./pages/**/*.{ts,tsx}",
 		"./components/**/*.{ts,tsx}",
-		"./app/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
+		"./app/**/*.{js,jsx,ts,tsx}",
+		"./src/**/*.{js,jsx,ts,tsx}",
 	],
 	prefix: "",
 	theme: {
@@ -26,11 +26,13 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
+					DEFAULT: "#007AFF",
+					dark: "#0056B3",
 					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
+					DEFAULT: "#6C757D",
+					dark: "#495057",
 					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				destructive: {
@@ -102,4 +104,5 @@ export default {
 		}
 	},
 	plugins: [animate],
+	presets: [require("nativewind/preset")],
 } satisfies Config;
