@@ -103,6 +103,5 @@ export default {
 			}
 		}
 	},
-	plugins: [animate],
-	presets: [require("nativewind/preset")],
+	plugins: [animate, require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 } satisfies Config;
