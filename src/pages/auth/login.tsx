@@ -3,9 +3,9 @@ import { View, Text, StyleSheet } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Button } from '@/components/ui/native/button';
 import { Checkbox } from '@/components/ui/native/checkbox';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/native/toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Google } from 'lucide-react-native';
+import { LogIn } from 'lucide-react-native';
 
 export default function LoginPage() {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -13,13 +13,13 @@ export default function LoginPage() {
   const params = useLocalSearchParams();
   const { toast } = useToast();
   
-  const isDevelopment = import.meta.env.MODE === 'development';
-  const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
+  const isDevelopment = __DEV__;
+  const testingEmail = process.env.EXPO_PUBLIC_TESTING_GOOGLE_MAIL;
 
   useEffect(() => {
     if (isInitialized && user) {
-      const from = params.from as string || '/';
-      router.replace(from);
+      const from = params.from as string || '/(app)';
+      router.replace(from as any);
     }
   }, [user, isInitialized, params.from]);
 
@@ -77,7 +77,7 @@ export default function LoginPage() {
             style={styles.loginButton}
           >
             <View style={styles.buttonContent}>
-              <Google size={24} color="#000" />
+              <LogIn size={24} color="#000" />
               <Text style={styles.buttonText}>Googleでログイン</Text>
             </View>
           </Button>
@@ -91,14 +91,14 @@ export default function LoginPage() {
               <Text style={styles.termsLabel}>
                 <Text 
                   style={styles.link}
-                  onPress={() => router.push('/terms')}
+                  onPress={() => router.push('/(app)/terms' as any)}
                 >
                   利用規約
                 </Text>
                 と
                 <Text 
                   style={styles.link}
-                  onPress={() => router.push('/privacy')}
+                  onPress={() => router.push('/(app)/privacy' as any)}
                 >
                   プライバシーポリシー
                 </Text>
@@ -202,4 +202,4 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     transform: [{ rotate: '45deg' }],
   },
-});                                                                                                                                                                                                                                                                                                                              
+});                                                                                                                                                                                                                                                                                                                                                                                                                                                              
