@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui/native/button';
-import { Camera, CameraType } from 'expo-camera';
+import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { Video as ExpoVideo, ResizeMode, AVPlaybackStatus } from 'expo-av';
 import { ArrowLeft, Video as VideoIcon, Upload, Play, Pause } from 'lucide-react-native';
@@ -14,8 +14,8 @@ export default function VideoPostPage() {
   const [description, setDescription] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   
-  const cameraRef = useRef<Camera>(null);
-  const videoRef = useRef<any>(null);
+  const cameraRef = useRef<Camera | null>(null);
+  const videoRef = useRef<ExpoVideo | null>(null);
 
   const startRecording = async () => {
     try {
@@ -28,7 +28,10 @@ export default function VideoPostPage() {
       if (status === 'granted') {
         setIsRecording(true);
         if (cameraRef.current) {
-          const video = await cameraRef.current.recordAsync();
+          const video = await cameraRef.current.recordAsync({
+            quality: Camera.Constants.VideoQuality['720p'],
+            maxDuration: 60,
+          });
           setVideo(video.uri);
         }
       } else {
@@ -107,7 +110,7 @@ export default function VideoPostPage() {
             <Camera
               ref={cameraRef}
               style={styles.video}
-              type={CameraType.back}
+              type={Camera.Constants.Type.back}
             />
           )}
           
@@ -266,4 +269,4 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginTop: 8,
   },
-});                             
+});                                   
