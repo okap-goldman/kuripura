@@ -12,9 +12,11 @@ export const Avatar = ({ source, fallback, style }: AvatarProps) => {
       {source?.uri ? (
         <Image source={source} style={styles.image} />
       ) : (
-        <Text style={[styles.fallback, styles[`${size}Text`]]}>
-          {fallback?.[0] || '?'}
-        </Text>
+        <View style={styles.fallback}>
+          <Text style={styles.fallbackText}>
+            {fallback?.[0] || '?'}
+          </Text>
+        </View>
       )}
     </View>
   );
@@ -22,7 +24,9 @@ export const Avatar = ({ source, fallback, style }: AvatarProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 9999,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     overflow: 'hidden',
     backgroundColor: '#e5e7eb',
     alignItems: 'center',
@@ -31,30 +35,16 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-  },
-  sm: {
-    width: 24,
-    height: 24,
-  },
-  md: {
-    width: 40,
-    height: 40,
-  },
-  lg: {
-    width: 64,
-    height: 64,
+    resizeMode: 'cover',
   },
   fallback: {
-    color: '#6b7280',
-    fontWeight: '500',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  smText: {
-    fontSize: 12,
-  },
-  mdText: {
+  fallbackText: {
     fontSize: 16,
-  },
-  lgText: {
-    fontSize: 24,
+    fontWeight: '500',
+    color: '#6b7280',
   },
 });
