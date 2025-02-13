@@ -50,9 +50,9 @@ export function FooterNav() {
         
         <TouchableOpacity
           style={styles.tab}
-          onPress={() => router.push('/profile' as any)
+          onPress={() => router.push('/profile' as any)}
         >
-          <User size={24} color={isActive('/(tabs)/profile') ? '#3b82f6' : '#6b7280'} />
+          <User size={24} color={isActive('/profile') ? '#3b82f6' : '#6b7280'} />
         </TouchableOpacity>
       </View>
 

@@ -9,10 +9,8 @@ interface PostActionsProps {
   onComment: () => void;
 }
 
-export function PostActions({ postId, onComment }: PostActionsProps) {
-  const [liked, setLiked] = useState(false);
-  const [kuratta, setKuratta] = useState(false);
-  const [showKurattaDialog, setShowKurattaDialog] = useState(false);
+export function PostActions({ likes, comments, onLike, onComment, shareUrl }: PostActionsProps) {
+  const [isLiked, setIsLiked] = useState(false);
 
   return (
     <div className="flex items-center gap-4">
