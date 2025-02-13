@@ -110,7 +110,7 @@ export default function TextPostPage() {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const handleImageUpload = async (file: Blob) => {
+  const handleImageUpload = async (file: Blob | File) => {
     if (images.length >= 4) {
       toast({
         title: 'エラー',
@@ -136,8 +136,7 @@ export default function TextPostPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     
     if (!user) {
       toast({
@@ -179,7 +178,7 @@ export default function TextPostPage() {
         description: '投稿が完了しました。',
       });
       
-      router.push('/(tabs)/timeline');
+      router.replace('/(tabs)/timeline' as any);
     } catch (error) {
       console.error('Post creation error:', error);
       toast({
@@ -195,7 +194,7 @@ export default function TextPostPage() {
       <View style={styles.header}>
         <Button
           variant="outline"
-          onPress={() => router.push('/(tabs)/post')}
+          onPress={() => router.replace('/(tabs)/post' as any)}
         >
           <ArrowLeft size={20} color="#6b7280" />
         </Button>
@@ -261,7 +260,7 @@ export default function TextPostPage() {
 
             {images.length > 0 && (
               <View style={styles.imageGrid}>
-                {images.map((url, index) => (
+                {images.map((url) => (
                   <View key={url} style={styles.imageContainer}>
                     <Image
                       source={{ uri: url }}
@@ -282,4 +281,4 @@ export default function TextPostPage() {
       </ScrollView>
     </View>
   );
-}                                
+}                                                
