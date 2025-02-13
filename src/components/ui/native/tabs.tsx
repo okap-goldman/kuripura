@@ -12,7 +12,7 @@ export const Tabs = ({ value, onValueChange, children }: TabsProps) => {
     <View style={styles.container}>
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, { value, onValueChange });
+          return React.cloneElement(child, { currentValue: value, onValueChange });
         }
         return child;
       })}

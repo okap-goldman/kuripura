@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Pressable } from 'react-native';
 import { Card } from "@/components/ui/native/card";
 import { AnalysisSection } from "@/components/discover/AnalysisSection";
 import { RegionalActivitySection } from "@/components/discover/RegionalActivitySection";
@@ -7,7 +7,6 @@ import { RecommendedPostsSection } from "@/components/discover/RecommendedPostsS
 import { useState } from "react";
 import { ChevronLeft } from "lucide-react-native";
 import { Button } from "@/components/ui/native/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/native/tabs";
 
 type Section = "main" | "analysis" | "regional" | "events" | "recommended";
 
@@ -43,41 +42,41 @@ export default function Discover() {
       default:
         return (
           <View style={styles.grid}>
-            <TouchableOpacity onPress={() => setCurrentSection("analysis")}>
+            <Pressable onPress={() => setCurrentSection("analysis")}>
               <Card style={styles.gridCard}>
                 <Text style={styles.cardTitle}>分析</Text>
                 <Text style={styles.cardDescription}>
                   あなたの目醒め状況を分析し、アドバイスを提供します
                 </Text>
               </Card>
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity onPress={() => setCurrentSection("regional")}>
+            <Pressable onPress={() => setCurrentSection("regional")}>
               <Card style={styles.gridCard}>
                 <Text style={styles.cardTitle}>地域毎の活動状況</Text>
                 <Text style={styles.cardDescription}>
                   各地域での活動状況や注目のイベントをチェック
                 </Text>
               </Card>
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity onPress={() => setCurrentSection("events")}>
+            <Pressable onPress={() => setCurrentSection("events")}>
               <Card style={styles.gridCard}>
                 <Text style={styles.cardTitle}>イベント</Text>
                 <Text style={styles.cardDescription}>
                   目醒め人が企画するイベントを探す・企画する
                 </Text>
               </Card>
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity onPress={() => setCurrentSection("recommended")}>
+            <Pressable onPress={() => setCurrentSection("recommended")}>
               <Card style={styles.gridCard}>
                 <Text style={styles.cardTitle}>おすすめ投稿</Text>
                 <Text style={styles.cardDescription}>
                   あなたにおすすめの投稿をピックアップ
                 </Text>
               </Card>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         );
     }
