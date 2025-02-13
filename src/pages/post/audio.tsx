@@ -133,7 +133,6 @@ export default function AudioPostPage() {
         const { sound: newSound } = await Audio.Sound.createAsync({ uri });
         setSound(newSound);
       }
-      setSound(newSound);
     } catch (error) {
       console.error('録音の停止に失敗しました:', error);
     }
@@ -141,14 +140,15 @@ export default function AudioPostPage() {
 
   const handleSelectAudio = async () => {
     try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: 'audio/*',
-        copyToCacheDirectory: true,
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        quality: 1,
       });
 
-      if (result.type === 'success') {
-        setAudioUri(result.uri);
-        const { sound: newSound } = await Audio.Sound.createAsync({ uri: result.uri });
+      if (!result.canceled && result.assets[0]) {
+        const uri = result.assets[0].uri;
+        setAudioUri(uri);
+        const { sound: newSound } = await Audio.Sound.createAsync({ uri });
         setSound(newSound);
       }
     } catch (error) {
@@ -257,4 +257,4 @@ export default function AudioPostPage() {
       </View>
     </View>
   );
-}          
+}              
