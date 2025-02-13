@@ -1,5 +1,5 @@
+import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
-import { createContext, useContext, useState, useRef, useEffect } from 'react';
 
 interface Toast {
   title?: string;
