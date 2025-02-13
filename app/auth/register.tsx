@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'expo-router';
-import { useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Input } from '@/components/ui/native/input';
+import { Button } from '@/components/ui/native/button';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -19,42 +20,37 @@ export default function RegisterPage() {
         Register
       </Text>
       
-      <TextInput
+      <Input
         style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#666"
+        placeholder="メールアドレス"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
       />
       
-      <TextInput
+      <Input
         style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#666"
+        placeholder="パスワード"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
 
-      <TextInput
+      <Input
         style={styles.input}
-        placeholder="Confirm Password"
-        placeholderTextColor="#666"
+        placeholder="パスワード（確認）"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
       
-      <TouchableOpacity
+      <Button
         style={styles.button}
         onPress={handleRegister}
       >
-        <Text style={styles.buttonText}>
-          Register
-        </Text>
-      </TouchableOpacity>
+        登録する
+      </Button>
       
       <Link href="/auth/login">
         <Text style={styles.linkText}>
@@ -80,26 +76,15 @@ const styles = StyleSheet.create({
     color: '#000'
   },
   input: {
-    width: '100%',
-    backgroundColor: '#f3f4f6',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    color: '#000'
-  },
-  button: {
-    width: '100%',
-    backgroundColor: '#3b82f6',
-    borderRadius: 8,
-    padding: 16,
     marginBottom: 16
   },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontWeight: 'bold'
+  button: {
+    marginBottom: 16
   },
   linkText: {
-    color: '#3b82f6'
+    color: '#3b82f6',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 8
   }
 });
