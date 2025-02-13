@@ -63,7 +63,7 @@ export default function SearchPage() {
       padding: 16,
     },
     container: {
-      backgroundColor: '#f9fafb',
+      backgroundColor: colors.background,
       flex: 1,
       paddingBottom: 64,
       paddingTop: 64,
@@ -94,8 +94,8 @@ export default function SearchPage() {
       marginTop: 8,
     },
     searchBar: {
-      backgroundColor: '#f9fafb',
-      borderBottomColor: '#e5e7eb',
+      backgroundColor: colors.background,
+      borderBottomColor: colors.border,
       borderBottomWidth: 1,
       padding: 16,
     },
@@ -106,6 +106,9 @@ export default function SearchPage() {
     searchInput: {
       flex: 1,
     },
+    searchResults: {
+      gap: 16,
+    },
     suggestedQuestions: {
       borderTopColor: colors.border,
       borderTopWidth: 1,
@@ -115,9 +118,6 @@ export default function SearchPage() {
       color: colors.textSecondary,
       fontSize: 14,
       marginBottom: 8,
-    },
-    searchResults: {
-      gap: 16,
     },
   });
   const [searchQuery, setSearchQuery] = useState('');
@@ -234,4 +234,4 @@ export default function SearchPage() {
       </View>
     </View>
   );
-}                  
+}                    
