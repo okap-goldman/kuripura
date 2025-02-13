@@ -48,20 +48,87 @@ const SUGGESTED_QUESTIONS = [
 
 export default function SearchPage() {
   const styles = StyleSheet.create({
-    container: {
+    tabs: {
+      marginTop: 16,
+    },
+    tabsList: {
+      flexDirection: 'row',
+      width: '100%',
+      backgroundColor: colors.background,
+      borderRadius: 8,
+      padding: 4,
+    },
+    tabsTrigger: {
       flex: 1,
+      paddingVertical: 8,
+      paddingHorizontal: 12,
+      alignItems: 'center',
+      borderRadius: 6,
+    },
+    activeTab: {
+      backgroundColor: colors.primary,
+    },
+    tabText: {
+      fontSize: 14,
+      fontWeight: '500',
+      color: colors.text,
+    },
+    activeTabText: {
+      color: colors.background,
+    },
+    tabsContent: {
+      marginTop: 24,
+    },
+    chatContainer: {
+      backgroundColor: colors.background,
+      borderRadius: 8,
+      elevation: 2,
+      shadowColor: colors.text,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+    },
+    chatHistory: {
+      maxHeight: 600,
+      minHeight: 400,
+      padding: 16,
+    },
+    container: {
       backgroundColor: '#f9fafb',
-      paddingTop: 64,
+      flex: 1,
       paddingBottom: 64,
+      paddingTop: 64,
     },
     content: {
       paddingHorizontal: 16,
     },
+    input: {
+      flex: 1,
+    },
+    inputContainer: {
+      borderTopColor: colors.border,
+      borderTopWidth: 1,
+      padding: 16,
+    },
+    inputWrapper: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    questionButtons: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+    },
+    remainingQuestions: {
+      color: colors.textSecondary,
+      fontSize: 14,
+      marginTop: 8,
+    },
     searchBar: {
       backgroundColor: '#f9fafb',
-      padding: 16,
-      borderBottomWidth: 1,
       borderBottomColor: '#e5e7eb',
+      borderBottomWidth: 1,
+      padding: 16,
     },
     searchForm: {
       flexDirection: 'row',
@@ -70,57 +137,22 @@ export default function SearchPage() {
     searchInput: {
       flex: 1,
     },
-    chatContainer: {
-      backgroundColor: colors.background,
-      borderRadius: 8,
-      shadowColor: colors.text,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
-      elevation: 2,
-    },
-    chatHistory: {
-      padding: 16,
-      minHeight: 400,
-      maxHeight: 600,
-    },
     suggestedQuestions: {
-      padding: 16,
-      borderTopWidth: 1,
       borderTopColor: colors.border,
+      borderTopWidth: 1,
+      padding: 16,
     },
     suggestedQuestionsTitle: {
-      fontSize: 14,
       color: colors.textSecondary,
+      fontSize: 14,
       marginBottom: 8,
-    },
-    questionButtons: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 8,
-    },
-    inputContainer: {
-      padding: 16,
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
-    },
-    inputWrapper: {
-      flexDirection: 'row',
-      gap: 8,
-    },
-    input: {
-      flex: 1,
-    },
-    remainingQuestions: {
-      fontSize: 14,
-      color: colors.textSecondary,
-      marginTop: 8,
     },
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState(MOCK_CHAT_HISTORY);
   const [searchResults, setSearchResults] = useState(MOCK_SEARCH_RESULTS);
+  const [activeTab, setActiveTab] = useState('chat');
 
   const handleSearch = () => {
     // TODO: Implement search
@@ -163,17 +195,17 @@ export default function SearchPage() {
         </View>
 
         {/* タブ付きコンテンツ */}
-        <Tabs defaultValue="chat" className="mt-4">
-          <TabsList className="w-full">
-            <TabsTrigger value="chat" className="flex-1">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList>
+            <TabsTrigger value="chat">
               AIチャット
             </TabsTrigger>
-            <TabsTrigger value="search" className="flex-1">
+            <TabsTrigger value="search">
               検索結果
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="chat">
+          <TabsContent value="chat" currentValue={activeTab}>
             <View style={styles.chatContainer}>
               {/* チャット履歴 */}
               <ScrollView style={styles.chatHistory}>
@@ -219,15 +251,15 @@ export default function SearchPage() {
             </View>
           </TabsContent>
 
-          <TabsContent value="search" className="mt-6">
-            <div className="space-y-4">
+          <TabsContent value="search" currentValue={activeTab}>
+            <View style={styles.searchResults}>
               {searchResults.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
-            </div>
+            </View>
           </TabsContent>
         </Tabs>
       </View>
     </View>
   );
-}      
+}              

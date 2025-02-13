@@ -12,7 +12,7 @@ export const Tabs = ({ value, onValueChange, children }: TabsProps) => {
     <View style={styles.container}>
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, { currentValue: value, onValueChange });
+          return React.cloneElement(child as React.ReactElement, { currentValue: value, onValueChange });
         }
         return child;
       })}
@@ -76,29 +76,29 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
+  content: {
+    padding: 16,
+  },
   list: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
   },
   trigger: {
+    alignItems: 'center',
     flex: 1,
     paddingVertical: 12,
-    alignItems: 'center',
   },
   triggerSelected: {
-    borderBottomWidth: 2,
     borderBottomColor: '#3b82f6',
+    borderBottomWidth: 2,
   },
   triggerText: {
-    fontSize: 14,
     color: '#6b7280',
+    fontSize: 14,
   },
   triggerTextSelected: {
     color: '#3b82f6',
     fontWeight: '600',
-  },
-  content: {
-    padding: 16,
   },
 });
