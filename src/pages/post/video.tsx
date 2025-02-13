@@ -1,228 +1,259 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { ArrowLeft, Video as VideoIcon, Upload, Play, Pause } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { View, Text, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
+import { Button } from '@/components/ui/native/button';
+import { Camera } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
+import { Video } from 'expo-av';
+import { ArrowLeft, Video as VideoIcon, Upload, Play, Pause } from 'lucide-react-native';
+import { Input } from '@/components/ui/native/input';
 
 export default function VideoPostPage() {
-  const navigate = useNavigate();
-  const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [video, setVideo] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [description, setDescription] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const videoChunksRef = useRef<Blob[]>([]);
-  const videoElementRef = useRef<HTMLVideoElement | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const cameraRef = useRef<Camera | null>(null);
+  const videoRef = useRef<Video | null>(null);
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      });
-      streamRef.current = stream;
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      videoChunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        videoChunksRef.current.push(event.data);
-      };
-
-      mediaRecorder.onstop = () => {
-        const videoBlob = new Blob(videoChunksRef.current, { type: 'video/webm' });
-        const videoUrl = URL.createObjectURL(videoBlob);
-        setVideoBlob(videoBlob);
-        setVideoUrl(videoUrl);
-        stream.getTracks().forEach(track => track.stop());
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+      
+      if (status === 'granted') {
+        setIsRecording(true);
+        if (cameraRef.current) {
+          const video = await cameraRef.current.recordAsync();
+          setVideo(video.uri);
+        }
+      } else {
+        alert('カメラへのアクセスを許可してください。');
+      }
     } catch (error) {
       console.error('録画の開始に失敗しました:', error);
-      alert('録画の開始に失敗しました。カメラとマイクへのアクセスを許可してください。');
+      alert('録画の開始に失敗しました。');
     }
   };
 
   const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
+    if (cameraRef.current && isRecording) {
+      cameraRef.current.stopRecording();
       setIsRecording(false);
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-      }
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setVideoBlob(file);
-      setVideoUrl(url);
+  const handleSelectVideo = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      allowsEditing: true,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setVideo(result.assets[0].uri);
     }
   };
 
-  const togglePlayback = () => {
-    if (videoElementRef.current) {
-      if (isPlaying) {
-        videoElementRef.current.pause();
+  const togglePlayback = async () => {
+    if (videoRef.current) {
+      const status = await videoRef.current.getStatusAsync();
+      if (status.isPlaying) {
+        await videoRef.current.pauseAsync();
       } else {
-        videoElementRef.current.play();
+        await videoRef.current.playAsync();
       }
-      setIsPlaying(!isPlaying);
+      setIsPlaying(!status.isPlaying);
     }
   };
 
   const handleSubmit = async () => {
-    if (!videoBlob) {
+    if (!video) {
       alert('動画を録画または選択してください。');
       return;
     }
 
     // TODO: Implement video upload and post submission
-    console.log({ videoBlob, description, isPublic });
-    navigate('/');
+    console.log({ video, description });
+    router.push('/');
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 pb-16">
-      <div className="container mx-auto px-4">
-        {/* ヘッダー */}
-        <div className="sticky top-16 bg-gray-50 py-4 z-10 flex items-center justify-between border-b">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/post')}
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-lg font-semibold">動画投稿</h1>
-          <Button
-            onClick={handleSubmit}
-            disabled={!videoBlob}
-          >
-            投稿する
-          </Button>
-        </div>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onPress={() => router.push('/post')}
+        >
+          <ArrowLeft size={20} color="#000" />
+        </Button>
+        <Text style={styles.title}>動画投稿</Text>
+        <Button
+          onPress={handleSubmit}
+          disabled={!video}
+        >
+          投稿する
+        </Button>
+      </View>
 
-        <div className="py-6 space-y-6">
-          {/* 公開設定 */}
-          <div className="flex items-center justify-between">
-            <Label htmlFor="public-switch">公開設定</Label>
-            <div className="flex items-center space-x-2">
-              <Label htmlFor="public-switch" className="text-sm text-gray-500">
-                {isPublic ? '公開' : '限定公開'}
-              </Label>
-              <Switch
-                id="public-switch"
-                checked={isPublic}
-                onCheckedChange={setIsPublic}
+      <View style={styles.content}>
+        <View style={styles.videoContainer}>
+          {isRecording && (
+            <Camera
+              ref={cameraRef}
+              style={styles.video}
+              type={Camera.Constants.Type.back}
+            />
+          )}
+          
+          {video && !isRecording && (
+            <View style={styles.videoWrapper}>
+              <Video
+                ref={videoRef}
+                source={{ uri: video }}
+                style={styles.video}
+                shouldPlay={isPlaying}
+                resizeMode="contain"
               />
-            </div>
-          </div>
-
-          {/* 動画プレビュー/録画 */}
-          <div className="space-y-4">
-            {isRecording && streamRef.current && (
-              <video
-                ref={videoElementRef}
-                autoPlay
-                muted
-                playsInline
-                className="w-full aspect-video rounded-lg bg-black"
-                srcObject={streamRef.current}
-              />
-            )}
-            
-            {videoUrl && !isRecording && (
-              <div className="relative">
-                <video
-                  ref={videoElementRef}
-                  src={videoUrl}
-                  className="w-full aspect-video rounded-lg bg-black"
-                  onClick={togglePlayback}
-                />
+              <View style={styles.controlsContainer}>
                 <Button
                   variant="outline"
                   size="icon"
-                  className="absolute bottom-4 right-4"
-                  onClick={togglePlayback}
+                  onPress={togglePlayback}
                 >
                   {isPlaying ? (
-                    <Pause className="h-4 w-4" />
+                    <Pause size={16} color="#fff" />
                   ) : (
-                    <Play className="h-4 w-4" />
+                    <Play size={16} color="#fff" />
                   )}
                 </Button>
-              </div>
-            )}
+              </View>
+            </View>
+          )}
 
-            {!videoUrl && !isRecording && (
-              <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <VideoIcon className="h-12 w-12 text-gray-400 mx-auto" />
-                  <div className="space-x-4">
-                    <Button
-                      variant="outline"
-                      onClick={startRecording}
-                    >
-                      録画を開始
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => fileInputRef.current?.click()}
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      動画を選択
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {isRecording && (
-              <div className="flex justify-center">
+          {!video && !isRecording && (
+            <View style={styles.placeholderContainer}>
+              <VideoIcon size={48} color="#9ca3af" />
+              <View style={styles.buttonGroup}>
                 <Button
-                  variant="destructive"
-                  onClick={stopRecording}
+                  variant="outline"
+                  onPress={startRecording}
                 >
-                  録画を停止
+                  録画を開始
                 </Button>
-              </div>
-            )}
+                <Button
+                  variant="outline"
+                  onPress={handleSelectVideo}
+                >
+                  <Upload size={16} color="#000" />
+                  <Text>動画を選択</Text>
+                </Button>
+              </View>
+            </View>
+          )}
 
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="video/*"
-              className="hidden"
-              onChange={handleFileSelect}
-            />
-          </div>
+          {isRecording && (
+            <View style={styles.recordingControls}>
+              <Button
+                variant="destructive"
+                onPress={stopRecording}
+              >
+                録画を停止
+              </Button>
+            </View>
+          )}
+        </View>
 
-          {/* 説明文入力 */}
-          <div className="space-y-2">
-            <Label htmlFor="description">説明文</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="説明文を入力（任意）"
-              className="min-h-[100px]"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+        <View style={styles.description}>
+          <Text>説明文</Text>
+          <Input
+            value={description}
+            onChangeText={setDescription}
+            placeholder="説明文を入力（任意）"
+            multiline
+            style={styles.descriptionInput}
+          />
+        </View>
+      </View>
+    </View>
   );
-} 
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+  },
+  videoContainer: {
+    aspectRatio: 16 / 9,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    overflow: 'hidden',
+    marginBottom: 16,
+  },
+  video: {
+    flex: 1,
+  },
+  videoWrapper: {
+    flex: 1,
+    position: 'relative',
+  },
+  controlsContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  placeholderContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  buttonGroup: {
+    flexDirection: 'row',
+    gap: 16,
+    marginTop: 16,
+  },
+  recordingControls: {
+    position: 'absolute',
+    bottom: 16,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  description: {
+    marginTop: 16,
+  },
+  descriptionInput: {
+    height: 100,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    padding: 12,
+    textAlignVertical: 'top',
+    marginTop: 8,
+  },
+});         
