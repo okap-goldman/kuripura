@@ -73,6 +73,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         };
         const appUser = createUserFromFirebase(mockUser);
         setUser(appUser);
+        // 認証状態をローカルストレージに保存
+        localStorage.setItem('auth_user', JSON.stringify(appUser));
+        return;
+      }
+
+      // 開発環境での認証状態の復元
+      const storedUser = localStorage.getItem('auth_user');
+      if (isDevelopment && storedUser) {
+        setUser(JSON.parse(storedUser));
         return;
       }
 
