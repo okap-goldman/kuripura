@@ -1,14 +1,53 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon, FilterIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { ja } from "date-fns/locale"
-import { useState } from "react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { View, Text, StyleSheet } from 'react-native';
+import { Input } from '@/components/ui/native/input';
+import { Select, SelectItem } from '@/components/ui/native/select';
+import { Button } from '@/components/ui/native/button';
+import { FilterIcon } from 'lucide-react-native';
+import { useState } from 'react';
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 16,
+  },
+  searchRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  searchInput: {
+    flex: 1,
+  },
+  filterButton: {
+    paddingHorizontal: 12,
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  buttonText: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  filterSection: {
+    gap: 8,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#374151',
+  },
+  priceRange: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  priceInput: {
+    flex: 1,
+  },
+  priceSeparator: {
+    color: '#6b7280',
+  },
+});
 
 interface EventFilterProps {
   onFilterChange: (filters: EventFilters) => void
@@ -38,94 +77,60 @@ export function EventFilter({ onFilterChange }: EventFilterProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-4">
-        <div className="flex-1">
+    <View style={styles.container}>
+      <View style={styles.searchRow}>
+        <Input
+          placeholder="イベントを検索"
+          value={filters.keyword}
+          onChangeText={(text) => handleFilterChange({ keyword: text })}
+          style={styles.searchInput}
+        />
+        <Button
+          variant="outline"
+          onPress={() => {}}
+          style={styles.filterButton}
+        >
+          <View style={styles.buttonContent}>
+            <FilterIcon size={16} color="#6b7280" />
+            <Text style={styles.buttonText}>詳細検索</Text>
+          </View>
+        </Button>
+      </View>
+
+      <View style={styles.filterSection}>
+        <Text style={styles.label}>開催場所</Text>
+        <Select
+          value={filters.location}
+          onValueChange={(value: string) => handleFilterChange({ location: value })}
+          placeholder="場所を選択"
+        >
+          <SelectItem value="all">すべて</SelectItem>
+          <SelectItem value="tokyo">東京</SelectItem>
+          <SelectItem value="osaka">大阪</SelectItem>
+          <SelectItem value="online">オンライン</SelectItem>
+        </Select>
+      </View>
+
+      <View style={styles.filterSection}>
+        <Text style={styles.label}>参加費用</Text>
+        <View style={styles.priceRange}>
           <Input
-            placeholder="イベントを検索"
-            value={filters.keyword}
-            onChange={(e) => handleFilterChange({ keyword: e.target.value })}
+            placeholder="最小"
+            value={filters.minPrice.toString()}
+            onChangeText={(text) => handleFilterChange({ minPrice: Number(text) || 0 })}
+            keyboardType="numeric"
+            style={styles.priceInput}
           />
-        </div>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline">
-              <FilterIcon className="mr-2 h-4 w-4" />
-              詳細検索
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>開催場所</Label>
-                <Select
-                  value={filters.location}
-                  onValueChange={(value) => handleFilterChange({ location: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="場所を選択" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">すべて</SelectItem>
-                    <SelectItem value="tokyo">東京</SelectItem>
-                    <SelectItem value="osaka">大阪</SelectItem>
-                    <SelectItem value="online">オンライン</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>参加費用</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    placeholder="最小"
-                    value={filters.minPrice}
-                    onChange={(e) => handleFilterChange({ minPrice: Number(e.target.value) })}
-                  />
-                  <span>〜</span>
-                  <Input
-                    type="number"
-                    placeholder="最大"
-                    value={filters.maxPrice}
-                    onChange={(e) => handleFilterChange({ maxPrice: Number(e.target.value) })}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>開催日</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !filters.date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {filters.date ? (
-                        format(filters.date, "PPP", { locale: ja })
-                      ) : (
-                        <span>日付を選択</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={filters.date}
-                      onSelect={(date) => handleFilterChange({ date })}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
-    </div>
+          <Text style={styles.priceSeparator}>〜</Text>
+          <Input
+            placeholder="最大"
+            value={filters.maxPrice.toString()}
+            onChangeText={(text) => handleFilterChange({ maxPrice: Number(text) || 0 })}
+            keyboardType="numeric"
+            style={styles.priceInput}
+          />
+        </View>
+      </View>
+    </View>
   )
-} 
+}  
