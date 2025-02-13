@@ -39,8 +39,8 @@ export function PostActions({ likes, comments, onLike, onComment, shareUrl }: Po
       >
         <Heart 
           size={20} 
+          strokeWidth={2}
           color={isLiked ? '#ef4444' : '#6b7280'} 
-          fill={isLiked ? '#ef4444' : 'none'} 
         />
         <Text style={styles.count}>{likes}</Text>
       </TouchableOpacity>
@@ -50,7 +50,7 @@ export function PostActions({ likes, comments, onLike, onComment, shareUrl }: Po
         onPress={onComment}
         testID="comment-button"
       >
-        <MessageCircle size={20} color="#6b7280" />
+        <MessageCircle size={20} strokeWidth={2} color="#6b7280" />
         <Text style={styles.count}>{comments}</Text>
       </TouchableOpacity>
 
@@ -60,7 +60,7 @@ export function PostActions({ likes, comments, onLike, onComment, shareUrl }: Po
           onPress={handleShare}
           testID="share-button"
         >
-          <Share2 size={20} color="#6b7280" />
+          <Share2 size={20} strokeWidth={2} color="#6b7280" />
         </TouchableOpacity>
       )}
     </View>
