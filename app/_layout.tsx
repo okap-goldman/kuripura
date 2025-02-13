@@ -2,9 +2,9 @@ import React from 'react';
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { View } from 'react-native';
-import { Toaster } from "../src/components/ui/toaster";
-import { Toaster as Sonner } from "../src/components/ui/sonner";
-import { TooltipProvider } from "../src/components/ui/tooltip";
+import { Toaster } from "../src/components/ui/native/toaster";
+import { Toaster as Sonner } from "../src/components/ui/native/sonner";
+import { TooltipProvider } from "../src/components/ui/native/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "../src/contexts/AuthContext";
 
