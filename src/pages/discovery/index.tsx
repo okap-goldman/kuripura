@@ -358,7 +358,7 @@ export default function DiscoveryPage() {
                       </Text>
                     </View>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       onPress={() => {}}
                     >
                       <ChevronRight size={16} color="#6b7280" />
@@ -372,4 +372,4 @@ export default function DiscoveryPage() {
       </ScrollView>
     </View>
   );
-}          
+}            

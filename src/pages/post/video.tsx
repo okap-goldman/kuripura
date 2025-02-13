@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui/native/button';
 import { Camera } from 'expo-camera';
+import type { CameraType } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { Video as ExpoVideo, ResizeMode, AVPlaybackStatus } from 'expo-av';
 import { ArrowLeft, Video as VideoIcon, Upload, Play, Pause } from 'lucide-react-native';
@@ -266,4 +267,4 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginTop: 8,
   },
-});                                         
+});                                             
