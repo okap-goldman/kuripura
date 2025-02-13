@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui/native/button';
-import { Camera as ExpoCamera, CameraType } from 'expo-camera';
+import { Camera as ExpoCamera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { Video as ExpoVideo, ResizeMode, AVPlaybackStatus } from 'expo-av';
 import { ArrowLeft, Video as VideoIcon, Upload, Play, Pause } from 'lucide-react-native';
@@ -14,8 +14,8 @@ export default function VideoPostPage() {
   const [description, setDescription] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   
-  const cameraRef = useRef<ExpoCamera | null>(null);
-  const videoRef = useRef<ExpoVideo | null>(null);
+  const cameraRef = useRef<any>(null);
+  const videoRef = useRef<any>(null);
 
   const startRecording = async () => {
     try {
@@ -79,7 +79,7 @@ export default function VideoPostPage() {
 
     // TODO: Implement video upload and post submission
     console.log({ video, description });
-    router.push('/');
+    router.replace('/(tabs)' as any);
   };
 
   return (
@@ -87,7 +87,7 @@ export default function VideoPostPage() {
       <View style={styles.header}>
         <Button
           variant="outline"
-          size="icon"
+          style={styles.backButton}
           onPress={() => router.back()}
         >
           <ArrowLeft size={20} color="#000" />
@@ -123,7 +123,7 @@ export default function VideoPostPage() {
               <View style={styles.controlsContainer}>
                 <Button
                   variant="outline"
-                  size="icon"
+                  style={styles.playButton}
                   onPress={togglePlayback}
                 >
                   {isPlaying ? (
@@ -185,6 +185,22 @@ export default function VideoPostPage() {
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    padding: 8,
+  },
+  playButton: {
+    padding: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 20,
+  },
+  backButton: {
+    padding: 8,
+  },
+  playButton: {
+    padding: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -258,4 +274,4 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginTop: 8,
   },
-});                 
+});                       
