@@ -1,6 +1,7 @@
-import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { router } from "expo-router";
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
+import { Avatar } from "@/components/ui/native/avatar";
+import { Badge } from "@/components/ui/native/badge";
 import { FooterNav } from "@/components/FooterNav";
 
 type Message = {
@@ -130,59 +131,151 @@ const mockMessages: Message[] = [
 ];
 
 export const MessagesPage = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="flex flex-col h-screen bg-background">
-      <header className="flex items-center justify-between px-4 py-3 border-b bg-background">
-        <h1 className="text-lg font-bold">トーク</h1>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">9</span>
-        </div>
-      </header>
-      <div className="flex-1 overflow-y-auto">
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>トーク</Text>
+        <View style={styles.headerRight}>
+          <Text style={styles.count}>9</Text>
+        </View>
+      </View>
+      <ScrollView style={styles.messageList}>
         {mockMessages.map((message) => (
-          <button
+          <TouchableOpacity
             key={message.id}
-            onClick={() => navigate(`/chat/${message.id}`)}
-            className="w-full p-4 flex items-center gap-3 hover:bg-muted/50 transition-colors border-b"
+            onPress={() => router.push(`/(app)/chat/${message.id}` as any)}
+            style={styles.messageItem}
           >
-            <Avatar className="w-12 h-12">
-              <AvatarImage src={message.user.avatarUrl} />
-              <AvatarFallback>{message.user.name[0]}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-sm text-rose-500">
+            <Avatar 
+              style={styles.avatar}
+              source={{ uri: message.user.avatarUrl }}
+              fallback={message.user.name[0]}
+            />
+            <View style={styles.messageContent}>
+              <View style={styles.messageHeader}>
+                <Text style={styles.userName}>
                   {message.user.name}
-                </span>
-                <span className="text-sm text-rose-500">
+                </Text>
+                <Text style={styles.userInfo}>
                   {message.user.age}歳 {message.user.location}
-                </span>
+                </Text>
                 {message.isUndelivered && (
-                  <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
-                    未返信
-                  </span>
+                  <View style={styles.undeliveredBadge}>
+                    <Text style={styles.undeliveredText}>未返信</Text>
+                  </View>
                 )}
-                <span className="text-sm text-muted-foreground ml-auto">
+                <Text style={styles.timeAgo}>
                   {message.weeksAgo}週間前
-                </span>
-              </div>
-              <div className="flex items-center gap-2 mt-1">
-                <p className="text-sm text-muted-foreground truncate">
+                </Text>
+              </View>
+              <View style={styles.messageFooter}>
+                <Text style={styles.lastMessage} numberOfLines={1}>
                   {message.lastMessage}
-                </p>
+                </Text>
                 {message.unreadCount && (
-                  <Badge variant="destructive" className="h-5 w-5 rounded-full p-0 flex items-center justify-center">
-                    {message.unreadCount}
-                  </Badge>
+                  <View style={[styles.unreadBadge, { backgroundColor: '#ef4444' }]}>
+                    <Text style={{ color: '#fff' }}>{message.unreadCount}</Text>
+                  </View>
                 )}
-              </div>
-            </div>
-          </button>
+              </View>
+            </View>
+          </TouchableOpacity>
         ))}
-      </div>
+      </ScrollView>
       <FooterNav />
-    </div>
+    </View>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  count: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  messageList: {
+    flex: 1,
+  },
+  messageItem: {
+    flexDirection: 'row',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    marginRight: 12,
+  },
+  messageContent: {
+    flex: 1,
+  },
+  messageHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  userName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ef4444',
+    marginRight: 8,
+  },
+  userInfo: {
+    fontSize: 14,
+    color: '#ef4444',
+    marginRight: 8,
+  },
+  undeliveredBadge: {
+    backgroundColor: '#f3f4f6',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 12,
+    marginRight: 8,
+  },
+  undeliveredText: {
+    fontSize: 12,
+    color: '#6b7280',
+  },
+  timeAgo: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginLeft: 'auto',
+  },
+  messageFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  lastMessage: {
+    flex: 1,
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  unreadBadge: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 8,
+  },
+});         

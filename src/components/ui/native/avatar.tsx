@@ -1,16 +1,16 @@
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 interface AvatarProps {
-  source?: { uri: string };
+  source?: { uri?: string };
   fallback?: string;
-  size?: 'sm' | 'md' | 'lg';
+  style?: StyleProp<ViewStyle>;
 }
 
-export const Avatar = ({ source, fallback, size = 'md' }: AvatarProps) => {
+export const Avatar = ({ source, fallback, style }: AvatarProps) => {
   return (
-    <View style={[styles.container, styles[size]]}>
-      {source ? (
-        <Image source={source} style={[styles.image, styles[size]]} />
+    <View style={[styles.container, style]}>
+      {source?.uri ? (
+        <Image source={source} style={styles.image} />
       ) : (
         <Text style={[styles.fallback, styles[`${size}Text`]]}>
           {fallback?.[0] || '?'}
