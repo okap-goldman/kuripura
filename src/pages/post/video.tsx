@@ -2,9 +2,9 @@ import { useState, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui/native/button';
-import { Camera as ExpoCamera } from 'expo-camera';
+import { Camera as ExpoCamera, CameraType } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
-import { Video as ExpoVideo, ResizeMode } from 'expo-av';
+import { Video as ExpoVideo, ResizeMode, AVPlaybackStatus } from 'expo-av';
 import { ArrowLeft, Video as VideoIcon, Upload, Play, Pause } from 'lucide-react-native';
 import { Input } from '@/components/ui/native/input';
 
@@ -14,8 +14,8 @@ export default function VideoPostPage() {
   const [description, setDescription] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   
-  const cameraRef = useRef<ExpoCamera>(null);
-  const videoRef = useRef<ExpoVideo>(null);
+  const cameraRef = useRef<ExpoCamera | null>(null);
+  const videoRef = useRef<ExpoVideo | null>(null);
 
   const startRecording = async () => {
     try {
@@ -113,7 +113,7 @@ export default function VideoPostPage() {
           
           {video && !isRecording && (
             <View style={styles.videoWrapper}>
-              <Video
+              <ExpoVideo
                 ref={videoRef}
                 source={{ uri: video }}
                 style={styles.video}
@@ -258,4 +258,4 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginTop: 8,
   },
-});               
+});                 
