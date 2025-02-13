@@ -110,7 +110,7 @@ export default function TextPostPage() {
 
   const { user } = useAuth();
 
-  const handleImageUpload = async (file: Blob | File) => {
+  const handleImageUpload = async (file: File) => {
     if (images.length >= 4) {
       Alert.alert('エラー', '画像は最大4枚までです。');
       return;
@@ -218,7 +218,8 @@ export default function TextPostPage() {
                 if (!result.canceled && result.assets[0]) {
                   const response = await fetch(result.assets[0].uri);
                   const blob = await response.blob();
-                  handleImageUpload(blob);
+                  const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+                  handleImageUpload(file);
                 }
               }}
               disabled={images.length >= 4 || isUploading}
@@ -254,4 +255,4 @@ export default function TextPostPage() {
       </ScrollView>
     </View>
   );
-}                                                        
+}                                                                        

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
 import { Button } from '@/components/ui/native/button';
+import { Card } from '@/components/ui/native/card';
 import { ChevronRight, TrendingUp, MapPin, Sparkles } from 'lucide-react-native';
 
 // モックデータ
@@ -232,7 +233,7 @@ export default function DiscoveryPage() {
         <View style={styles.tabList}>
           <Button
             onPress={() => setActiveTab('analytics')}
-            variant={activeTab === 'analytics' ? 'default' : 'ghost'}
+            variant={activeTab === 'analytics' ? 'default' : 'outline'}
             style={styles.tabButton}
           >
             <View style={styles.tabButtonContent}>
@@ -245,7 +246,7 @@ export default function DiscoveryPage() {
           </Button>
           <Button
             onPress={() => setActiveTab('locations')}
-            variant={activeTab === 'locations' ? 'default' : 'ghost'}
+            variant={activeTab === 'locations' ? 'default' : 'outline'}
             style={styles.tabButton}
           >
             <View style={styles.tabButtonContent}>
@@ -258,7 +259,7 @@ export default function DiscoveryPage() {
           </Button>
           <Button
             onPress={() => setActiveTab('recommendations')}
-            variant={activeTab === 'recommendations' ? 'default' : 'ghost'}
+            variant={activeTab === 'recommendations' ? 'default' : 'outline'}
             style={styles.tabButton}
           >
             <View style={styles.tabButtonContent}>
@@ -371,4 +372,4 @@ export default function DiscoveryPage() {
       </ScrollView>
     </View>
   );
-}      
+}          

@@ -2,15 +2,15 @@ import React from 'react';
 import { Switch as RNSwitch, StyleSheet } from 'react-native';
 
 interface SwitchProps {
-  checked: boolean;
-  onCheckedChange: (checked: boolean) => void;
+  value: boolean;
+  onValueChange: (value: boolean) => void;
 }
 
-export const Switch = ({ checked, onCheckedChange }: SwitchProps) => {
+export const Switch = ({ value, onValueChange }: SwitchProps) => {
   return (
     <RNSwitch
-      value={checked}
-      onValueChange={onCheckedChange}
+      value={value}
+      onValueChange={onValueChange}
       trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
       thumbColor="#ffffff"
       ios_backgroundColor="#e5e7eb"
