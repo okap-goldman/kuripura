@@ -177,6 +177,6 @@ const MOCK_ANALYTICS_DETAIL = {
           </Card>
         </div>
       </div>
-    </div>
+    </View>
   );
-}  
+} 
