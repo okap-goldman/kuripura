@@ -1,12 +1,13 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
 interface ButtonProps {
   onPress?: () => void;
   children: React.ReactNode;
   variant?: 'default' | 'destructive' | 'outline';
   size?: 'default' | 'sm' | 'lg' | 'icon';
-  className?: string;
+  style?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
   disabled?: boolean;
 }
 
@@ -23,8 +24,10 @@ export const Button = ({
         styles.button,
         styles[variant],
         styles[size],
-        disabled && styles.disabled
-      ]} 
+        disabled && styles.disabled,
+        style,
+        containerStyle
+      ]}
       onPress={onPress}
       disabled={disabled}
     >
