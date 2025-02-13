@@ -1,10 +1,132 @@
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { ArrowLeft, Image as ImageIcon, Plus, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from 'react';
+import { View, Text, Image, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
+import { Button } from '@/components/ui/native/button';
+import { ArrowLeft, Plus, X } from 'lucide-react-native';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  content: {
+    flex: 1,
+  },
+  section: {
+    padding: 16,
+    gap: 24,
+  },
+  layoutSection: {
+    gap: 8,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#374151',
+    marginBottom: 8,
+  },
+  layoutGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  layoutButton: {
+    flex: 1,
+    minWidth: '23%',
+  },
+  imageGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  singleGrid: {
+    flexDirection: 'column',
+  },
+  tripleGrid: {
+    justifyContent: 'space-between',
+  },
+  quadGrid: {
+    justifyContent: 'space-between',
+  },
+  gridGrid: {
+    justifyContent: 'space-between',
+  },
+  imageContainer: {
+    width: '48%',
+    aspectRatio: 1,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  singleImage: {
+    width: '100%',
+    maxHeight: 500,
+  },
+  imageWrapper: {
+    width: '100%',
+    height: '100%',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  removeButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: '#ef4444',
+    borderRadius: 16,
+    padding: 4,
+  },
+  addButton: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#f3f4f6',
+    borderWidth: 2,
+    borderColor: '#e5e7eb',
+    borderStyle: 'dashed',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addButtonContent: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  addButtonText: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  descriptionSection: {
+    gap: 8,
+  },
+  descriptionInput: {
+    minHeight: 100,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: '#1f2937',
+    textAlignVertical: 'top',
+  },
+});
+import * as ImagePicker from 'expo-image-picker';
 
 const LAYOUT_OPTIONS = [
   { id: 'single', label: '1枚', maxImages: 1 },
@@ -14,165 +136,149 @@ const LAYOUT_OPTIONS = [
 ];
 
 interface ImagePreview {
-  url: string;
-  file: File;
+  uri: string;
 }
 
 export default function ImagePostPage() {
-  const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedLayout, setSelectedLayout] = useState(LAYOUT_OPTIONS[0]);
   const [images, setImages] = useState<ImagePreview[]>([]);
   const [description, setDescription] = useState('');
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+  const handleSelectImage = async () => {
     const remainingSlots = selectedLayout.maxImages - images.length;
-    const newFiles = files.slice(0, remainingSlots);
+    if (remainingSlots <= 0) return;
 
-    const newImages = newFiles.map((file) => ({
-      url: URL.createObjectURL(file),
-      file,
-    }));
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      quality: 1,
+    });
 
-    setImages([...images, ...newImages]);
+    if (!result.canceled) {
+      const newImages = result.assets
+        .slice(0, remainingSlots)
+        .map(asset => ({ uri: asset.uri }));
+      setImages([...images, ...newImages]);
+    }
   };
 
   const handleRemoveImage = (index: number) => {
     const newImages = [...images];
-    URL.revokeObjectURL(newImages[index].url);
-    newImages.splice(index, index + 1);
+    newImages.splice(index, 1);
     setImages(newImages);
   };
 
   const handleSubmit = async () => {
     if (images.length === 0) {
-      alert('画像を選択してください。');
+      // TODO: Replace with proper alert
+      console.warn('画像を選択してください。');
       return;
     }
 
     // TODO: Implement image upload and post submission
     console.log({ images, description, layout: selectedLayout.id });
-    navigate('/');
+    router.replace('/(tabs)' as any);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 pb-16">
-      <div className="container mx-auto px-4">
-        {/* ヘッダー */}
-        <div className="sticky top-16 bg-gray-50 py-4 z-10 flex items-center justify-between border-b">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/post')}
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-lg font-semibold">画像投稿</h1>
-          <Button
-            onClick={handleSubmit}
-            disabled={images.length === 0}
-          >
-            投稿する
-          </Button>
-        </div>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Button
+          variant="outline"
+          onPress={() => router.replace('/(tabs)/post' as any)}
+        >
+          <ArrowLeft size={20} color="#6b7280" />
+        </Button>
+        <Text style={styles.title}>画像投稿</Text>
+        <Button
+          onPress={handleSubmit}
+          disabled={images.length === 0}
+        >
+          投稿する
+        </Button>
+      </View>
 
-        <div className="py-6 space-y-6">
+      <ScrollView style={styles.content}>
+        <View style={styles.section}>
           {/* レイアウト選択 */}
-          <div className="space-y-2">
-            <Label>レイアウト</Label>
-            <div className="grid grid-cols-4 gap-2">
+          <View style={styles.layoutSection}>
+            <Text style={styles.sectionTitle}>レイアウト</Text>
+            <View style={styles.layoutGrid}>
               {LAYOUT_OPTIONS.map((layout) => (
                 <Button
                   key={layout.id}
                   variant={selectedLayout.id === layout.id ? 'default' : 'outline'}
-                  className="w-full"
-                  onClick={() => {
+                  onPress={() => {
                     if (images.length > layout.maxImages) {
-                      const removedImages = images.slice(layout.maxImages);
-                      removedImages.forEach((img) => URL.revokeObjectURL(img.url));
                       setImages(images.slice(0, layout.maxImages));
                     }
                     setSelectedLayout(layout);
                   }}
+                  style={styles.layoutButton}
                 >
                   {layout.label}
                 </Button>
               ))}
-            </div>
-          </div>
+            </View>
+          </View>
 
           {/* 画像プレビュー */}
-          <div className={cn(
-            'grid gap-2',
-            selectedLayout.id === 'single' && 'grid-cols-1',
-            selectedLayout.id === 'triple' && 'grid-cols-3',
-            selectedLayout.id === 'quad' && 'grid-cols-2',
-            selectedLayout.id === 'grid' && 'grid-cols-3',
-          )}>
+          <View style={[
+            styles.imageGrid,
+            selectedLayout.id === 'single' && styles.singleGrid,
+            selectedLayout.id === 'triple' && styles.tripleGrid,
+            selectedLayout.id === 'quad' && styles.quadGrid,
+            selectedLayout.id === 'grid' && styles.gridGrid,
+          ]}>
             {Array.from({ length: selectedLayout.maxImages }).map((_, index) => (
-              <div
+              <View
                 key={index}
-                className={cn(
-                  'aspect-square rounded-lg overflow-hidden',
-                  selectedLayout.id === 'single' && 'max-h-[500px]',
-                )}
+                style={[
+                  styles.imageContainer,
+                  selectedLayout.id === 'single' && styles.singleImage,
+                ]}
               >
                 {images[index] ? (
-                  <div className="relative h-full">
-                    <img
-                      src={images[index].url}
-                      alt={`プレビュー ${index + 1}`}
-                      className="w-full h-full object-cover"
+                  <View style={styles.imageWrapper}>
+                    <Image
+                      source={{ uri: images[index].uri }}
+                      style={styles.image}
                     />
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      className="absolute top-2 right-2"
-                      onClick={() => handleRemoveImage(index)}
+                    <TouchableOpacity
+                      style={styles.removeButton}
+                      onPress={() => handleRemoveImage(index)}
                     >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
+                      <X size={16} color="#fff" />
+                    </TouchableOpacity>
+                  </View>
                 ) : (
-                  <Button
-                    variant="outline"
-                    className="w-full h-full"
-                    onClick={() => fileInputRef.current?.click()}
+                  <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={handleSelectImage}
                   >
-                    <div className="flex flex-col items-center space-y-2">
-                      <Plus className="h-6 w-6" />
-                      <span className="text-sm">画像を追加</span>
-                    </div>
-                  </Button>
+                    <View style={styles.addButtonContent}>
+                      <Plus size={24} color="#6b7280" />
+                      <Text style={styles.addButtonText}>画像を追加</Text>
+                    </View>
+                  </TouchableOpacity>
                 )}
-              </div>
+              </View>
             ))}
-          </div>
+          </View>
 
           {/* 説明文入力 */}
-          <div className="space-y-2">
-            <Label htmlFor="description">説明文</Label>
-            <Textarea
-              id="description"
+          <View style={styles.descriptionSection}>
+            <Text style={styles.sectionTitle}>説明文</Text>
+            <TextInput
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChangeText={setDescription}
               placeholder="説明文を入力（任意）"
-              className="min-h-[100px]"
+              multiline
+              style={styles.descriptionInput}
             />
-          </div>
-
-          {/* 非表示のファイル入力 */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            className="hidden"
-            onChange={handleFileSelect}
-          />
-        </div>
-      </div>
-    </div>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
-} 
+}        
