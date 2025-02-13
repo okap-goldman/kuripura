@@ -26,14 +26,14 @@ export function Navbar() {
           style={styles.iconButton}
           onPress={() => router.push('/notifications' as any)}
         >
-          <Bell size={20} color="#000" />
+          <Bell size={20} color="#000" strokeWidth={2} />
         </TouchableOpacity>
         
         <TouchableOpacity
           style={styles.iconButton}
           onPress={() => router.push('/messages' as any)}
         >
-          <MessageCircle size={20} color="#000" />
+          <MessageCircle size={20} color="#000" strokeWidth={2} />
         </TouchableOpacity>
         
         {user ? (
@@ -44,7 +44,7 @@ export function Navbar() {
             <Avatar
               source={{ uri: user.email || undefined }}
               fallback={user.email?.[0] || 'U'}
-              size={32}
+              style={{ width: 32, height: 32 }}
             />
           </TouchableOpacity>
         ) : (
@@ -52,7 +52,7 @@ export function Navbar() {
             style={styles.loginButton}
             onPress={() => router.push('/auth/login' as any)}
           >
-            <User size={16} color="#000" />
+            <User size={16} color="#000" strokeWidth={2} />
             <Text style={styles.loginText}><Text>ログイン</Text></Text>
           </TouchableOpacity>
         )}
