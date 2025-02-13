@@ -1,7 +1,102 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Calendar, MapPin, Users } from 'lucide-react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Avatar } from '@/components/ui/native/avatar';
+import { Calendar, MapPin, Users } from 'lucide-react-native';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  imageContainer: {
+    aspectRatio: 16 / 9,
+    width: '100%',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  priceBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 16,
+  },
+  priceText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  content: {
+    padding: 16,
+    gap: 16,
+  },
+  section: {
+    gap: 8,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
+  },
+  description: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  details: {
+    gap: 8,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  icon: {
+    width: 16,
+    height: 16,
+  },
+  detailText: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  fullText: {
+    color: '#ef4444',
+  },
+  dot: {
+    marginHorizontal: 4,
+    color: '#6b7280',
+  },
+  organizer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
+  },
+  organizerAvatar: {
+    width: 24,
+    height: 24,
+  },
+  organizerName: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+});
 
 interface EventCardProps {
   event: {
@@ -28,67 +123,67 @@ export default function EventCard({ event, onClick }: EventCardProps) {
   const remainingSpots = event.capacity - event.currentParticipants;
 
   return (
-    <button
-      onClick={onClick}
-      className="block w-full bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+    <TouchableOpacity
+      onPress={onClick}
+      style={styles.container}
     >
       {/* イベント画像 */}
-      <div className="aspect-video relative">
-        <img
-          src={event.image}
-          alt={event.title}
-          className="w-full h-full object-cover"
+      <View style={styles.imageContainer}>
+        <Image
+          source={{ uri: event.image }}
+          style={styles.image}
         />
         {/* 価格バッジ */}
-        <div className="absolute top-2 right-2 bg-white/90 px-3 py-1 rounded-full">
-          <span className="font-bold">
+        <View style={styles.priceBadge}>
+          <Text style={styles.priceText}>
             {event.price === 0 ? '無料' : `¥${event.price.toLocaleString()}`}
-          </span>
-        </div>
-      </div>
+          </Text>
+        </View>
+      </View>
 
       {/* イベント情報 */}
-      <div className="p-4 space-y-4">
-        <div className="space-y-2">
-          <h3 className="font-semibold text-left line-clamp-2">
+      <View style={styles.content}>
+        <View style={styles.section}>
+          <Text style={styles.title} numberOfLines={2}>
             {event.title}
-          </h3>
-          <p className="text-sm text-gray-500 line-clamp-2">
+          </Text>
+          <Text style={styles.description} numberOfLines={2}>
             {event.description}
-          </p>
-        </div>
+          </Text>
+        </View>
 
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center text-gray-600">
-            <Calendar className="h-4 w-4 mr-2" />
-            {formattedDate}
-          </div>
-          <div className="flex items-center text-gray-600">
-            <MapPin className="h-4 w-4 mr-2" />
-            {event.location}
-          </div>
-          <div className="flex items-center text-gray-600">
-            <Users className="h-4 w-4 mr-2" />
+        <View style={styles.details}>
+          <View style={styles.detailRow}>
+            <Calendar size={16} color="#6b7280" style={styles.icon} />
+            <Text style={styles.detailText}>{formattedDate}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <MapPin size={16} color="#6b7280" style={styles.icon} />
+            <Text style={styles.detailText}>{event.location}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Users size={16} color="#6b7280" style={styles.icon} />
             {remainingSpots > 0 ? (
-              <span>残り{remainingSpots}名</span>
+              <Text style={styles.detailText}>残り{remainingSpots}名</Text>
             ) : (
-              <span className="text-red-500">満員</span>
+              <Text style={[styles.detailText, styles.fullText]}>満員</Text>
             )}
-            <span className="mx-1">•</span>
-            <span>{event.interestedCount}名が興味あり</span>
-          </div>
-        </div>
+            <Text style={styles.dot}>•</Text>
+            <Text style={styles.detailText}>{event.interestedCount}名が興味あり</Text>
+          </View>
+        </View>
 
-        <div className="flex items-center space-x-2 pt-2 border-t">
-          <Avatar className="h-6 w-6">
-            <AvatarImage src={event.organizer.image} />
-            <AvatarFallback>{event.organizer.name[0]}</AvatarFallback>
-          </Avatar>
-          <span className="text-sm text-gray-500">
+        <View style={styles.organizer}>
+          <Avatar
+            source={{ uri: event.organizer.image }}
+            fallback={event.organizer.name[0]}
+            style={styles.organizerAvatar}
+          />
+          <Text style={styles.organizerName}>
             主催: {event.organizer.name}
-          </span>
-        </div>
-      </div>
-    </button>
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
-} 
+}    
