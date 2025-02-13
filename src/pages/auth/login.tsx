@@ -61,7 +61,7 @@ export default function LoginPage() {
     <View style={styles.container}>
       <View style={styles.card}>
         <View style={styles.header}>
-          <Text style={styles.title}>目醒め人のためのSNS</Text>
+          <Text style={styles.title}><Text>目醒め人のためのSNS</Text></Text>
         </View>
 
         <View style={styles.content}>
@@ -78,7 +78,7 @@ export default function LoginPage() {
           >
             <View style={styles.buttonContent}>
               <LogIn size={24} color="#000" />
-              <Text style={styles.buttonText}>Googleでログイン</Text>
+              <Text style={styles.buttonText}><Text>Googleでログイン</Text></Text>
             </View>
           </Button>
 
@@ -113,18 +113,21 @@ export default function LoginPage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f3f4f6',
-    padding: 16,
-    justifyContent: 'center',
+  buttonContent: {
     alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   card: {
-    width: '100%',
-    maxWidth: 400,
     backgroundColor: '#fff',
     borderRadius: 16,
+    elevation: 3,
+    maxWidth: 400,
     padding: 24,
     shadowColor: '#000',
     shadowOffset: {
@@ -133,73 +136,70 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    width: '100%',
   },
-  header: {
+  container: {
     alignItems: 'center',
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
+    backgroundColor: '#f3f4f6',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
   },
   content: {
     gap: 24,
   },
   devInfo: {
-    fontSize: 14,
     color: '#6b7280',
+    fontSize: 14,
     textAlign: 'center',
   },
-  loginButton: {
-    width: '100%',
-    paddingVertical: 16,
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
   googleIcon: {
-    width: 24,
     height: 24,
+    width: 24,
   },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  termsContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 8,
-  },
-  termsText: {
-    flex: 1,
-  },
-  termsLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#374151',
+  header: {
+    alignItems: 'center',
+    marginBottom: 24,
   },
   link: {
     color: '#3b82f6',
     textDecorationLine: 'underline',
   },
   loadingContainer: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+  },
+  loginButton: {
+    paddingVertical: 16,
+    width: '100%',
   },
   spinner: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: '#ef4444',
-    borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
+    borderColor: '#ef4444',
+    borderRadius: 16,
+    borderTopColor: 'transparent',
+    borderWidth: 2,
+    height: 32,
     transform: [{ rotate: '45deg' }],
+    width: 32,
+  },
+  termsContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  termsLabel: {
+    color: '#374151',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  termsText: {
+    flex: 1,
+  },
+  title: {
+    color: '#111827',
+    fontSize: 24,
+    fontWeight: 'bold',
   },
 });                                                                                                                                                                                                                                                                                                                                                                                                                                                              

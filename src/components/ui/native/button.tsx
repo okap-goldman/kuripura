@@ -16,6 +16,8 @@ export const Button = ({
   children, 
   variant = 'default',
   size = 'default',
+  style,
+  containerStyle,
   disabled = false,
 }: ButtonProps) => {
   return (
@@ -46,60 +48,60 @@ export const Button = ({
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    justifyContent: 'center',
     borderRadius: 8,
+    justifyContent: 'center',
   },
   default: {
     backgroundColor: '#3b82f6',
   },
-  destructive: {
-    backgroundColor: '#ef4444',
-  },
-  outline: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#3b82f6',
-  },
-  sm: {
-    padding: 8,
-  },
-  md: {
-    padding: 12,
-  },
-  lg: {
-    padding: 16,
-  },
-  icon: {
-    padding: 8,
-    width: 36,
-    height: 36,
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
   defaultText: {
     color: '#ffffff',
+  },
+  destructive: {
+    backgroundColor: '#ef4444',
   },
   destructiveText: {
     color: '#ffffff',
   },
-  outlineText: {
-    color: '#3b82f6',
+  disabled: {
+    opacity: 0.5,
   },
-  smText: {
-    fontSize: 14,
+  disabledText: {
+    color: '#9ca3af',
   },
-  lgText: {
-    fontSize: 18,
+  icon: {
+    height: 36,
+    padding: 8,
+    width: 36,
   },
   iconText: {
     fontSize: 20,
   },
-  disabledText: {
-    color: '#9ca3af',
+  lg: {
+    padding: 16,
+  },
+  lgText: {
+    fontSize: 18,
+  },
+  md: {
+    padding: 12,
+  },
+  outline: {
+    backgroundColor: 'transparent',
+    borderColor: '#3b82f6',
+    borderWidth: 1,
+  },
+  outlineText: {
+    color: '#3b82f6',
+  },
+  sm: {
+    padding: 8,
+  },
+  smText: {
+    fontSize: 14,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

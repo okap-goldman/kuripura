@@ -77,44 +77,44 @@ export const Carousel: React.FC<CarouselProps> = ({ children }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-  },
-  slide: {
-    height: '100%',
-  },
   button: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 20,
+    height: 40,
+    justifyContent: 'center',
     position: 'absolute',
     top: '50%',
     transform: [{ translateY: -20 }],
     width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  prevButton: {
-    left: 10,
+  container: {
+    position: 'relative',
   },
   nextButton: {
     right: 10,
   },
   pagination: {
-    position: 'absolute',
     bottom: 10,
     flexDirection: 'row',
     justifyContent: 'center',
+    position: 'absolute',
     width: '100%',
   },
   paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: 4,
+    height: 8,
     marginHorizontal: 4,
+    width: 8,
   },
   paginationDotActive: {
     backgroundColor: '#fff',
+  },
+  prevButton: {
+    left: 10,
+  },
+  slide: {
+    height: '100%',
   },
 });

@@ -8,86 +8,86 @@ import { Audio } from 'expo-av';
 import * as ImagePicker from 'expo-image-picker';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
-  },
   backButton: {
     padding: 8,
   },
+  container: {
+    backgroundColor: '#f9fafb',
+    flex: 1,
+  },
   content: {
     flex: 1,
-    padding: 16,
     gap: 24,
+    padding: 16,
   },
   controls: {
     alignItems: 'center',
     gap: 24,
   },
-  recordButton: {
-    alignItems: 'center',
-  },
-  roundButton: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   defaultButton: {
     backgroundColor: '#3b82f6',
   },
-  recordingButton: {
-    backgroundColor: '#ef4444',
-  },
-  playButton: {
-    backgroundColor: '#3b82f6',
-  },
-  selectButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    padding: 12,
-    borderWidth: 1,
+  descriptionInput: {
+    backgroundColor: '#fff',
     borderColor: '#e5e7eb',
     borderRadius: 8,
-  },
-  selectButtonText: {
-    fontSize: 14,
-    color: '#6b7280',
+    borderWidth: 1,
+    color: '#1f2937',
+    fontSize: 16,
+    minHeight: 100,
+    padding: 12,
+    textAlignVertical: 'top',
   },
   descriptionSection: {
     gap: 8,
   },
+  header: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 16,
+  },
+  playButton: {
+    backgroundColor: '#3b82f6',
+  },
+  recordButton: {
+    alignItems: 'center',
+  },
+  recordingButton: {
+    backgroundColor: '#ef4444',
+  },
+  roundButton: {
+    alignItems: 'center',
+    borderRadius: 32,
+    height: 64,
+    justifyContent: 'center',
+    width: 64,
+  },
   sectionTitle: {
+    color: '#374151',
     fontSize: 14,
     fontWeight: '500',
-    color: '#374151',
   },
-  descriptionInput: {
-    minHeight: 100,
-    backgroundColor: '#fff',
-    borderWidth: 1,
+  selectButton: {
+    alignItems: 'center',
     borderColor: '#e5e7eb',
     borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 8,
     padding: 12,
-    fontSize: 16,
-    color: '#1f2937',
-    textAlignVertical: 'top',
+  },
+  selectButtonText: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  title: {
+    color: '#111827',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
 
@@ -192,7 +192,7 @@ export default function AudioPostPage() {
         >
           <ArrowLeft size={20} color="#6b7280" />
         </Button>
-        <Text style={styles.title}>音声投稿</Text>
+        <Text style={styles.title}><Text>音声投稿</Text></Text>
         <Button
           onPress={handleSubmit}
           disabled={!audioUri}
@@ -239,13 +239,13 @@ export default function AudioPostPage() {
             onPress={handleSelectAudio}
           >
             <Upload size={16} color="#6b7280" />
-            <Text style={styles.selectButtonText}>音声ファイルを選択</Text>
+            <Text style={styles.selectButtonText}><Text>音声ファイルを選択</Text></Text>
           </TouchableOpacity>
         </View>
 
         {/* 説明文入力 */}
         <View style={styles.descriptionSection}>
-          <Text style={styles.sectionTitle}>説明文</Text>
+          <Text style={styles.sectionTitle}><Text>説明文</Text></Text>
           <TextInput
             value={description}
             onChangeText={setDescription}

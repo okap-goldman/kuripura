@@ -53,7 +53,7 @@ export function Navbar() {
             onPress={() => router.push('/auth/login' as any)}
           >
             <User size={16} color="#000" />
-            <Text style={styles.loginText}>ログイン</Text>
+            <Text style={styles.loginText}><Text>ログイン</Text></Text>
           </TouchableOpacity>
         )}
       </View>
@@ -62,37 +62,37 @@ export function Navbar() {
 }
 
 const styles = StyleSheet.create({
+  actions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 16,
+  },
   container: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
     padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
   },
   iconButton: {
     padding: 8,
   },
   loginButton: {
-    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    flexDirection: 'row',
     gap: 8,
     padding: 8,
-    borderRadius: 8,
-    backgroundColor: '#f3f4f6',
   },
   loginText: {
     fontSize: 14,
     fontWeight: '500',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });

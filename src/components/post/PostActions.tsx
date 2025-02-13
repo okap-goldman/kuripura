@@ -71,19 +71,19 @@ export function PostActions({ likes, comments, onLike, onComment, shareUrl }: Po
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
+  action: {
     alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
+  },
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
     gap: 16,
     paddingVertical: 8,
   },
-  action: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
   count: {
-    fontSize: 14,
     color: '#6b7280',
+    fontSize: 14,
   },
 });

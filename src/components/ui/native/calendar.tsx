@@ -80,38 +80,34 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  day: {
     alignItems: 'center',
-    marginBottom: 16,
+    aspectRatio: 1,
+    justifyContent: 'center',
+    width: '14.28%',
   },
-  monthText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  weekDays: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  weekDayText: {
-    flex: 1,
-    textAlign: 'center',
-    color: '#6b7280',
+  dayText: {
     fontSize: 14,
   },
   days: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  day: {
-    width: '14.28%',
-    aspectRatio: 1,
-    justifyContent: 'center',
+  header: {
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
   },
-  dayText: {
-    fontSize: 14,
+  monthText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  otherMonthDay: {
+    opacity: 0.5,
+  },
+  otherMonthDayText: {
+    color: '#9ca3af',
   },
   selectedDay: {
     backgroundColor: '#3b82f6',
@@ -120,10 +116,14 @@ const styles = StyleSheet.create({
   selectedDayText: {
     color: '#fff',
   },
-  otherMonthDay: {
-    opacity: 0.5,
+  weekDayText: {
+    color: '#6b7280',
+    flex: 1,
+    fontSize: 14,
+    textAlign: 'center',
   },
-  otherMonthDayText: {
-    color: '#9ca3af',
+  weekDays: {
+    flexDirection: 'row',
+    marginBottom: 8,
   },
 });

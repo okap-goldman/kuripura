@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     borderRadius: 8,
+    elevation: 2,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: {
@@ -16,85 +17,84 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    elevation: 2,
+  },
+  content: {
+    gap: 16,
+    padding: 16,
+  },
+  description: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  detailRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  detailText: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  details: {
+    gap: 8,
+  },
+  dot: {
+    color: '#6b7280',
+    marginHorizontal: 4,
+  },
+  fullText: {
+    color: '#ef4444',
+  },
+  icon: {
+    height: 16,
+    width: 16,
+  },
+  image: {
+    height: '100%',
+    resizeMode: 'cover',
+    width: '100%',
   },
   imageContainer: {
     aspectRatio: 16 / 9,
     width: '100%',
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+  organizer: {
+    alignItems: 'center',
+    borderTopColor: '#e5e7eb',
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    gap: 8,
+    paddingTop: 8,
+  },
+  organizerAvatar: {
+    height: 24,
+    width: 24,
+  },
+  organizerName: {
+    color: '#6b7280',
+    fontSize: 14,
   },
   priceBadge: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 4,
-    borderRadius: 16,
+    position: 'absolute',
+    right: 8,
+    top: 8,
   },
   priceText: {
+    color: '#000',
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#000',
-  },
-  content: {
-    padding: 16,
-    gap: 16,
   },
   section: {
     gap: 8,
   },
   title: {
+    color: '#000',
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
-  },
-  description: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  details: {
-    gap: 8,
-  },
-  detailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  icon: {
-    width: 16,
-    height: 16,
-  },
-  detailText: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  fullText: {
-    color: '#ef4444',
-  },
-  dot: {
-    marginHorizontal: 4,
-    color: '#6b7280',
-  },
-  organizer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingTop: 8,
-    borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
-  },
-  organizerAvatar: {
-    width: 24,
-    height: 24,
-  },
-  organizerName: {
-    fontSize: 14,
-    color: '#6b7280',
   },
 });
 
@@ -164,12 +164,12 @@ export default function EventCard({ event, onClick }: EventCardProps) {
           <View style={styles.detailRow}>
             <Users size={16} color="#6b7280" style={styles.icon} />
             {remainingSpots > 0 ? (
-              <Text style={styles.detailText}>残り{remainingSpots}名</Text>
+              <Text style={styles.detailText}><Text>残り{remainingSpots}名</Text></Text>
             ) : (
-              <Text style={[styles.detailText, styles.fullText]}>満員</Text>
+              <Text style={[styles.detailText, styles.fullText]}><Text>満員</Text></Text>
             )}
-            <Text style={styles.dot}>•</Text>
-            <Text style={styles.detailText}>{event.interestedCount}名が興味あり</Text>
+            <Text style={styles.dot}><Text>•</Text></Text>
+            <Text style={styles.detailText}><Text>{event.interestedCount}名が興味あり</Text></Text>
           </View>
         </View>
 

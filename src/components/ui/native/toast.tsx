@@ -70,13 +70,14 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    bottom: 100,
-    left: 16,
-    right: 16,
     backgroundColor: '#fff',
-    padding: 16,
     borderRadius: 8,
+    bottom: 100,
+    elevation: 5,
+    left: 16,
+    padding: 16,
+    position: 'absolute',
+    right: 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -84,7 +85,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+  },
+  description: {
+    color: '#374151',
+    fontSize: 14,
   },
   destructive: {
     backgroundColor: '#fee2e2',
@@ -93,9 +97,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 4,
-  },
-  description: {
-    fontSize: 14,
-    color: '#374151',
   },
 });

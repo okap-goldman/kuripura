@@ -1,4 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { View, Text, StyleSheet } from 'react-native';
+import { Avatar } from "@/components/ui/native/avatar";
 
 interface PostHeaderProps {
   author: {
@@ -10,17 +11,35 @@ interface PostHeaderProps {
 
 export function PostHeader({ author }: PostHeaderProps) {
   return (
-    <div className="flex items-center gap-3">
-      <Avatar>
-        <AvatarImage src={author.image} />
-        <AvatarFallback>{author.name[0]}</AvatarFallback>
-      </Avatar>
-      <div>
-        <div className="font-semibold">{author.name}</div>
-        <div className="text-sm text-muted-foreground">
+    <View style={styles.container}>
+      <Avatar
+        source={{ uri: author.image }}
+        fallback={author.name[0]}
+      />
+      <View style={styles.info}>
+        <Text style={styles.name}>{author.name}</Text>
+        <Text style={styles.id}>
           {author.id || `@${author.name.toLowerCase().replace(/\s+/g, '')}`}
-        </div>
-      </div>
-    </div>
+        </Text>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  id: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  info: {
+    flex: 1,
+  },
+  name: {
+    fontWeight: '600',
+  },
+});

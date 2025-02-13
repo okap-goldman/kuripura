@@ -6,46 +6,46 @@ import { FilterIcon } from 'lucide-react-native';
 import { useState } from 'react';
 
 const styles = StyleSheet.create({
-  container: {
-    gap: 16,
-  },
-  searchRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  searchInput: {
-    flex: 1,
-  },
-  filterButton: {
-    paddingHorizontal: 12,
-  },
   buttonContent: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     gap: 8,
   },
   buttonText: {
-    fontSize: 14,
     color: '#6b7280',
+    fontSize: 14,
+  },
+  container: {
+    gap: 16,
+  },
+  filterButton: {
+    paddingHorizontal: 12,
   },
   filterSection: {
     gap: 8,
   },
   label: {
+    color: '#374151',
     fontSize: 14,
     fontWeight: '500',
-    color: '#374151',
-  },
-  priceRange: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
   },
   priceInput: {
     flex: 1,
   },
+  priceRange: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
   priceSeparator: {
     color: '#6b7280',
+  },
+  searchInput: {
+    flex: 1,
+  },
+  searchRow: {
+    flexDirection: 'row',
+    gap: 8,
   },
 });
 
@@ -92,27 +92,27 @@ export function EventFilter({ onFilterChange }: EventFilterProps) {
         >
           <View style={styles.buttonContent}>
             <FilterIcon size={16} color="#6b7280" />
-            <Text style={styles.buttonText}>詳細検索</Text>
+            <Text style={styles.buttonText}><Text>詳細検索</Text></Text>
           </View>
         </Button>
       </View>
 
       <View style={styles.filterSection}>
-        <Text style={styles.label}>開催場所</Text>
+        <Text style={styles.label}><Text>開催場所</Text></Text>
         <Select
           value={filters.location}
           onValueChange={(value: string) => handleFilterChange({ location: value })}
           placeholder="場所を選択"
         >
-          <SelectItem value="all">すべて</SelectItem>
-          <SelectItem value="tokyo">東京</SelectItem>
-          <SelectItem value="osaka">大阪</SelectItem>
-          <SelectItem value="online">オンライン</SelectItem>
+          <SelectItem value="all"><Text>すべて</Text></SelectItem>
+          <SelectItem value="tokyo"><Text>東京</Text></SelectItem>
+          <SelectItem value="osaka"><Text>大阪</Text></SelectItem>
+          <SelectItem value="online"><Text>オンライン</Text></SelectItem>
         </Select>
       </View>
 
       <View style={styles.filterSection}>
-        <Text style={styles.label}>参加費用</Text>
+        <Text style={styles.label}><Text>参加費用</Text></Text>
         <View style={styles.priceRange}>
           <Input
             placeholder="最小"
@@ -121,7 +121,7 @@ export function EventFilter({ onFilterChange }: EventFilterProps) {
             keyboardType="numeric"
             style={styles.priceInput}
           />
-          <Text style={styles.priceSeparator}>〜</Text>
+          <Text style={styles.priceSeparator}><Text>〜</Text></Text>
           <Input
             placeholder="最大"
             value={filters.maxPrice.toString()}

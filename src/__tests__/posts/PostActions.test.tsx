@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { PostActions } from '../../components/post/PostActions';
 import { describe, expect, test, jest } from '@jest/globals';

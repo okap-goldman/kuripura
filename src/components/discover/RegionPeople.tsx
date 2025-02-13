@@ -1,4 +1,5 @@
-import { Card } from "@/components/ui/card";
+import { View, Text, StyleSheet } from 'react-native';
+import { Card } from "@/components/ui/native/card";
 
 interface Person {
   name: string;
@@ -12,19 +13,51 @@ interface RegionPeopleProps {
 
 export function RegionPeople({ people }: RegionPeopleProps) {
   return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">活動する人々</h3>
-      <div className="space-y-4">
+    <Card style={styles.card}>
+      <Text style={styles.title}><Text>活動する人々</Text></Text>
+      <View style={styles.peopleList}>
         {people.map((person, index) => (
-          <div key={index} className="border rounded-lg p-4">
-            <h4 className="font-medium">{person.name}</h4>
-            <p className="text-sm text-accent-foreground">{person.role}</p>
-            <p className="text-sm text-muted-foreground mt-2">
+          <View key={index} style={styles.personCard}>
+            <Text style={styles.name}>{person.name}</Text>
+            <Text style={styles.role}>{person.role}</Text>
+            <Text style={styles.description}>
               {person.description}
-            </p>
-          </div>
+            </Text>
+          </View>
         ))}
-      </div>
+      </View>
     </Card>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    padding: 24,
+  },
+  description: {
+    color: '#6b7280',
+    fontSize: 14,
+    marginTop: 8,
+  },
+  name: {
+    fontWeight: '500',
+  },
+  peopleList: {
+    gap: 16,
+  },
+  personCard: {
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 16,
+  },
+  role: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 16,
+  },
+});

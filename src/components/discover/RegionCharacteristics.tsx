@@ -1,4 +1,5 @@
-import { Card } from "@/components/ui/card";
+import { View, Text, StyleSheet } from 'react-native';
+import { Card } from "@/components/ui/native/card";
 
 interface RegionCharacteristicsProps {
   characteristics: string;
@@ -6,9 +7,23 @@ interface RegionCharacteristicsProps {
 
 export function RegionCharacteristics({ characteristics }: RegionCharacteristicsProps) {
   return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">地域の特色</h3>
-      <p className="text-muted-foreground">{characteristics}</p>
+    <Card style={styles.card}>
+      <Text style={styles.title}><Text>地域の特色</Text></Text>
+      <Text style={styles.description}>{characteristics}</Text>
     </Card>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    padding: 24,
+  },
+  description: {
+    color: '#666',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 16,
+  },
+});

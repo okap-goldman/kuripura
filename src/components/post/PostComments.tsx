@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useToast } from "@/hooks/use-toast";
-import { Heart, Send } from "lucide-react";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { Input } from "@/components/ui/native/input";
+import { Avatar } from "@/components/ui/native/avatar";
+import { Heart, Send } from "lucide-react-native";
 
 interface Comment {
   id: string;
@@ -24,7 +23,7 @@ interface PostCommentsProps {
 export function PostComments({ postId, comments: initialComments }: PostCommentsProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newComment, setNewComment] = useState("");
-  const { toast } = useToast();
+
 
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,15 +42,13 @@ export function PostComments({ postId, comments: initialComments }: PostComments
 
     setComments([...comments, comment]);
     setNewComment("");
-    toast({
-      title: "コメントを投稿しました",
-    });
+    Alert.alert("コメントを投稿しました");
   };
 
   return (
     <div className="flex flex-col h-[80vh]">
       <div className="text-center py-4 border-b">
-        <h2 className="text-lg font-semibold">コメント</h2>
+        <h2 className="text-lg font-semibold"><Text>コメント</Text></h2>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-2 space-y-6">
@@ -88,7 +85,7 @@ export function PostComments({ postId, comments: initialComments }: PostComments
             {comment.likes !== undefined && comment.likes > 0 && (
               <div className="ml-11 flex items-center gap-1">
                 <Heart className="w-3 h-3 text-pink-500" fill="currentColor" />
-                <p className="text-xs">{comment.likes}件</p>
+                <p className="text-xs"><Text>{comment.likes}件</Text></p>
               </div>
             )}
           </div>

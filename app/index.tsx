@@ -17,20 +17,20 @@ export default function Page() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#fff',
+    flex: 1,
+    justifyContent: 'center',
     padding: 16
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 32,
-    color: '#000'
   },
   linkText: {
     color: '#3b82f6',
     fontSize: 16
+  },
+  title: {
+    color: '#000',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 32
   }
 });

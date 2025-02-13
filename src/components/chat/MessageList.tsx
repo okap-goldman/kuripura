@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { Avatar } from "@/components/ui/native/avatar";
 
 type Message = {
   id: string;
@@ -35,48 +35,103 @@ export const MessageList = ({ messages, currentUserId, onMessageSelect }: Messag
   };
 
   return (
-    <div className="flex flex-col space-y-4 p-4 overflow-y-auto">
+    <ScrollView style={styles.container}>
       {messages.map((message) => {
         const isCurrentUser = message.sender.id === currentUserId;
         return (
-          <div
+          <View
             key={message.id}
-            className={cn("flex items-end gap-2", isCurrentUser ? "flex-row-reverse" : "flex-row")}
+            style={[
+              styles.messageRow,
+              isCurrentUser ? styles.currentUserRow : styles.otherUserRow
+            ]}
           >
             {!isCurrentUser && (
-              <Avatar className="w-8 h-8">
-                <AvatarImage src={message.sender.avatarUrl} />
-                <AvatarFallback>{message.sender.name[0]}</AvatarFallback>
-              </Avatar>
+              <Avatar
+                size="sm"
+                source={{ uri: message.sender.avatarUrl }}
+                fallback={message.sender.name[0]}
+              />
             )}
-            <div
-              className={cn(
-                "max-w-[70%] rounded-2xl",
-                isCurrentUser ? "bg-primary text-primary-foreground" : "bg-muted"
-              )}
+            <View
+              style={[
+                styles.messageContent,
+                isCurrentUser ? styles.currentUserContent : styles.otherUserContent
+              ]}
             >
               {message.imageUrl && (
-                <div className="relative">
-                  <img
-                    src={message.imageUrl}
-                    alt=""
-                    className={cn(
-                      "rounded-t-2xl w-full object-cover",
-                      message.imageType === "story" ? "max-h-[400px]" : "max-h-[200px]"
-                    )}
+                <View>
+                  <Image
+                    source={{ uri: message.imageUrl }}
+                    style={[
+                      styles.messageImage,
+                      message.imageType === "story" ? styles.storyImage : styles.normalImage
+                    ]}
                   />
-                </div>
+                </View>
               )}
-              <div className="px-4 py-2">
-                <p className="text-sm break-words">{message.content}</p>
-              </div>
-            </div>
-            <span className="text-xs text-muted-foreground">
+              <View style={styles.textContainer}>
+                <Text style={styles.messageText}>{message.content}</Text>
+              </View>
+            </View>
+            <Text style={styles.timestamp}>
               {getTimeAgo(message.createdAt)}
-            </span>
-          </div>
+            </Text>
+          </View>
         );
       })}
-    </div>
+    </ScrollView>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  currentUserContent: {
+    backgroundColor: '#3b82f6',
+  },
+  currentUserRow: {
+    flexDirection: 'row-reverse',
+  },
+  messageContent: {
+    borderRadius: 16,
+    maxWidth: '70%',
+    overflow: 'hidden',
+  },
+  messageImage: {
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    width: '100%',
+  },
+  messageRow: {
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+  },
+  messageText: {
+    color: '#000',
+    fontSize: 14,
+  },
+  normalImage: {
+    height: 200,
+  },
+  otherUserContent: {
+    backgroundColor: '#f3f4f6',
+  },
+  otherUserRow: {
+    flexDirection: 'row',
+  },
+  storyImage: {
+    height: 400,
+  },
+  textContainer: {
+    padding: 8,
+  },
+  timestamp: {
+    color: '#6b7280',
+    fontSize: 12,
+  },
+});   

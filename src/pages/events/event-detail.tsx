@@ -8,104 +8,104 @@ import { ja } from 'date-fns/locale';
 import PostCard from '@/components/post/post-card';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  imageContainer: {
-    aspectRatio: 16 / 9,
-    width: '100%',
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  content: {
-    padding: 16,
-    gap: 24,
-  },
-  section: {
+  actions: {
     gap: 16,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  organizer: {
-    flexDirection: 'row',
+  buttonContent: {
     alignItems: 'center',
+    flexDirection: 'row',
     gap: 8,
   },
-  organizerName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
+  buttonText: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  content: {
+    gap: 24,
+    padding: 16,
+  },
+  description: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  detailRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  detailText: {
+    color: '#6b7280',
+    fontSize: 14,
   },
   details: {
     gap: 8,
   },
-  detailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  icon: {
-    width: 20,
-    height: 20,
-  },
-  detailText: {
-    fontSize: 14,
+  dot: {
     color: '#6b7280',
+    marginHorizontal: 8,
   },
   fullText: {
     color: '#ef4444',
   },
-  dot: {
-    marginHorizontal: 8,
-    color: '#6b7280',
+  icon: {
+    height: 20,
+    width: 20,
   },
-  price: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  image: {
+    height: '100%',
+    resizeMode: 'cover',
+    width: '100%',
+  },
+  imageContainer: {
+    aspectRatio: 16 / 9,
+    borderRadius: 8,
+    overflow: 'hidden',
+    width: '100%',
+  },
+  interestedText: {
+    color: '#ef4444',
+  },
+  organizer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  organizerName: {
     color: '#000',
-  },
-  sectionTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    color: '#000',
-  },
-  description: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  actions: {
-    gap: 16,
   },
   participateButton: {
     width: '100%',
+  },
+  price: {
+    color: '#000',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  section: {
+    gap: 16,
+  },
+  sectionTitle: {
+    color: '#000',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  subActionButton: {
+    flex: 1,
   },
   subActions: {
     flexDirection: 'row',
     gap: 8,
   },
-  subActionButton: {
-    flex: 1,
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  buttonText: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  interestedText: {
-    color: '#ef4444',
+  title: {
+    color: '#000',
+    fontSize: 24,
+    fontWeight: 'bold',
   },
 });
 
@@ -189,7 +189,7 @@ export default function EventDetail({ event, onClose }: EventDetailProps) {
               source={{ uri: event.organizer.image }}
               fallback={event.organizer.name[0]}
             />
-            <Text style={styles.organizerName}>主催: {event.organizer.name}</Text>
+            <Text style={styles.organizerName}><Text>主催: {event.organizer.name}</Text></Text>
           </View>
 
           <View style={styles.details}>
@@ -204,12 +204,12 @@ export default function EventDetail({ event, onClose }: EventDetailProps) {
             <View style={styles.detailRow}>
               <Users size={20} color="#6b7280" style={styles.icon} />
               {remainingSpots > 0 ? (
-                <Text style={styles.detailText}>残り{remainingSpots}名</Text>
+                <Text style={styles.detailText}><Text>残り{remainingSpots}名</Text></Text>
               ) : (
-                <Text style={[styles.detailText, styles.fullText]}>満員</Text>
+                <Text style={[styles.detailText, styles.fullText]}><Text>満員</Text></Text>
               )}
-              <Text style={styles.dot}>•</Text>
-              <Text style={styles.detailText}>{event.interestedCount}名が興味あり</Text>
+              <Text style={styles.dot}><Text>•</Text></Text>
+              <Text style={styles.detailText}><Text>{event.interestedCount}名が興味あり</Text></Text>
             </View>
           </View>
 
@@ -219,7 +219,7 @@ export default function EventDetail({ event, onClose }: EventDetailProps) {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>イベント詳細</Text>
+          <Text style={styles.sectionTitle}><Text>イベント詳細</Text></Text>
           <Text style={styles.description}>
             {event.description}
           </Text>
@@ -256,7 +256,7 @@ export default function EventDetail({ event, onClose }: EventDetailProps) {
             >
               <View style={styles.buttonContent}>
                 <MessageCircle size={16} color="#6b7280" />
-                <Text style={styles.buttonText}>質問する</Text>
+                <Text style={styles.buttonText}><Text>質問する</Text></Text>
               </View>
             </Button>
           </View>
@@ -264,7 +264,7 @@ export default function EventDetail({ event, onClose }: EventDetailProps) {
 
         {/* 関連投稿 */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>関連投稿</Text>
+          <Text style={styles.sectionTitle}><Text>関連投稿</Text></Text>
           {MOCK_RELATED_POSTS.map((post) => (
             <PostCard key={post.id} post={post} />
           ))}

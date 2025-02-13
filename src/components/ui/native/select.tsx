@@ -38,9 +38,9 @@ export const Select = ({ value, onValueChange, placeholder, children }: SelectPr
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>選択してください</Text>
+              <Text style={styles.modalTitle}><Text>選択してください</Text></Text>
               <TouchableOpacity onPress={() => setIsOpen(false)}>
-                <Text style={styles.closeButton}>閉じる</Text>
+                <Text style={styles.closeButton}><Text>閉じる</Text></Text>
               </TouchableOpacity>
             </View>
             <ScrollView>
@@ -74,21 +74,9 @@ export const SelectItem = ({ value, children }: SelectItemProps) => {
 };
 
 const styles = StyleSheet.create({
-  trigger: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    borderRadius: 8,
-    padding: 12,
-  },
-  triggerText: {
+  closeButton: {
+    color: '#3b82f6',
     fontSize: 16,
-    color: '#1f2937',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
   },
   modalContent: {
     backgroundColor: '#fff',
@@ -97,33 +85,45 @@ const styles = StyleSheet.create({
     maxHeight: '80%',
   },
   modalHeader: {
+    alignItems: 'center',
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+  },
+  modalOverlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   modalTitle: {
+    color: '#1f2937',
     fontSize: 18,
     fontWeight: '600',
-    color: '#1f2937',
-  },
-  closeButton: {
-    fontSize: 16,
-    color: '#3b82f6',
   },
   option: {
-    padding: 16,
-    borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    padding: 16,
   },
   optionText: {
-    fontSize: 16,
     color: '#1f2937',
+    fontSize: 16,
   },
   selectedOption: {
     color: '#3b82f6',
     fontWeight: '600',
+  },
+  trigger: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 12,
+  },
+  triggerText: {
+    color: '#1f2937',
+    fontSize: 16,
   },
 });

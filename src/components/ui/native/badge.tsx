@@ -18,32 +18,32 @@ export const Badge = ({ children, variant = 'default' }: BadgeProps) => {
 
 const styles = StyleSheet.create({
   container: {
+    borderRadius: 16,
     paddingHorizontal: 8,
     paddingVertical: 2,
-    borderRadius: 16,
   },
   default: {
     backgroundColor: '#e5e7eb',
   },
-  destructive: {
-    backgroundColor: '#ef4444',
-  },
-  outline: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-  },
-  text: {
-    fontSize: 12,
-    fontWeight: '500',
-  },
   defaultText: {
     color: '#374151',
+  },
+  destructive: {
+    backgroundColor: '#ef4444',
   },
   destructiveText: {
     color: '#ffffff',
   },
+  outline: {
+    backgroundColor: 'transparent',
+    borderColor: '#e5e7eb',
+    borderWidth: 1,
+  },
   outlineText: {
     color: '#374151',
+  },
+  text: {
+    fontSize: 12,
+    fontWeight: '500',
   },
 });

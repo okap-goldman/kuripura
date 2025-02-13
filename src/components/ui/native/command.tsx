@@ -75,36 +75,36 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+  icon: {
+    marginRight: 8,
   },
   input: {
-    flex: 1,
-    marginLeft: 8,
-    fontSize: 14,
     color: '#111827',
+    flex: 1,
+    fontSize: 14,
+    marginLeft: 8,
+  },
+  item: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: 12,
+  },
+  label: {
+    color: '#111827',
+    fontSize: 14,
   },
   list: {
     maxHeight: 300,
   },
-  item: {
-    flexDirection: 'row',
+  searchContainer: {
     alignItems: 'center',
-    padding: 12,
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   selectedItem: {
     backgroundColor: '#f3f4f6',
-  },
-  icon: {
-    marginRight: 8,
-  },
-  label: {
-    fontSize: 14,
-    color: '#111827',
   },
 });

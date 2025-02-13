@@ -24,27 +24,27 @@ export const Avatar = ({ source, fallback, style }: AvatarProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    overflow: 'hidden',
-    backgroundColor: '#e5e7eb',
     alignItems: 'center',
+    backgroundColor: '#e5e7eb',
+    borderRadius: 20,
+    height: 40,
     justifyContent: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    overflow: 'hidden',
+    width: 40,
   },
   fallback: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
   },
   fallbackText: {
+    color: '#6b7280',
     fontSize: 16,
     fontWeight: '500',
-    color: '#6b7280',
+  },
+  image: {
+    height: '100%',
+    resizeMode: 'cover',
+    width: '100%',
   },
 });

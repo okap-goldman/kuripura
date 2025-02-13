@@ -41,7 +41,7 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
               style={styles.cancelButton}
               onPress={onClose}
             >
-              <Text style={styles.cancelButtonText}>キャンセル</Text>
+              <Text style={styles.cancelButtonText}><Text>キャンセル</Text></Text>
             </TouchableOpacity>
             
             <TouchableOpacity
@@ -69,60 +69,60 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
 };
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
+  actionButton: {
+    backgroundColor: '#3b82f6',
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  actionButtonText: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  actions: {
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'flex-end',
+    marginTop: 16,
+  },
+  cancelButton: {
+    backgroundColor: '#f3f4f6',
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  cancelButtonText: {
+    color: '#374151',
+    fontSize: 14,
   },
   content: {
     backgroundColor: '#fff',
     borderRadius: 8,
+    maxWidth: 500,
     padding: 16,
     width: '100%',
-    maxWidth: 500,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 8,
   },
   description: {
-    fontSize: 14,
     color: '#6b7280',
+    fontSize: 14,
     marginBottom: 16,
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    gap: 8,
-    marginTop: 16,
-  },
-  cancelButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    backgroundColor: '#f3f4f6',
-  },
-  cancelButtonText: {
-    fontSize: 14,
-    color: '#374151',
-  },
-  actionButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    backgroundColor: '#3b82f6',
-  },
-  actionButtonText: {
-    fontSize: 14,
-    color: '#fff',
   },
   destructiveButton: {
     backgroundColor: '#ef4444',
   },
   destructiveButtonText: {
     color: '#fff',
+  },
+  overlay: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 8,
   },
 });

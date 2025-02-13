@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'expo-router';
-import { useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
+import { Input } from '@/components/ui/native/input';
+import { Button } from '@/components/ui/native/button';
+import { colors } from '@/lib/colors';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,82 +16,63 @@ export default function LoginPage() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        Login
-      </Text>
+      <Text style={styles.title}>ログイン</Text>
       
-      <TextInput
+      <Input
         style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#666"
+        placeholder="メールアドレス"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
       />
       
-      <TextInput
+      <Input
         style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#666"
+        placeholder="パスワード"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
       
-      <TouchableOpacity
-        style={styles.button}
+      <Button
         onPress={handleLogin}
+        style={styles.button}
       >
-        <Text style={styles.buttonText}>
-          Login
-        </Text>
-      </TouchableOpacity>
+        <Text>ログイン</Text>
+      </Button>
       
-      <Link href="/auth/register">
-        <Text style={styles.linkText}>
-          Don't have an account? Register
-        </Text>
+      <Link href="/auth/register" asChild>
+        <Text style={styles.linkText}>アカウントをお持ちでない方はこちら</Text>
       </Link>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  button: {
+    marginBottom: 16,
+    width: '100%'
+  },
   container: {
-    flex: 1,
     alignItems: 'center',
+    backgroundColor: colors.background,
+    flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#fff',
     padding: 16
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 32,
-    color: '#000'
-  },
   input: {
-    width: '100%',
-    backgroundColor: '#f3f4f6',
-    borderRadius: 8,
-    padding: 16,
     marginBottom: 16,
-    color: '#000'
-  },
-  button: {
-    width: '100%',
-    backgroundColor: '#3b82f6',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16
-  },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontWeight: 'bold'
+    width: '100%'
   },
   linkText: {
-    color: '#3b82f6'
+    color: colors.primary,
+    marginTop: 8
+  },
+  title: {
+    color: colors.text,
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 32
   }
 });

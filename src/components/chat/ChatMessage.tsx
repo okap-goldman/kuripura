@@ -1,4 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { View, Text, StyleSheet } from 'react-native';
+import { Avatar } from "@/components/ui/native/avatar";
 
 interface ChatMessageProps {
   isAi?: boolean;
@@ -7,17 +8,48 @@ interface ChatMessageProps {
 
 export function ChatMessage({ isAi = false, message }: ChatMessageProps) {
   return (
-    <div className={`flex gap-4 ${isAi ? "bg-muted/50" : "bg-background"} p-6`}>
-      <Avatar className="h-8 w-8">
-        <AvatarImage src={isAi ? "/ai-avatar.png" : "/user-avatar.png"} />
-        <AvatarFallback>{isAi ? "AI" : "Me"}</AvatarFallback>
-      </Avatar>
-      <div className="flex-1 space-y-2">
-        <p className="text-sm font-medium">{isAi ? "アシスタント" : "あなた"}</p>
-        <div className="text-sm text-muted-foreground">
+    <View style={[styles.container, isAi ? styles.aiBackground : styles.userBackground]}>
+      <Avatar
+        style={styles.avatar}
+        source={{ uri: isAi ? "/ai-avatar.png" : "/user-avatar.png" }}
+        fallback={isAi ? "AI" : "Me"}
+      />
+      <View style={styles.content}>
+        <Text style={styles.name}><Text>{isAi ? "アシスタント" : "あなた"}</Text></Text>
+        <Text style={styles.message}>
           {message}
-        </div>
-      </div>
-    </div>
+        </Text>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  aiBackground: {
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+  },
+  avatar: {
+    height: 32,
+    width: 32,
+  },
+  container: {
+    flexDirection: 'row',
+    gap: 16,
+    padding: 24,
+  },
+  content: {
+    flex: 1,
+    gap: 8,
+  },
+  message: {
+    color: '#666',
+    fontSize: 14,
+  },
+  name: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  userBackground: {
+    backgroundColor: '#fff',
+  },
+});

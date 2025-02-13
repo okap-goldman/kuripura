@@ -3,7 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui/native/button';
 import { Camera } from 'expo-camera';
-import type { CameraType } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { Video as ExpoVideo, ResizeMode, AVPlaybackStatus } from 'expo-av';
 import { ArrowLeft, Video as VideoIcon, Upload, Play, Pause } from 'lucide-react-native';
@@ -93,7 +92,7 @@ export default function VideoPostPage() {
         >
           <ArrowLeft size={20} color="#000" />
         </Button>
-        <Text style={styles.title}>動画投稿</Text>
+        <Text style={styles.title}><Text>動画投稿</Text></Text>
         <Button
           onPress={handleSubmit}
           disabled={!video}
@@ -152,7 +151,7 @@ export default function VideoPostPage() {
                   onPress={handleSelectVideo}
                 >
                   <Upload size={16} color="#000" />
-                  <Text>動画を選択</Text>
+                  <Text><Text>動画を選択</Text></Text>
                 </Button>
               </View>
             </View>
@@ -171,7 +170,7 @@ export default function VideoPostPage() {
         </View>
 
         <View style={styles.description}>
-          <Text>説明文</Text>
+          <Text><Text>説明文</Text></Text>
           <Input
             value={description}
             onChangeText={setDescription}
@@ -189,82 +188,82 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 8,
   },
-  playButton: {
-    padding: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 20,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  content: {
-    flex: 1,
-    padding: 16,
-  },
-  videoContainer: {
-    aspectRatio: 16 / 9,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 8,
-    overflow: 'hidden',
-    marginBottom: 16,
-  },
-  video: {
-    flex: 1,
-  },
-  videoWrapper: {
-    flex: 1,
-    position: 'relative',
-  },
-  controlsContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    padding: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  placeholderContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-  },
   buttonGroup: {
     flexDirection: 'row',
     gap: 16,
     marginTop: 16,
   },
-  recordingControls: {
-    position: 'absolute',
-    bottom: 16,
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+  },
+  controlsContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
     left: 0,
+    padding: 16,
+    position: 'absolute',
     right: 0,
-    alignItems: 'center',
   },
   description: {
     marginTop: 16,
   },
   descriptionInput: {
-    height: 100,
     backgroundColor: '#f3f4f6',
     borderRadius: 8,
+    height: 100,
+    marginTop: 8,
     padding: 12,
     textAlignVertical: 'top',
-    marginTop: 8,
   },
-});                                             
+  header: {
+    alignItems: 'center',
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 16,
+  },
+  placeholderContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
+  playButton: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 20,
+    padding: 8,
+  },
+  recordingControls: {
+    alignItems: 'center',
+    bottom: 16,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  video: {
+    flex: 1,
+  },
+  videoContainer: {
+    aspectRatio: 16 / 9,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  videoWrapper: {
+    flex: 1,
+    position: 'relative',
+  },
+});                                                 

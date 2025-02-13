@@ -1,4 +1,5 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { ChatHeader } from "@/components/chat/ChatHeader";
 import { MessageList } from "@/components/chat/MessageList";
 import { MessageInput } from "@/components/chat/MessageInput";
@@ -75,11 +76,10 @@ const mockMessages: Message[] = [
 ];
 
 export const ChatPage = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
+  const { id } = useLocalSearchParams();
 
   const handleBack = () => {
-    navigate("/messages");
+    router.push("/messages");
   };
 
   const handleSend = (message: string) => {
@@ -104,4 +104,4 @@ export const ChatPage = () => {
       </div>
     </div>
   );
-}; 
+};  

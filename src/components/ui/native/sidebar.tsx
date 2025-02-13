@@ -70,35 +70,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
 };
 
 const styles = StyleSheet.create({
-  sidebar: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    backgroundColor: '#fff',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    zIndex: 1000,
-  },
   content: {
     flex: 1,
   },
-  toggleButton: {
-    position: 'absolute',
-    top: '50%',
-    width: 40,
-    height: 40,
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 999,
+  },
+  sidebar: {
     backgroundColor: '#fff',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    bottom: 0,
     elevation: 5,
+    position: 'absolute',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    top: 0,
+    zIndex: 1000,
+  },
+  toggleButton: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    elevation: 5,
+    height: 40,
+    justifyContent: 'center',
+    position: 'absolute',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    top: '50%',
+    width: 40,
     zIndex: 1001,
   },
   toggleButtonLeft: {
@@ -108,10 +113,5 @@ const styles = StyleSheet.create({
   toggleButtonRight: {
     right: 0,
     transform: [{ translateY: -20 }],
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 999,
   },
 });

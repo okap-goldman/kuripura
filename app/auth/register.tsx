@@ -62,29 +62,29 @@ export default function RegisterPage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    padding: 16
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 32,
-    color: '#000'
-  },
-  input: {
+  button: {
     marginBottom: 16
   },
-  button: {
+  container: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16
+  },
+  input: {
     marginBottom: 16
   },
   linkText: {
     color: '#3b82f6',
     fontSize: 14,
-    textAlign: 'center',
-    marginTop: 8
+    marginTop: 8,
+    textAlign: 'center'
+  },
+  title: {
+    color: '#000',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 32
   }
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Switch as RNSwitch, StyleSheet } from 'react-native';
 
 interface SwitchProps {
@@ -6,7 +6,7 @@ interface SwitchProps {
   onValueChange: (value: boolean) => void;
 }
 
-export const Switch = ({ value, onValueChange }: SwitchProps) => {
+export const Switch: FC<SwitchProps> = ({ value, onValueChange }) => {
   return (
     <RNSwitch
       value={value}

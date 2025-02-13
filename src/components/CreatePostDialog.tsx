@@ -32,7 +32,7 @@ export function CreatePostDialog({ isOpen, onClose }: CreatePostDialogProps) {
     >
       <View style={styles.overlay}>
         <View style={styles.content}>
-          <Text style={styles.title}>新規投稿を作成</Text>
+          <Text style={styles.title}><Text>新規投稿を作成</Text></Text>
           <View style={styles.grid}>
             {postTypes.map(({ icon: Icon, label, value }) => (
               <Button
@@ -55,45 +55,45 @@ export function CreatePostDialog({ isOpen, onClose }: CreatePostDialogProps) {
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
+  button: {
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    height: 96,
+    width: (Dimensions.get('window').width - 64) / 2,
+  },
+  buttonContent: {
     alignItems: 'center',
-    padding: 16,
+    flex: 1,
+    gap: 8,
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: '#6b7280',
+    fontSize: 14,
   },
   content: {
     backgroundColor: '#fff',
     borderRadius: 8,
+    maxWidth: 500,
     padding: 16,
     width: '100%',
-    maxWidth: 500,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 16,
-    textAlign: 'center',
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 16,
   },
-  button: {
-    width: (Dimensions.get('window').width - 64) / 2,
-    height: 96,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 8,
-  },
-  buttonContent: {
-    flex: 1,
+  overlay: {
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    flex: 1,
     justifyContent: 'center',
-    gap: 8,
+    padding: 16,
   },
-  buttonText: {
-    fontSize: 14,
-    color: '#6b7280',
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 16,
+    textAlign: 'center',
   },
 });

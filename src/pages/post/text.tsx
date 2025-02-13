@@ -7,90 +7,90 @@ import { Label } from '@/components/ui/native/label';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#f9fafb',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
+    flex: 1,
   },
   content: {
     flex: 1,
   },
-  section: {
-    padding: 16,
-    gap: 24,
-  },
-  settingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  switchLabel: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
   editorContainer: {
     gap: 16,
   },
-  imageUpload: {
-    height: 128,
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    borderColor: '#e5e7eb',
+  header: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 16,
+  },
+  image: {
+    height: '100%',
+    resizeMode: 'cover',
+    width: '100%',
+  },
+  imageContainer: {
+    aspectRatio: 1,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imageUploadDisabled: {
-    opacity: 0.5,
-  },
-  imageUploadContent: {
-    alignItems: 'center',
-    gap: 8,
-  },
-  imageUploadText: {
-    fontSize: 14,
-    color: '#6b7280',
+    overflow: 'hidden',
+    width: '48%',
   },
   imageGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
   },
-  imageContainer: {
-    width: '48%',
-    aspectRatio: 1,
+  imageUpload: {
+    alignItems: 'center',
+    borderColor: '#e5e7eb',
     borderRadius: 8,
-    overflow: 'hidden',
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    height: 128,
+    justifyContent: 'center',
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+  imageUploadContent: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  imageUploadDisabled: {
+    opacity: 0.5,
+  },
+  imageUploadText: {
+    color: '#6b7280',
+    fontSize: 14,
   },
   removeButton: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
     backgroundColor: '#ef4444',
     borderRadius: 16,
     padding: 4,
+    position: 'absolute',
+    right: 8,
+    top: 8,
+  },
+  section: {
+    gap: 24,
+    padding: 16,
+  },
+  settingRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  switchContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  switchLabel: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  title: {
+    color: '#111827',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
 import { ArrowLeft, ImagePlus, X } from 'lucide-react-native';
@@ -171,7 +171,7 @@ export default function TextPostPage() {
         >
           <ArrowLeft size={20} color="#6b7280" />
         </Button>
-        <Text style={styles.title}>テキスト投稿</Text>
+        <Text style={styles.title}><Text>テキスト投稿</Text></Text>
         <Button
           onPress={handleSubmit}
           disabled={!content.text.trim() || isUploading}
@@ -183,7 +183,7 @@ export default function TextPostPage() {
       <ScrollView style={styles.content}>
         <View style={styles.section}>
           <View style={styles.settingRow}>
-            <Label>公開設定</Label>
+            <Label><Text>公開設定</Text></Label>
             <View style={styles.switchContainer}>
               <Text style={styles.switchLabel}>
                 {isPublic ? '公開' : '下書き'}

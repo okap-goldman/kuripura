@@ -29,18 +29,18 @@ export const Dialog: React.FC<DialogProps> = ({ visible, onDismiss, children }) 
 };
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
   content: {
     backgroundColor: '#fff',
     borderRadius: 8,
+    maxWidth: 500,
     padding: 16,
     width: '100%',
-    maxWidth: 500,
+  },
+  overlay: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
   },
 });

@@ -228,7 +228,7 @@ export default function DiscoveryPage() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>発見</Text>
+        <Text style={styles.title}><Text>発見</Text></Text>
 
         <View style={styles.tabList}>
           <Button
@@ -241,7 +241,7 @@ export default function DiscoveryPage() {
               <Text style={[
                 styles.tabText,
                 activeTab === 'analytics' && styles.tabTextActive
-              ]}>分析</Text>
+              ]}><Text>分析</Text></Text>
             </View>
           </Button>
           <Button
@@ -254,7 +254,7 @@ export default function DiscoveryPage() {
               <Text style={[
                 styles.tabText,
                 activeTab === 'locations' && styles.tabTextActive
-              ]}>地域</Text>
+              ]}><Text>地域</Text></Text>
             </View>
           </Button>
           <Button
@@ -267,7 +267,7 @@ export default function DiscoveryPage() {
               <Text style={[
                 styles.tabText,
                 activeTab === 'recommendations' && styles.tabTextActive
-              ]}>おすすめ</Text>
+              ]}><Text>おすすめ</Text></Text>
             </View>
           </Button>
         </View>
@@ -292,15 +292,15 @@ export default function DiscoveryPage() {
                       <View style={styles.statsGrid}>
                         <View style={styles.statItem}>
                           <Text style={styles.statValue}>{item.stats.participants}</Text>
-                          <Text style={styles.statLabel}>参加者数</Text>
+                          <Text style={styles.statLabel}><Text>参加者数</Text></Text>
                         </View>
                         <View style={styles.statItem}>
-                          <Text style={styles.statValue}>{item.stats.avgDuration}分</Text>
-                          <Text style={styles.statLabel}>平均実践時間</Text>
+                          <Text style={styles.statValue}><Text>{item.stats.avgDuration}分</Text></Text>
+                          <Text style={styles.statLabel}><Text>平均実践時間</Text></Text>
                         </View>
                         <View style={styles.statItem}>
                           <Text style={styles.statValue}>{item.stats.satisfaction}</Text>
-                          <Text style={styles.statLabel}>満足度</Text>
+                          <Text style={styles.statLabel}><Text>満足度</Text></Text>
                         </View>
                       </View>
                     </View>
@@ -324,9 +324,9 @@ export default function DiscoveryPage() {
                     <View style={styles.locationContent}>
                       <Text style={styles.locationTitle}>{location.name}</Text>
                       <View style={styles.locationStats}>
-                        <Text style={styles.locationStatText}>{location.activeUsers}人が活動中</Text>
-                        <Text style={styles.locationStatDivider}>•</Text>
-                        <Text style={styles.locationStatText}>イベント{location.events}件</Text>
+                        <Text style={styles.locationStatText}><Text>{location.activeUsers}人が活動中</Text></Text>
+                        <Text style={styles.locationStatDivider}><Text>•</Text></Text>
+                        <Text style={styles.locationStatText}><Text>イベント{location.events}件</Text></Text>
                       </View>
                     </View>
                   </View>

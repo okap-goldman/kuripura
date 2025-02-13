@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions, Pressable } from 'react-native';
 import { Card } from "@/components/ui/native/card";
 import { AnalysisSection } from "@/components/discover/AnalysisSection";
 import { RegionalActivitySection } from "@/components/discover/RegionalActivitySection";
@@ -44,7 +44,7 @@ export default function Discover() {
           <View style={styles.grid}>
             <Pressable onPress={() => setCurrentSection("analysis")}>
               <Card style={styles.gridCard}>
-                <Text style={styles.cardTitle}>分析</Text>
+                <Text style={styles.cardTitle}><Text>分析</Text></Text>
                 <Text style={styles.cardDescription}>
                   あなたの目醒め状況を分析し、アドバイスを提供します
                 </Text>
@@ -53,7 +53,7 @@ export default function Discover() {
 
             <Pressable onPress={() => setCurrentSection("regional")}>
               <Card style={styles.gridCard}>
-                <Text style={styles.cardTitle}>地域毎の活動状況</Text>
+                <Text style={styles.cardTitle}><Text>地域毎の活動状況</Text></Text>
                 <Text style={styles.cardDescription}>
                   各地域での活動状況や注目のイベントをチェック
                 </Text>
@@ -62,7 +62,7 @@ export default function Discover() {
 
             <Pressable onPress={() => setCurrentSection("events")}>
               <Card style={styles.gridCard}>
-                <Text style={styles.cardTitle}>イベント</Text>
+                <Text style={styles.cardTitle}><Text>イベント</Text></Text>
                 <Text style={styles.cardDescription}>
                   目醒め人が企画するイベントを探す・企画する
                 </Text>
@@ -71,7 +71,7 @@ export default function Discover() {
 
             <Pressable onPress={() => setCurrentSection("recommended")}>
               <Card style={styles.gridCard}>
-                <Text style={styles.cardTitle}>おすすめ投稿</Text>
+                <Text style={styles.cardTitle}><Text>おすすめ投稿</Text></Text>
                 <Text style={styles.cardDescription}>
                   あなたにおすすめの投稿をピックアップ
                 </Text>
@@ -83,29 +83,21 @@ export default function Discover() {
   };
 
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
+    cardDescription: {
+      color: '#666',
+      fontSize: 14,
     },
-    header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: '#e5e7eb',
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
+    cardTitle: {
       color: '#000',
+      fontSize: 18,
+      fontWeight: '600',
+      marginBottom: 8,
     },
-    scrollView: {
+    container: {
+      backgroundColor: '#fff',
       flex: 1,
     },
     content: {
-      padding: 16,
-    },
-    sectionCard: {
       padding: 16,
     },
     grid: {
@@ -114,18 +106,26 @@ export default function Discover() {
       gap: 16,
     },
     gridCard: {
+      padding: 16,
       width: (Dimensions.get('window').width - 48) / 2,
+    },
+    header: {
+      alignItems: 'center',
+      borderBottomColor: '#e5e7eb',
+      borderBottomWidth: 1,
+      flexDirection: 'row',
       padding: 16,
     },
-    cardTitle: {
-      fontSize: 18,
-      fontWeight: '600',
-      marginBottom: 8,
-      color: '#000',
+    scrollView: {
+      flex: 1,
     },
-    cardDescription: {
-      fontSize: 14,
-      color: '#666',
+    sectionCard: {
+      padding: 16,
+    },
+    title: {
+      color: '#000',
+      fontSize: 24,
+      fontWeight: 'bold',
     },
   });
 

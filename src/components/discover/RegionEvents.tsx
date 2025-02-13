@@ -1,37 +1,75 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { View, Text, StyleSheet } from 'react-native';
+import { Button } from "@/components/ui/native/button";
+import { Card } from "@/components/ui/native/card";
 
 export function RegionEvents() {
   return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">イベント</h3>
-      <div className="space-y-4">
-        <div className="border rounded-lg p-4">
-          <div className="flex justify-between items-start">
-            <div>
-              <h4 className="font-medium">集団瞑想会</h4>
-              <p className="text-sm text-muted-foreground">2024年4月20日</p>
-            </div>
-            <Button size="sm">参加する</Button>
-          </div>
-          <p className="text-sm text-muted-foreground mt-2">
+    <Card style={styles.card}>
+      <Text style={styles.title}><Text>イベント</Text></Text>
+      <View style={styles.eventList}>
+        <View style={styles.eventCard}>
+          <View style={styles.eventHeader}>
+            <View>
+              <Text style={styles.eventTitle}><Text>集団瞑想会</Text></Text>
+              <Text style={styles.eventDate}><Text>2024年4月20日</Text></Text>
+            </View>
+            <Button variant="outline" onPress={() =><Text> {}}>参加する</Text></Button>
+          </View>
+          <Text style={styles.eventDescription}>
             地域の皆さんと共に、深い瞑想体験を共有します。
-          </p>
-        </div>
+          </Text>
+        </View>
         
-        <div className="border rounded-lg p-4">
-          <div className="flex justify-between items-start">
-            <div>
-              <h4 className="font-medium">目醒めシェアリングサークル</h4>
-              <p className="text-sm text-muted-foreground">2024年4月25日</p>
-            </div>
-            <Button size="sm">参加する</Button>
-          </div>
-          <p className="text-sm text-muted-foreground mt-2">
+        <View style={styles.eventCard}>
+          <View style={styles.eventHeader}>
+            <View>
+              <Text style={styles.eventTitle}><Text>目醒めシェアリングサークル</Text></Text>
+              <Text style={styles.eventDate}><Text>2024年4月25日</Text></Text>
+            </View>
+            <Button variant="outline" onPress={() =><Text> {}}>参加する</Text></Button>
+          </View>
+          <Text style={styles.eventDescription}>
             それぞれの気づきや学びを分かち合う場を設けます。
-          </p>
-        </div>
-      </div>
+          </Text>
+        </View>
+      </View>
     </Card>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    padding: 24,
+  },
+  eventCard: {
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 16,
+  },
+  eventDate: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  eventDescription: {
+    color: '#6b7280',
+    fontSize: 14,
+    marginTop: 8,
+  },
+  eventHeader: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  eventList: {
+    gap: 16,
+  },
+  eventTitle: {
+    fontWeight: '500',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 16,
+  },
+});

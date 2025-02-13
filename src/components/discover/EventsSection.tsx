@@ -1,12 +1,13 @@
-import { Calendar, Filter, Search, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Calendar, Filter, Search, Plus } from "lucide-react-native";
+import { Button } from "@/components/ui/native/button";
+import { Card } from "@/components/ui/native/card";
+import { Dialog } from "@/components/ui/native/dialog";
+import { Input } from "@/components/ui/native/input";
+import { Label } from "@/components/ui/native/label";
+import { Textarea } from "@/components/ui/native/textarea";
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/native/badge";
+import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
 export function EventsSection() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,7 +18,7 @@ export function EventsSection() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Calendar className="w-5 h-5" />
-          <h2 className="text-lg font-semibold">イベント</h2>
+          <h2 className="text-lg font-semibold"><Text>イベント</Text></h2>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-2">
@@ -44,50 +45,50 @@ export function EventsSection() {
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>新しいイベントを企画</DialogTitle>
+                <DialogTitle><Text>新しいイベントを企画</Text></DialogTitle>
               </DialogHeader>
               <form className="space-y-4">
                 <div>
-                  <Label htmlFor="event-name">イベント名</Label>
+                  <Label htmlFor="event-name"><Text>イベント名</Text></Label>
                   <Input id="event-name" />
                 </div>
                 <div>
-                  <Label htmlFor="event-content">コンテンツ</Label>
+                  <Label htmlFor="event-content"><Text>コンテンツ</Text></Label>
                   <Textarea id="event-content" />
                 </div>
                 <div>
-                  <Label htmlFor="event-media">画像・動画</Label>
+                  <Label htmlFor="event-media"><Text>画像・動画</Text></Label>
                   <Input id="event-media" type="file" accept="image/*,video/*" multiple />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="event-capacity">人数</Label>
+                    <Label htmlFor="event-capacity"><Text>人数</Text></Label>
                     <Input id="event-capacity" type="number" />
                   </div>
                   <div>
-                    <Label htmlFor="event-price">金額</Label>
+                    <Label htmlFor="event-price"><Text>金額</Text></Label>
                     <Input id="event-price" type="number" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="event-start-date">募集開始日</Label>
+                    <Label htmlFor="event-start-date"><Text>募集開始日</Text></Label>
                     <Input id="event-start-date" type="date" />
                   </div>
                   <div>
-                    <Label htmlFor="event-end-date">募集終了日</Label>
+                    <Label htmlFor="event-end-date"><Text>募集終了日</Text></Label>
                     <Input id="event-end-date" type="date" />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="event-location">開催場所</Label>
+                  <Label htmlFor="event-location"><Text>開催場所</Text></Label>
                   <Input id="event-location" />
                 </div>
                 <div>
-                  <Label htmlFor="event-datetime">開催日時</Label>
+                  <Label htmlFor="event-datetime"><Text>開催日時</Text></Label>
                   <Input id="event-datetime" type="datetime-local" />
                 </div>
-                <Button type="submit" className="w-full">作成</Button>
+                <Button type="submit" className="w-full"><Text>作成</Text></Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -95,7 +96,7 @@ export function EventsSection() {
       </div>
 
       <Card className="p-4 space-y-4">
-        <h3 className="font-medium">注目のイベント</h3>
+        <h3 className="font-medium"><Text>注目のイベント</Text></h3>
         <div className="aspect-video w-full rounded-lg overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800"
@@ -104,12 +105,12 @@ export function EventsSection() {
           />
         </div>
         <div>
-          <h4 className="font-medium">シアターワーク体験会</h4>
-          <p className="text-sm text-muted-foreground mt-1">2024年4月20日 14:00-16:00</p>
-          <p className="mt-2">青梅市文化会館</p>
+          <h4 className="font-medium"><Text>シアターワーク体験会</Text></h4>
+          <p className="text-sm text-muted-foreground mt-1"><Text>2024年4月20日 14:00-16:00</Text></p>
+          <p className="mt-2"><Text>青梅市文化会館</Text></p>
           <div className="flex gap-2 mt-4">
-            <Badge variant="secondary">参加費無料</Badge>
-            <Badge variant="secondary">定員20名</Badge>
+            <Badge variant="secondary"><Text>参加費無料</Text></Badge>
+            <Badge variant="secondary"><Text>定員20名</Text></Badge>
           </div>
         </div>
       </Card>
@@ -189,7 +190,7 @@ export function EventsSection() {
             </div>
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium">イベント詳細</h4>
+                <h4 className="font-medium"><Text>イベント詳細</Text></h4>
                 <p className="text-sm text-muted-foreground mt-1">
                   瞑想を通じて、心の平安とマインドフルネスを体験するワークショップです。
                   初心者の方も安心してご参加いただけます。
@@ -197,25 +198,25 @@ export function EventsSection() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h4 className="text-sm font-medium">開催日時</h4>
-                  <p className="text-sm text-muted-foreground">2024年4月20日 14:00-16:00</p>
+                  <h4 className="text-sm font-medium"><Text>開催日時</Text></h4>
+                  <p className="text-sm text-muted-foreground"><Text>2024年4月20日 14:00-16:00</Text></p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium">場所</h4>
-                  <p className="text-sm text-muted-foreground">渋谷区瞑想センター</p>
+                  <h4 className="text-sm font-medium"><Text>場所</Text></h4>
+                  <p className="text-sm text-muted-foreground"><Text>渋谷区瞑想センター</Text></p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium">参加費</h4>
-                  <p className="text-sm text-muted-foreground">¥3,000</p>
+                  <h4 className="text-sm font-medium"><Text>参加費</Text></h4>
+                  <p className="text-sm text-muted-foreground"><Text>¥3,000</Text></p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium">定員</h4>
-                  <p className="text-sm text-muted-foreground">15名</p>
+                  <h4 className="text-sm font-medium"><Text>定員</Text></h4>
+                  <p className="text-sm text-muted-foreground"><Text>15名</Text></p>
                 </div>
               </div>
               <div className="flex justify-end gap-2">
-                <Button variant="outline">詳細を見る</Button>
-                <Button>参加する</Button>
+                <Button variant="outline"><Text>詳細を見る</Text></Button>
+                <Button><Text>参加する</Text></Button>
               </div>
             </div>
           </div>

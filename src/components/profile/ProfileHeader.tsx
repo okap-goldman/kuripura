@@ -1,10 +1,12 @@
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Play, Pause, Store, Settings } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { Avatar } from "@/components/ui/native/avatar";
+import { Button } from "@/components/ui/native/button";
+import { Play, Pause, Store, Settings } from "lucide-react-native";
+import { router } from 'expo-router';
+import { useState } from "react";
+import { Dialog } from "@/components/ui/native/dialog";
 import ProfileEditForm from "@/pages/profile/edit-form";
+import { Audio } from 'expo-av';
 
 interface ProfileHeaderProps {
   isPlaying: boolean;
@@ -62,7 +64,7 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
             ) : (
               <Play className="h-6 w-6" />
             )}
-            <span className="sr-only">音声を再生</span>
+            <span className="sr-only"><Text>音声を再生</Text></span>
           </Button>
 
           <Avatar className="h-24 w-24">
@@ -77,7 +79,7 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
             onClick={() => navigate("/shop")}
           >
             <Store className="h-6 w-6" />
-            <span className="sr-only">ショップ</span>
+            <span className="sr-only"><Text>ショップ</Text></span>
           </Button>
         </div>
 
@@ -91,7 +93,7 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
               onClick={() => setIsEditDialogOpen(true)}
             >
               <Settings className="h-4 w-4" />
-              <span className="sr-only">プロフィールを編集</span>
+              <span className="sr-only"><Text>プロフィールを編集</Text></span>
             </Button>
           </div>
           <p className="text-sm text-muted-foreground">@{dummyProfile.username}</p>
@@ -104,19 +106,19 @@ export function ProfileHeader({ isPlaying, handlePlayVoice }: ProfileHeaderProps
         <div className="flex gap-8 border rounded-lg p-4 w-full max-w-md justify-between">
           <div className="text-center">
             <div className="font-bold">1.2k</div>
-            <div className="text-sm text-muted-foreground">ファミリー</div>
+            <div className="text-sm text-muted-foreground"><Text>ファミリー</Text></div>
           </div>
           <div className="text-center">
             <div className="font-bold">890</div>
-            <div className="text-sm text-muted-foreground">ウォッチ</div>
+            <div className="text-sm text-muted-foreground"><Text>ウォッチ</Text></div>
           </div>
           <div className="text-center">
             <div className="font-bold">3.4k</div>
-            <div className="text-sm text-muted-foreground">フォロー</div>
+            <div className="text-sm text-muted-foreground"><Text>フォロー</Text></div>
           </div>
           <div className="text-center">
             <div className="font-bold">2.1k</div>
-            <div className="text-sm text-muted-foreground">フォロワー</div>
+            <div className="text-sm text-muted-foreground"><Text>フォロワー</Text></div>
           </div>
         </div>
       </div>

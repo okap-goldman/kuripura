@@ -106,11 +106,11 @@ export default function EventsPage() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>イベント</Text>
+        <Text style={styles.title}><Text>イベント</Text></Text>
         <Button onPress={() => {}}>
           <View style={styles.buttonContent}>
             <Plus size={16} color="#fff" />
-            <Text style={styles.buttonText}>イベントを作成</Text>
+            <Text style={styles.buttonText}><Text>イベントを作成</Text></Text>
           </View>
         </Button>
       </View>
@@ -121,13 +121,32 @@ export default function EventsPage() {
 
       <View style={styles.eventGrid}>
         {filteredEvents.map(event => (
-          <EventCard key={event.id} {...event} />
+          <EventCard
+            key={event.id}
+            event={{
+              id: event.id,
+              title: event.title,
+              description: event.description,
+              date: event.date,
+              location: event.location,
+              price: event.price,
+              capacity: event.participants,
+              currentParticipants: event.participants,
+              interestedCount: event.interested,
+              image: event.imageUrl || '',
+              organizer: {
+                name: '主催者',
+                image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=1',
+              },
+            }}
+            onClick={() => {}}
+          />
         ))}
       </View>
 
       {filteredEvents.length === 0 && (
         <View style={styles.emptyState}>
-          <Text style={styles.emptyText}>該当するイベントが見つかりませんでした。</Text>
+          <Text style={styles.emptyText}><Text>該当するイベントが見つかりませんでした。</Text></Text>
         </View>
       )}
     </View>
@@ -135,36 +154,18 @@ export default function EventsPage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
   buttonContent: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   buttonText: {
-    marginLeft: 8,
     color: '#fff',
+    marginLeft: 8,
   },
-  filterContainer: {
-    marginBottom: 24,
-  },
-  eventGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+    padding: 16,
   },
   emptyState: {
     alignItems: 'center',
@@ -173,4 +174,22 @@ const styles = StyleSheet.create({
   emptyText: {
     color: '#6b7280',
   },
-});       
+  eventGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
+  },
+  filterContainer: {
+    marginBottom: 24,
+  },
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});         

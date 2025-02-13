@@ -51,16 +51,16 @@ export function EventCard({
           </div>
           <div className="flex items-center gap-2">
             <Currency className="w-4 h-4" />
-            <span className="text-sm">{price === 0 ? '無料' : `¥${price.toLocaleString()}`}</span>
+            <span className="text-sm"><Text>{price === 0 ? '無料' : `¥${price.toLocaleString()}`}</Text></span>
           </div>
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
         <div className="flex gap-2">
-          <Badge variant="secondary">{participants}人参加</Badge>
-          <Badge variant="outline">{interested}人興味あり</Badge>
+          <Badge variant="secondary"><Text>{participants}人参加</Text></Badge>
+          <Badge variant="outline"><Text>{interested}人興味あり</Text></Badge>
         </div>
-        <Button variant="default">詳細を見る</Button>
+        <Button variant="default"><Text>詳細を見る</Text></Button>
       </CardFooter>
     </Card>
   )

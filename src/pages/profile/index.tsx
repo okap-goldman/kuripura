@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Play, Pause, Link as LinkIcon, Edit } from 'lucide-react';
+import { View, Text, StyleSheet, ScrollView, Pressable, Linking } from 'react-native';
+import { Button } from '@/components/ui/native/button';
+import { Tabs } from '@/components/ui/native/tabs';
+import { Avatar } from '@/components/ui/native/avatar';
+import { Play, Pause, Link as LinkIcon, Edit } from 'lucide-react-native';
 import PostCard from '@/components/post/post-card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog } from '@/components/ui/native/dialog';
 import ProfileEditForm from './edit-form';
 
 // モックデータ
@@ -90,7 +91,7 @@ export default function ProfilePage() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>プロフィールを編集</DialogTitle>
+                  <DialogTitle><Text>プロフィールを編集</Text></DialogTitle>
                 </DialogHeader>
                 <ProfileEditForm
                   profile={MOCK_PROFILE}
@@ -106,11 +107,11 @@ export default function ProfilePage() {
             <div className="flex space-x-6">
               <div>
                 <span className="text-lg font-bold">{MOCK_PROFILE.familyCount}</span>
-                <span className="text-gray-500 ml-2">ファミリー</span>
+                <span className="text-gray-500 ml-2"><Text>ファミリー</Text></span>
               </div>
               <div>
                 <span className="text-lg font-bold">{MOCK_PROFILE.watchCount}</span>
-                <span className="text-gray-500 ml-2">ウォッチ</span>
+                <span className="text-gray-500 ml-2"><Text>ウォッチ</Text></span>
               </div>
             </div>
           </div>
@@ -120,11 +121,11 @@ export default function ProfilePage() {
         <div className="mt-6">
           <Tabs defaultValue="media">
             <TabsList className="w-full">
-              <TabsTrigger value="media" className="flex-1">メディア</TabsTrigger>
-              <TabsTrigger value="audio" className="flex-1">音声</TabsTrigger>
-              <TabsTrigger value="text" className="flex-1">テキスト</TabsTrigger>
-              <TabsTrigger value="highlight" className="flex-1">ハイライト</TabsTrigger>
-              <TabsTrigger value="event" className="flex-1">イベント</TabsTrigger>
+              <TabsTrigger value="media" className="flex-1"><Text>メディア</Text></TabsTrigger>
+              <TabsTrigger value="audio" className="flex-1"><Text>音声</Text></TabsTrigger>
+              <TabsTrigger value="text" className="flex-1"><Text>テキスト</Text></TabsTrigger>
+              <TabsTrigger value="highlight" className="flex-1"><Text>ハイライト</Text></TabsTrigger>
+              <TabsTrigger value="event" className="flex-1"><Text>イベント</Text></TabsTrigger>
             </TabsList>
 
             <div className="mt-6">
@@ -176,4 +177,4 @@ export default function ProfilePage() {
       </div>
     </div>
   );
-} 
+}    

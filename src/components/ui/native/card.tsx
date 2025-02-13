@@ -16,11 +16,12 @@ export const Card = ({ children, variant = 'default', style, ...props }: CardPro
 
 const styles = StyleSheet.create({
   card: {
-    padding: 16,
     borderRadius: 8,
+    padding: 16,
   },
   default: {
     backgroundColor: '#ffffff',
+    elevation: 3,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -28,11 +29,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
   },
   outline: {
     backgroundColor: '#ffffff',
-    borderWidth: 1,
     borderColor: '#e5e7eb',
+    borderWidth: 1,
   },
 });

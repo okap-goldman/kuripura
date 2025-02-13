@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Users, Clock, Star, TrendingUp, BarChart } from 'lucide-react';
+import { router } from 'expo-router';
+import { Button } from '@/components/ui/native/button';
+import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { ArrowLeft, Users, Clock, Star, TrendingUp, BarChart } from 'lucide-react-native';
 
 // モックデータ
 const MOCK_ANALYTICS_DETAIL = {
@@ -50,24 +50,20 @@ const MOCK_ANALYTICS_DETAIL = {
   ],
 };
 
-export default function AnalyticsDetailPage() {
-  const router = useRouter();
-
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 pb-16">
-      <div className="container mx-auto px-4">
+    <ScrollView style={styles.container}>
+      <View style={styles.content}>
         {/* ヘッダー */}
-        <div className="mb-6">
+        <View style={styles.header}>
           <Button
             variant="ghost"
-            className="mb-4"
-            onClick={() => router.back()}
+            onPress={() => router.back()}
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            戻る
+            <ArrowLeft size={16} color="#000" />
+            <Text><Text>戻る</Text></Text>
           </Button>
-          <h1 className="text-3xl font-bold">{MOCK_ANALYTICS_DETAIL.title}</h1>
-        </div>
+          <Text style={styles.title}>{MOCK_ANALYTICS_DETAIL.title}</Text>
+        </View>
 
         {/* メインコンテンツ */}
         <div className="space-y-6">
@@ -83,7 +79,7 @@ export default function AnalyticsDetailPage() {
           {/* 概要 */}
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">概要</h2>
+              <h2 className="text-xl font-semibold mb-4"><Text>概要</Text></h2>
               <p className="text-gray-600">
                 {MOCK_ANALYTICS_DETAIL.description}
               </p>
@@ -96,7 +92,7 @@ export default function AnalyticsDetailPage() {
               <CardContent className="p-6">
                 <div className="flex items-center space-x-2 text-gray-500 mb-2">
                   <Users className="h-5 w-5" />
-                  <span>参加者数</span>
+                  <span><Text>参加者数</Text></span>
                 </div>
                 <p className="text-3xl font-bold">
                   {MOCK_ANALYTICS_DETAIL.stats.participants}
@@ -107,7 +103,7 @@ export default function AnalyticsDetailPage() {
               <CardContent className="p-6">
                 <div className="flex items-center space-x-2 text-gray-500 mb-2">
                   <Clock className="h-5 w-5" />
-                  <span>平均実践時間</span>
+                  <span><Text>平均実践時間</Text></span>
                 </div>
                 <p className="text-3xl font-bold">
                   {MOCK_ANALYTICS_DETAIL.stats.avgDuration}分
@@ -118,7 +114,7 @@ export default function AnalyticsDetailPage() {
               <CardContent className="p-6">
                 <div className="flex items-center space-x-2 text-gray-500 mb-2">
                   <Star className="h-5 w-5" />
-                  <span>満足度</span>
+                  <span><Text>満足度</Text></span>
                 </div>
                 <p className="text-3xl font-bold">
                   {MOCK_ANALYTICS_DETAIL.stats.satisfaction}
@@ -130,7 +126,7 @@ export default function AnalyticsDetailPage() {
           {/* トレンド */}
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">トレンド</h2>
+              <h2 className="text-xl font-semibold mb-4"><Text>トレンド</Text></h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {MOCK_ANALYTICS_DETAIL.trends.map((trend) => (
                   <div key={trend.label}>
@@ -150,7 +146,7 @@ export default function AnalyticsDetailPage() {
           {/* 週間データ */}
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">週間データ</h2>
+              <h2 className="text-xl font-semibold mb-4"><Text>週間データ</Text></h2>
               <div className="h-48 flex items-end justify-between">
                 {MOCK_ANALYTICS_DETAIL.weeklyData.map((data) => (
                   <div key={data.day} className="flex flex-col items-center">
@@ -168,7 +164,7 @@ export default function AnalyticsDetailPage() {
           {/* インサイト */}
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">主なインサイト</h2>
+              <h2 className="text-xl font-semibold mb-4"><Text>主なインサイト</Text></h2>
               <ul className="space-y-3">
                 {MOCK_ANALYTICS_DETAIL.insights.map((insight, index) => (
                   <li key={index} className="flex items-start space-x-3">
@@ -183,4 +179,4 @@ export default function AnalyticsDetailPage() {
       </div>
     </div>
   );
-} 
+}  

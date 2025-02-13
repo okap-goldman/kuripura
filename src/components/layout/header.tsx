@@ -1,13 +1,11 @@
-import { Bell, MessageCircle, Settings, LogOut } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link, useNavigate } from 'react-router-dom';
+import { Bell, MessageCircle, Settings, LogOut } from 'lucide-react-native';
+import { Button } from '@/components/ui/native/button';
+import { router } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/components/ui/use-toast';
+import { Alert, View, Text, StyleSheet } from 'react-native';
 
 export default function Header() {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
 
   if (!user) {
     return null;
@@ -16,54 +14,56 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await logout();
-      toast({
-        title: "ログアウトしました",
-        description: "ご利用ありがとうございました",
-      });
-      navigate('/auth/login');
+      Alert.alert(
+        "ログアウトしました",
+        "ご利用ありがとうございました"
+      );
+      router.replace('/auth/login' as any);
     } catch (error) {
-      toast({
-        title: "ログアウトに失敗しました",
-        description: "もう一度お試しください",
-        variant: "destructive",
-      });
+      Alert.alert(
+        "ログアウトに失敗しました",
+        "もう一度お試しください"
+      );
     }
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-50">
-      <div className="container h-full mx-auto px-4 flex items-center justify-between">
-        <div className="flex-1">
-          <h1 className="text-xl font-bold">目醒め人</h1>
-        </div>
+    <View style={styles.header}>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}><Text>目醒め人</Text></Text>
+        </View>
         
-        <div className="flex items-center space-x-4">
-          <Link to="/notifications">
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />
-            </Button>
-          </Link>
-          
-          <Button variant="ghost" size="icon" className="relative">
-            <MessageCircle className="h-5 w-5" />
-            <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />
+        <View style={styles.actions}>
+          <Button
+            variant="outline"
+            onPress={() => router.push('/notifications' as any)}
+          >
+            <View style={styles.iconContainer}>
+              <Bell size={20} color="#000" />
+              <View style={styles.badge} />
+            </View>
           </Button>
           
-          <Button variant="ghost" size="icon">
-            <Settings className="h-5 w-5" />
+          <Button variant="outline">
+            <View style={styles.iconContainer}>
+              <MessageCircle size={20} color="#000" />
+              <View style={styles.badge} />
+            </View>
+          </Button>
+          
+          <Button variant="outline">
+            <Settings size={20} color="#000" />
           </Button>
 
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleLogout}
-            className="text-red-500 hover:text-red-600"
+            variant="outline"
+            onPress={handleLogout}
           >
-            <LogOut className="h-5 w-5" />
+            <LogOut size={20} color="#ef4444" />
           </Button>
-        </div>
-      </div>
-    </header>
+        </View>
+      </View>
+    </View>
   );
 }

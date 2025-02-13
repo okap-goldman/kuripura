@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { Tabs } from '@/components/ui/native/tabs';
 import PostCard from '@/components/post/post-card';
 
 // モックデータ（後でAPIから取得するように変更）
@@ -42,35 +42,67 @@ export default function TimelinePage() {
   const [timelineType, setTimelineType] = useState('family');
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 pb-16">
-      <div className="container mx-auto px-4">
-        <div className="sticky top-16 bg-gray-50 pt-4 pb-2 z-10">
-          <Tabs value={timelineType} onValueChange={setTimelineType}>
-            <TabsList className="w-full">
-              <TabsTrigger value="family" className="flex-1">
-                ファミリー
-              </TabsTrigger>
-              <TabsTrigger value="watch" className="flex-1">
-                ウォッチ
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.header}>
+          <Tabs
+            value={timelineType}
+            onValueChange={setTimelineType}
+            items={[
+              { value: 'family', label: 'ファミリー' },
+              { value: 'watch', label: 'ウォッチ' }
+            ]}
+          />
+        </View>
 
-        <div className="py-4">
+        <View style={styles.content}>
           {/* ストーリーズ（後で実装） */}
-          <div className="h-24 bg-white rounded-xl mb-4 flex items-center justify-center text-gray-400">
-            ストーリーズ（実装予定）
-          </div>
+          <View style={styles.storiesPlaceholder}>
+            <Text style={styles.placeholderText}><Text>ストーリーズ（実装予定）</Text></Text>
+          </View>
 
           {/* 投稿一覧 */}
-          <div className="space-y-4">
+          <View style={styles.postList}>
             {MOCK_POSTS.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
-          </div>
-        </div>
-      </div>
-    </div>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
-} 
+}
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f9fafb',
+    flex: 1,
+  },
+  content: {
+    padding: 16,
+  },
+  header: {
+    backgroundColor: '#f9fafb',
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  placeholderText: {
+    color: '#9ca3af',
+  },
+  postList: {
+    gap: 16,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  storiesPlaceholder: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    height: 96,
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+});  

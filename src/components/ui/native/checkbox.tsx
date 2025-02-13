@@ -23,20 +23,20 @@ export const Checkbox = ({ checked = false, onCheckedChange, disabled }: Checkbo
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 2,
-  },
   checkbox: {
-    width: 20,
-    height: 20,
+    alignItems: 'center',
+    borderColor: '#d1d5db',
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: '#d1d5db',
-    alignItems: 'center',
+    height: 20,
     justifyContent: 'center',
+    width: 20,
   },
   checked: {
     backgroundColor: '#3b82f6',
     borderColor: '#3b82f6',
+  },
+  container: {
+    padding: 2,
   },
 });

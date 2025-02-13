@@ -18,14 +18,14 @@ export const Tooltip = ({ children }: { children: React.ReactNode }) => {
 };
 
 const styles = StyleSheet.create({
-  tooltip: {
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    padding: 8,
-    borderRadius: 4,
-    position: 'absolute',
-  },
   text: {
     color: '#fff',
     fontSize: 12,
+  },
+  tooltip: {
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    borderRadius: 4,
+    padding: 8,
+    position: 'absolute',
   },
 });

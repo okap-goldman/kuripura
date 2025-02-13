@@ -5,125 +5,125 @@ import { Button } from '@/components/ui/native/button';
 import { ArrowLeft, Plus, X } from 'lucide-react-native';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
-  },
-  content: {
-    flex: 1,
-  },
-  section: {
-    padding: 16,
-    gap: 24,
-  },
-  layoutSection: {
-    gap: 8,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#374151',
-    marginBottom: 8,
-  },
-  layoutGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  layoutButton: {
-    flex: 1,
-    minWidth: '23%',
-  },
-  imageGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  singleGrid: {
-    flexDirection: 'column',
-  },
-  tripleGrid: {
-    justifyContent: 'space-between',
-  },
-  quadGrid: {
-    justifyContent: 'space-between',
-  },
-  gridGrid: {
-    justifyContent: 'space-between',
-  },
-  imageContainer: {
-    width: '48%',
-    aspectRatio: 1,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  singleImage: {
-    width: '100%',
-    maxHeight: 500,
-  },
-  imageWrapper: {
-    width: '100%',
-    height: '100%',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  removeButton: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    backgroundColor: '#ef4444',
-    borderRadius: 16,
-    padding: 4,
-  },
   addButton: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#f3f4f6',
-    borderWidth: 2,
-    borderColor: '#e5e7eb',
-    borderStyle: 'dashed',
-    borderRadius: 8,
-    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f3f4f6',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    height: '100%',
+    justifyContent: 'center',
+    width: '100%',
   },
   addButtonContent: {
     alignItems: 'center',
     gap: 8,
   },
   addButtonText: {
-    fontSize: 14,
     color: '#6b7280',
+    fontSize: 14,
+  },
+  container: {
+    backgroundColor: '#f9fafb',
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+  },
+  descriptionInput: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    color: '#1f2937',
+    fontSize: 16,
+    minHeight: 100,
+    padding: 12,
+    textAlignVertical: 'top',
   },
   descriptionSection: {
     gap: 8,
   },
-  descriptionInput: {
-    minHeight: 100,
+  gridGrid: {
+    justifyContent: 'space-between',
+  },
+  header: {
+    alignItems: 'center',
     backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 16,
+  },
+  image: {
+    height: '100%',
+    resizeMode: 'cover',
+    width: '100%',
+  },
+  imageContainer: {
+    aspectRatio: 1,
     borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    color: '#1f2937',
-    textAlignVertical: 'top',
+    overflow: 'hidden',
+    width: '48%',
+  },
+  imageGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  imageWrapper: {
+    height: '100%',
+    width: '100%',
+  },
+  layoutButton: {
+    flex: 1,
+    minWidth: '23%',
+  },
+  layoutGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  layoutSection: {
+    gap: 8,
+  },
+  quadGrid: {
+    justifyContent: 'space-between',
+  },
+  removeButton: {
+    backgroundColor: '#ef4444',
+    borderRadius: 16,
+    padding: 4,
+    position: 'absolute',
+    right: 8,
+    top: 8,
+  },
+  section: {
+    gap: 24,
+    padding: 16,
+  },
+  sectionTitle: {
+    color: '#374151',
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+  singleGrid: {
+    flexDirection: 'column',
+  },
+  singleImage: {
+    maxHeight: 500,
+    width: '100%',
+  },
+  title: {
+    color: '#111827',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  tripleGrid: {
+    justifyContent: 'space-between',
   },
 });
 import * as ImagePicker from 'expo-image-picker';
@@ -189,7 +189,7 @@ export default function ImagePostPage() {
         >
           <ArrowLeft size={20} color="#6b7280" />
         </Button>
-        <Text style={styles.title}>画像投稿</Text>
+        <Text style={styles.title}><Text>画像投稿</Text></Text>
         <Button
           onPress={handleSubmit}
           disabled={images.length === 0}
@@ -202,7 +202,7 @@ export default function ImagePostPage() {
         <View style={styles.section}>
           {/* レイアウト選択 */}
           <View style={styles.layoutSection}>
-            <Text style={styles.sectionTitle}>レイアウト</Text>
+            <Text style={styles.sectionTitle}><Text>レイアウト</Text></Text>
             <View style={styles.layoutGrid}>
               {LAYOUT_OPTIONS.map((layout) => (
                 <Button
@@ -258,7 +258,7 @@ export default function ImagePostPage() {
                   >
                     <View style={styles.addButtonContent}>
                       <Plus size={24} color="#6b7280" />
-                      <Text style={styles.addButtonText}>画像を追加</Text>
+                      <Text style={styles.addButtonText}><Text>画像を追加</Text></Text>
                     </View>
                   </TouchableOpacity>
                 )}
@@ -268,7 +268,7 @@ export default function ImagePostPage() {
 
           {/* 説明文入力 */}
           <View style={styles.descriptionSection}>
-            <Text style={styles.sectionTitle}>説明文</Text>
+            <Text style={styles.sectionTitle}><Text>説明文</Text></Text>
             <TextInput
               value={description}
               onChangeText={setDescription}

@@ -66,14 +66,14 @@ export function FooterNav() {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderTopWidth: 1,
     borderTopColor: '#e5e7eb',
-    paddingVertical: 12,
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   tab: {
     padding: 8,

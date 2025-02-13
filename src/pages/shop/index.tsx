@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Search, Filter } from 'lucide-react';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Button } from '@/components/ui/native/button';
+import { Input } from '@/components/ui/native/input';
+import { Select, SelectItem } from '@/components/ui/native/select';
+import { Dialog } from '@/components/ui/native/dialog';
+import { Search, Filter } from 'lucide-react-native';
 import ProductCard from './product-card';
 import ProductDetail from './product-detail';
 
@@ -79,7 +80,7 @@ export default function ShopPage() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>フィルター</DialogTitle>
+                  <DialogTitle><Text>フィルター</Text></DialogTitle>
                 </DialogHeader>
                 {/* TODO: フィルターの実装 */}
                 <div className="h-24 flex items-center justify-center text-gray-400">
@@ -130,4 +131,4 @@ export default function ShopPage() {
       </div>
     </div>
   );
-} 
+}    

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Button } from '@/components/ui/native/button';
 import { Input } from '@/components/ui/native/input';
@@ -13,16 +13,17 @@ interface EventFormProps {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  column: {
     flex: 1,
+    gap: 8,
+  },
+  container: {
     backgroundColor: '#fff',
+    flex: 1,
   },
   content: {
-    padding: 16,
     gap: 24,
-  },
-  section: {
-    gap: 8,
+    padding: 16,
   },
   imageUpload: {
     aspectRatio: 16 / 9,
@@ -30,57 +31,56 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
   },
+  inputIcon: {
+    left: 12,
+    position: 'absolute',
+    zIndex: 1,
+  },
+  inputWithIcon: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   previewImage: {
-    width: '100%',
     height: '100%',
     resizeMode: 'cover',
-  },
-  uploadPlaceholder: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  uploadText: {
-    fontSize: 14,
-    color: '#6b7280',
+    width: '100%',
   },
   row: {
     flexDirection: 'row',
     gap: 16,
   },
-  column: {
-    flex: 1,
+  section: {
     gap: 8,
   },
-  inputWithIcon: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  submitButton: {
+    marginTop: 24,
   },
-  inputIcon: {
-    position: 'absolute',
-    left: 12,
-    zIndex: 1,
+  switchContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  switchLabel: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  switchWrapper: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
   },
   textarea: {
     minHeight: 120,
   },
-  switchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  uploadPlaceholder: {
     alignItems: 'center',
-  },
-  switchWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flex: 1,
     gap: 8,
+    justifyContent: 'center',
   },
-  switchLabel: {
-    fontSize: 14,
+  uploadText: {
     color: '#6b7280',
-  },
-  submitButton: {
-    marginTop: 24,
+    fontSize: 14,
   },
 });
 
@@ -134,7 +134,7 @@ export default function EventForm({ onSubmit }: EventFormProps) {
       <View style={styles.content}>
         {/* イベント画像 */}
         <View style={styles.section}>
-          <Label>イベント画像</Label>
+          <Label><Text>イベント画像</Text></Label>
           <TouchableOpacity
             style={styles.imageUpload}
             onPress={handleImageSelect}
@@ -157,7 +157,7 @@ export default function EventForm({ onSubmit }: EventFormProps) {
 
         {/* タイトル */}
         <View style={styles.section}>
-          <Label>タイトル *</Label>
+          <Label><Text>タイトル *</Text></Label>
           <Input
             value={title}
             onChangeText={setTitle}
@@ -168,7 +168,7 @@ export default function EventForm({ onSubmit }: EventFormProps) {
 
         {/* 説明文 */}
         <View style={styles.section}>
-          <Label>イベント詳細 *</Label>
+          <Label><Text>イベント詳細 *</Text></Label>
           <Textarea
             value={description}
             onChangeText={setDescription}
@@ -180,7 +180,7 @@ export default function EventForm({ onSubmit }: EventFormProps) {
         {/* 日時 */}
         <View style={styles.row}>
           <View style={styles.column}>
-            <Label>開催日 *</Label>
+            <Label><Text>開催日 *</Text></Label>
             <View style={styles.inputWithIcon}>
               <Calendar size={16} color="#6b7280" style={styles.inputIcon} />
               <Input
@@ -191,7 +191,7 @@ export default function EventForm({ onSubmit }: EventFormProps) {
             </View>
           </View>
           <View style={styles.column}>
-            <Label>開始時間 *</Label>
+            <Label><Text>開始時間 *</Text></Label>
             <Input
               value={time}
               onChangeText={setTime}
@@ -202,7 +202,7 @@ export default function EventForm({ onSubmit }: EventFormProps) {
 
         {/* 開催場所 */}
         <View style={styles.section}>
-          <Label>開催場所 *</Label>
+          <Label><Text>開催場所 *</Text></Label>
           <View style={styles.inputWithIcon}>
             <MapPin size={16} color="#6b7280" style={styles.inputIcon} />
             <Input
@@ -215,7 +215,7 @@ export default function EventForm({ onSubmit }: EventFormProps) {
 
         {/* 参加費 */}
         <View style={styles.section}>
-          <Label>参加費</Label>
+          <Label><Text>参加費</Text></Label>
           <Input
             value={price}
             onChangeText={setPrice}
@@ -226,7 +226,7 @@ export default function EventForm({ onSubmit }: EventFormProps) {
 
         {/* 定員 */}
         <View style={styles.section}>
-          <Label>定員</Label>
+          <Label><Text>定員</Text></Label>
           <Input
             value={capacity}
             onChangeText={setCapacity}
@@ -237,7 +237,7 @@ export default function EventForm({ onSubmit }: EventFormProps) {
 
         {/* 公開設定 */}
         <View style={styles.switchContainer}>
-          <Label>公開設定</Label>
+          <Label><Text>公開設定</Text></Label>
           <View style={styles.switchWrapper}>
             <Text style={styles.switchLabel}>
               {isPublic ? '公開' : '限定公開'}
@@ -259,4 +259,4 @@ export default function EventForm({ onSubmit }: EventFormProps) {
       </View>
     </ScrollView>
   );
-}        
+}          

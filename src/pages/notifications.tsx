@@ -1,12 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/native/button";
+import { ArrowLeft } from "lucide-react-native";
+import { router } from "expo-router";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 
 export default function NotificationsPage() {
-  const navigate = useNavigate();
-
   // モックのお知らせデータ
   const notifications = [
     {
@@ -30,25 +27,68 @@ export default function NotificationsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="p-4 border-b flex items-center space-x-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-          <ArrowLeft className="h-5 w-5" />
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Button variant="outline" size="icon" onPress={() => router.back()}>
+          <ArrowLeft size={20} color="#000" />
         </Button>
-        <h1 className="text-lg font-semibold">お知らせ</h1>
-      </div>
-      <ScrollArea className="p-4">
+        <Text style={styles.title}><Text>お知らせ</Text></Text>
+      </View>
+      <ScrollView style={styles.content}>
         {notifications.map((notification) => (
-          <Card key={notification.id} className="mb-4">
-            <CardContent className="p-4">
-              <p className="text-sm">{notification.message}</p>
-              <p className="text-xs text-muted-foreground">
+          <View key={notification.id} style={styles.card}>
+            <View style={styles.cardContent}>
+              <Text style={styles.message}>{notification.message}</Text>
+              <Text style={styles.timestamp}>
                 {new Date(notification.createdAt).toLocaleString()}
-              </p>
-            </CardContent>
-          </Card>
+              </Text>
+            </View>
+          </View>
         ))}
-      </ScrollArea>
-    </div>
+      </ScrollView>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    elevation: 2,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  cardContent: {
+    padding: 16,
+  },
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  content: {
+    padding: 16,
+  },
+  header: {
+    alignItems: 'center',
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    padding: 16,
+  },
+  message: {
+    fontSize: 14,
+  },
+  timestamp: {
+    color: '#666',
+    fontSize: 12,
+    marginTop: 4,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginLeft: 16,
+  },
+});

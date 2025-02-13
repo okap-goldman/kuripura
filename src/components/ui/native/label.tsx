@@ -16,9 +16,9 @@ export const Label = ({ children, style }: LabelProps) => {
 
 const styles = StyleSheet.create({
   label: {
+    color: '#374151',
     fontSize: 14,
     fontWeight: '500',
-    color: '#374151',
     marginBottom: 4,
   },
 });

@@ -19,20 +19,20 @@ export const Textarea = ({ variant = 'default', style, ...props }: TextareaProps
 };
 
 const styles = StyleSheet.create({
-  textarea: {
-    minHeight: 100,
-    padding: 12,
-    fontSize: 16,
-    borderRadius: 8,
-  },
   default: {
     backgroundColor: '#f3f4f6',
     color: '#1f2937',
   },
   outline: {
     backgroundColor: 'transparent',
-    borderWidth: 1,
     borderColor: '#e5e7eb',
+    borderWidth: 1,
     color: '#1f2937',
+  },
+  textarea: {
+    borderRadius: 8,
+    fontSize: 16,
+    minHeight: 100,
+    padding: 12,
   },
 });

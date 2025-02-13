@@ -1,7 +1,6 @@
 import { router } from "expo-router";
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import { Avatar } from "@/components/ui/native/avatar";
-import { Badge } from "@/components/ui/native/badge";
 import { FooterNav } from "@/components/FooterNav";
 
 type Message = {
@@ -134,7 +133,7 @@ export const MessagesPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>トーク</Text>
+        <Text style={styles.title}><Text>トーク</Text></Text>
         <View style={styles.headerRight}>
           <Text style={styles.count}>9</Text>
         </View>
@@ -161,7 +160,7 @@ export const MessagesPage = () => {
                 </Text>
                 {message.isUndelivered && (
                   <View style={styles.undeliveredBadge}>
-                    <Text style={styles.undeliveredText}>未返信</Text>
+                    <Text style={styles.undeliveredText}><Text>未返信</Text></Text>
                   </View>
                 )}
                 <Text style={styles.timeAgo}>
@@ -188,94 +187,94 @@ export const MessagesPage = () => {
 };
 
 const styles = StyleSheet.create({
+  avatar: {
+    height: 48,
+    marginRight: 12,
+    width: 48,
+  },
   container: {
-    flex: 1,
     backgroundColor: '#fff',
+    flex: 1,
+  },
+  count: {
+    color: '#6b7280',
+    fontSize: 14,
   },
   header: {
-    flexDirection: 'row',
     alignItems: 'center',
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 16,
-    borderBottomWidth: 1,
+  },
+  headerRight: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  lastMessage: {
+    color: '#6b7280',
+    flex: 1,
+    fontSize: 14,
+  },
+  messageContent: {
+    flex: 1,
+  },
+  messageFooter: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  messageHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  messageItem: {
     borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    padding: 16,
+  },
+  messageList: {
+    flex: 1,
+  },
+  timeAgo: {
+    color: '#6b7280',
+    fontSize: 12,
+    marginLeft: 'auto',
   },
   title: {
     fontSize: 20,
     fontWeight: '600',
   },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  count: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  messageList: {
-    flex: 1,
-  },
-  messageItem: {
-    flexDirection: 'row',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    marginRight: 12,
-  },
-  messageContent: {
-    flex: 1,
-  },
-  messageHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  userName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#ef4444',
-    marginRight: 8,
-  },
-  userInfo: {
-    fontSize: 14,
-    color: '#ef4444',
-    marginRight: 8,
-  },
   undeliveredBadge: {
     backgroundColor: '#f3f4f6',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
     borderRadius: 12,
     marginRight: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
   },
   undeliveredText: {
+    color: '#6b7280',
     fontSize: 12,
-    color: '#6b7280',
-  },
-  timeAgo: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginLeft: 'auto',
-  },
-  messageFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  lastMessage: {
-    flex: 1,
-    fontSize: 14,
-    color: '#6b7280',
   },
   unreadBadge: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
     alignItems: 'center',
+    borderRadius: 10,
+    height: 20,
     justifyContent: 'center',
     marginLeft: 8,
+    width: 20,
   },
-});         
+  userInfo: {
+    color: '#ef4444',
+    fontSize: 14,
+    marginRight: 8,
+  },
+  userName: {
+    color: '#ef4444',
+    fontSize: 16,
+    fontWeight: '600',
+    marginRight: 8,
+  },
+});           
