@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
 });
 import { ArrowLeft, ImagePlus, X } from 'lucide-react-native';
-import { useToast } from '@/components/ui/use-toast';
+import { Alert } from 'react-native';
 import { createTextPost, uploadImage } from '@/lib/firebase';
 import { useAuth } from '@/contexts/AuthContext';
 import { RichTextEditor } from '@/components/RichTextEditor';
@@ -107,16 +107,12 @@ export default function TextPostPage() {
   const [isPublic, setIsPublic] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
 
-  const { toast } = useToast();
+
   const { user } = useAuth();
 
   const handleImageUpload = async (file: Blob | File) => {
     if (images.length >= 4) {
-      toast({
-        title: 'エラー',
-        description: '画像は最大4枚までです。',
-        variant: 'destructive',
-      });
+      Alert.alert('エラー', '画像は最大4枚までです。');
       return;
     }
 
@@ -126,11 +122,7 @@ export default function TextPostPage() {
       setImages([...images, url]);
     } catch (error) {
       console.error('Image upload error:', error);
-      toast({
-        title: 'エラー',
-        description: '画像のアップロードに失敗しました。',
-        variant: 'destructive',
-      });
+      Alert.alert('エラー', '画像のアップロードに失敗しました。');
     } finally {
       setIsUploading(false);
     }
@@ -139,29 +131,17 @@ export default function TextPostPage() {
   const handleSubmit = async () => {
     
     if (!user) {
-      toast({
-        title: 'エラー',
-        description: 'ログインが必要です。',
-        variant: 'destructive',
-      });
+      Alert.alert('エラー', 'ログインが必要です。');
       return;
     }
 
     if (!content.text.trim()) {
-      toast({
-        title: 'エラー',
-        description: '本文を入力してください。',
-        variant: 'destructive',
-      });
+      Alert.alert('エラー', '本文を入力してください。');
       return;
     }
 
     if (content.text.length > 10000) {
-      toast({
-        title: 'エラー',
-        description: '本文は10,000文字以内で入力してください。',
-        variant: 'destructive',
-      });
+      Alert.alert('エラー', '本文は10,000文字以内で入力してください。');
       return;
     }
 
@@ -173,19 +153,12 @@ export default function TextPostPage() {
         isPublic,
       });
       
-      toast({
-        title: '投稿完了',
-        description: '投稿が完了しました。',
-      });
+      Alert.alert('投稿完了', '投稿が完了しました。');
       
       router.replace('/(tabs)/timeline' as any);
     } catch (error) {
       console.error('Post creation error:', error);
-      toast({
-        title: 'エラー',
-        description: '投稿に失敗しました。',
-        variant: 'destructive',
-      });
+      Alert.alert('エラー', '投稿に失敗しました。');
     }
   };
 
@@ -281,4 +254,4 @@ export default function TextPostPage() {
       </ScrollView>
     </View>
   );
-}                                                
+}                                                        

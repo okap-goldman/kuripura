@@ -14,7 +14,7 @@ export default function VideoPostPage() {
   const [description, setDescription] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   
-  const cameraRef = useRef<Camera | null>(null);
+  const cameraRef = useRef<any>(null);
   const videoRef = useRef<ExpoVideo | null>(null);
 
   const startRecording = async () => {
@@ -28,10 +28,7 @@ export default function VideoPostPage() {
       if (status === 'granted') {
         setIsRecording(true);
         if (cameraRef.current) {
-          const video = await cameraRef.current.recordAsync({
-            quality: Camera.Constants.VideoQuality['720p'],
-            maxDuration: 60,
-          });
+          const video = await cameraRef.current.recordAsync();
           setVideo(video.uri);
         }
       } else {
@@ -269,4 +266,4 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginTop: 8,
   },
-});                                   
+});                                         
