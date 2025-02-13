@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "kuripura",
+    "name": "Kuripura",
     "slug": "kuripura",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -31,4 +31,4 @@
     ],
     "scheme": "kuripura"
   }
-} 
+}  
