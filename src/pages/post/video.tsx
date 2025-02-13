@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui/native/button';
-import { Camera } from 'expo-camera';
+import { Camera, CameraType } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { Video as ExpoVideo, ResizeMode, AVPlaybackStatus } from 'expo-av';
 import { ArrowLeft, Video as VideoIcon, Upload, Play, Pause } from 'lucide-react-native';
@@ -14,12 +14,12 @@ export default function VideoPostPage() {
   const [description, setDescription] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   
-  const cameraRef = useRef<Camera | null>(null);
+  const cameraRef = useRef<Camera>(null);
   const videoRef = useRef<any>(null);
 
   const startRecording = async () => {
     try {
-      const { status } = await ExpoCamera.requestCameraPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       if (status !== 'granted') {
         alert('カメラへのアクセスを許可してください。');
         return;
@@ -107,7 +107,7 @@ export default function VideoPostPage() {
             <Camera
               ref={cameraRef}
               style={styles.video}
-              type={Camera.Constants.Type.back}
+              type={CameraType.back}
             />
           )}
           
@@ -266,4 +266,4 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginTop: 8,
   },
-});                           
+});                             
