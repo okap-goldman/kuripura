@@ -1,14 +1,88 @@
 import { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Calendar, MapPin, Upload } from 'lucide-react';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Button } from '@/components/ui/native/button';
+import { Input } from '@/components/ui/native/input';
+import { Label } from '@/components/ui/native/label';
+import { Textarea } from '@/components/ui/native/textarea';
+import { Switch } from '@/components/ui/native/switch';
+import * as ImagePicker from 'expo-image-picker';
+import { Calendar, MapPin, Upload } from 'lucide-react-native';
 
 interface EventFormProps {
   onSubmit: () => void;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  content: {
+    padding: 16,
+    gap: 24,
+  },
+  section: {
+    gap: 8,
+  },
+  imageUpload: {
+    aspectRatio: 16 / 9,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  previewImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  uploadPlaceholder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  uploadText: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  row: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  column: {
+    flex: 1,
+    gap: 8,
+  },
+  inputWithIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputIcon: {
+    position: 'absolute',
+    left: 12,
+    zIndex: 1,
+  },
+  textarea: {
+    minHeight: 120,
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  switchWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  switchLabel: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  submitButton: {
+    marginTop: 24,
+  },
+});
 
 export default function EventForm({ onSubmit }: EventFormProps) {
   const [title, setTitle] = useState('');
@@ -21,18 +95,19 @@ export default function EventForm({ onSubmit }: EventFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isPublic, setIsPublic] = useState(true);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleImageSelect = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setImagePreview(url);
+    if (!result.canceled) {
+      setImagePreview(result.assets[0].uri);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     
     if (!title.trim() || !description.trim() || !date || !time || !location.trim()) {
       alert('必須項目を入力してください。');
@@ -55,150 +130,133 @@ export default function EventForm({ onSubmit }: EventFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* イベント画像 */}
-      <div className="space-y-2">
-        <Label>イベント画像</Label>
-        <div
-          className="aspect-video bg-gray-100 rounded-lg overflow-hidden relative"
-          onClick={() => fileInputRef.current?.click()}
-        >
-          {imagePreview ? (
-            <img
-              src={imagePreview}
-              alt="イベント画像プレビュー"
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <Upload className="h-8 w-8 text-gray-400 mb-2" />
-              <span className="text-sm text-gray-500">
-                クリックして画像をアップロード
-              </span>
-            </div>
-          )}
-        </div>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleImageSelect}
-        />
-      </div>
+    <ScrollView style={styles.container}>
+      <View style={styles.content}>
+        {/* イベント画像 */}
+        <View style={styles.section}>
+          <Label>イベント画像</Label>
+          <TouchableOpacity
+            style={styles.imageUpload}
+            onPress={handleImageSelect}
+          >
+            {imagePreview ? (
+              <Image
+                source={{ uri: imagePreview }}
+                style={styles.previewImage}
+              />
+            ) : (
+              <View style={styles.uploadPlaceholder}>
+                <Upload size={32} color="#9ca3af" />
+                <Text style={styles.uploadText}>
+                  タップして画像をアップロード
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
 
-      {/* タイトル */}
-      <div className="space-y-2">
-        <Label htmlFor="title">タイトル *</Label>
-        <Input
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          maxLength={100}
-          required
-        />
-      </div>
+        {/* タイトル */}
+        <View style={styles.section}>
+          <Label>タイトル *</Label>
+          <Input
+            value={title}
+            onChangeText={setTitle}
+            maxLength={100}
+            placeholder="イベントのタイトル"
+          />
+        </View>
 
-      {/* 説明文 */}
-      <div className="space-y-2">
-        <Label htmlFor="description">イベント詳細 *</Label>
-        <Textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="min-h-[200px]"
-          required
-        />
-      </div>
+        {/* 説明文 */}
+        <View style={styles.section}>
+          <Label>イベント詳細 *</Label>
+          <Textarea
+            value={description}
+            onChangeText={setDescription}
+            placeholder="イベントの詳細な説明"
+            style={styles.textarea}
+          />
+        </View>
 
-      {/* 日時 */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="date">開催日 *</Label>
-          <div className="relative">
-            <Calendar className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+        {/* 日時 */}
+        <View style={styles.row}>
+          <View style={styles.column}>
+            <Label>開催日 *</Label>
+            <View style={styles.inputWithIcon}>
+              <Calendar size={16} color="#6b7280" style={styles.inputIcon} />
+              <Input
+                value={date}
+                onChangeText={setDate}
+                placeholder="YYYY-MM-DD"
+              />
+            </View>
+          </View>
+          <View style={styles.column}>
+            <Label>開始時間 *</Label>
             <Input
-              id="date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="pl-10"
-              required
+              value={time}
+              onChangeText={setTime}
+              placeholder="HH:MM"
             />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="time">開始時間 *</Label>
+          </View>
+        </View>
+
+        {/* 開催場所 */}
+        <View style={styles.section}>
+          <Label>開催場所 *</Label>
+          <View style={styles.inputWithIcon}>
+            <MapPin size={16} color="#6b7280" style={styles.inputIcon} />
+            <Input
+              value={location}
+              onChangeText={setLocation}
+              placeholder="例: 東京都渋谷区"
+            />
+          </View>
+        </View>
+
+        {/* 参加費 */}
+        <View style={styles.section}>
+          <Label>参加費</Label>
           <Input
-            id="time"
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            required
+            value={price}
+            onChangeText={setPrice}
+            keyboardType="numeric"
+            placeholder="0"
           />
-        </div>
-      </div>
+        </View>
 
-      {/* 開催場所 */}
-      <div className="space-y-2">
-        <Label htmlFor="location">開催場所 *</Label>
-        <div className="relative">
-          <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+        {/* 定員 */}
+        <View style={styles.section}>
+          <Label>定員</Label>
           <Input
-            id="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="pl-10"
-            placeholder="例: 東京都渋谷区"
-            required
+            value={capacity}
+            onChangeText={setCapacity}
+            keyboardType="numeric"
+            placeholder="20"
           />
-        </div>
-      </div>
+        </View>
 
-      {/* 参加費 */}
-      <div className="space-y-2">
-        <Label htmlFor="price">参加費</Label>
-        <Input
-          id="price"
-          type="number"
-          min="0"
-          step="100"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-      </div>
+        {/* 公開設定 */}
+        <View style={styles.switchContainer}>
+          <Label>公開設定</Label>
+          <View style={styles.switchWrapper}>
+            <Text style={styles.switchLabel}>
+              {isPublic ? '公開' : '限定公開'}
+            </Text>
+            <Switch
+              checked={isPublic}
+              onCheckedChange={setIsPublic}
+            />
+          </View>
+        </View>
 
-      {/* 定員 */}
-      <div className="space-y-2">
-        <Label htmlFor="capacity">定員</Label>
-        <Input
-          id="capacity"
-          type="number"
-          min="1"
-          value={capacity}
-          onChange={(e) => setCapacity(e.target.value)}
-        />
-      </div>
-
-      {/* 公開設定 */}
-      <div className="flex items-center justify-between">
-        <Label htmlFor="public-switch">公開設定</Label>
-        <div className="flex items-center space-x-2">
-          <Label htmlFor="public-switch" className="text-sm text-gray-500">
-            {isPublic ? '公開' : '限定公開'}
-          </Label>
-          <Switch
-            id="public-switch"
-            checked={isPublic}
-            onCheckedChange={setIsPublic}
-          />
-        </div>
-      </div>
-
-      {/* 作成ボタン */}
-      <Button type="submit" className="w-full">
-        イベントを作成
-      </Button>
-    </form>
+        {/* 作成ボタン */}
+        <Button
+          onPress={handleSubmit}
+          style={styles.submitButton}
+        >
+          イベントを作成
+        </Button>
+      </View>
+    </ScrollView>
   );
-} 
+}        
