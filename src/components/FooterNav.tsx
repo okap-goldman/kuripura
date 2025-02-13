@@ -1,39 +1,60 @@
-import { Home, Search, PlusSquare, Compass, User, Calendar } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Home, Search, PlusSquare, Compass, User, Calendar } from "lucide-react-native";
+import { router, usePathname } from 'expo-router';
 import { useState } from "react";
 import { CreatePostDialog } from "./CreatePostDialog";
 
 export function FooterNav() {
-  const location = useLocation();
+  const pathname = usePathname();
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => pathname === path;
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 bg-background border-t flex justify-around items-center p-3 z-50">
-        <Link to="/" className={`${isActive('/') ? 'text-primary' : 'text-muted-foreground'}`}>
-          <Home className="w-6 h-6" />
-        </Link>
-        <Link to="/search" className={`${isActive('/search') ? 'text-primary' : 'text-muted-foreground'}`}>
-          <Search className="w-6 h-6" />
-        </Link>
-        <button 
-          onClick={() => setIsCreatePostOpen(true)}
-          className="text-muted-foreground hover:text-primary transition-colors"
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => router.push('/' as any)}
         >
-          <PlusSquare className="w-6 h-6" />
-        </button>
-        <Link to="/discover" className={`${isActive('/discover') ? 'text-primary' : 'text-muted-foreground'}`}>
-          <Compass className="w-6 h-6" />
-        </Link>
-        <Link to="/events" className={`${isActive('/events') ? 'text-primary' : 'text-muted-foreground'}`}>
-          <Calendar className="w-6 h-6" />
-        </Link>
-        <Link to="/profile" className={`${isActive('/profile') ? 'text-primary' : 'text-muted-foreground'}`}>
-          <User className="w-6 h-6" />
-        </Link>
-      </nav>
+          <Home size={24} color={isActive('/') ? '#3b82f6' : '#6b7280'} />
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => router.push('/search' as any)}
+        >
+          <Search size={24} color={isActive('/search') ? '#3b82f6' : '#6b7280'} />
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => setIsCreatePostOpen(true)}
+        >
+          <PlusSquare size={24} color="#6b7280" />
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => router.push('/discover' as any)}
+        >
+          <Compass size={24} color={isActive('/discover') ? '#3b82f6' : '#6b7280'} />
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => router.push('/events' as any)}
+        >
+          <Calendar size={24} color={isActive('/events') ? '#3b82f6' : '#6b7280'} />
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => router.push('/profile' as any)
+        >
+          <User size={24} color={isActive('/(tabs)/profile') ? '#3b82f6' : '#6b7280'} />
+        </TouchableOpacity>
+      </View>
 
       <CreatePostDialog 
         isOpen={isCreatePostOpen}
@@ -42,3 +63,19 @@ export function FooterNav() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  tab: {
+    padding: 8,
+  },
+});

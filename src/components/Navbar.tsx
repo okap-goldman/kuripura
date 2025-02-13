@@ -1,109 +1,98 @@
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { Bell, MessageCircle, User, LogOut } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Bell, MessageCircle, User } from "lucide-react-native";
+import { Avatar } from "@/components/ui/native/avatar";
+import { router } from 'expo-router';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function Navbar() {
-  const { toast } = useToast();
-  const [showNotifications, setShowNotifications] = useState(false);
-  const navigate = useNavigate();
   const { user, logout } = useAuth();
 
   const handleLogout = async () => {
     try {
       await logout();
-      toast({
-        title: "ログアウトしました",
-        description: "ご利用ありがとうございました",
-      });
-      navigate('/auth/login');
+      Alert.alert("ログアウトしました", "ご利用ありがとうございました");
+      router.replace('/(auth)/login' as any);
     } catch (error) {
-      toast({
-        title: "ログアウトに失敗しました",
-        description: "もう一度お試しください",
-        variant: "destructive",
-      });
+      Alert.alert("エラー", "ログアウトに失敗しました。もう一度お試しください。");
     }
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          Kuripura
-        </span>
+    <View style={styles.container}>
+      <Text style={styles.title}>Kuripura</Text>
+      
+      <View style={styles.actions}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/notifications' as any)}
+        >
+          <Bell size={20} color="#000" />
+        </TouchableOpacity>
         
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setShowNotifications(true)}
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => router.push('/messages' as any)}
+        >
+          <MessageCircle size={20} color="#000" />
+        </TouchableOpacity>
+        
+        {user ? (
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={handleLogout}
           >
-            <Bell className="h-5 w-5" />
-          </Button>
-          
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/messages")}
+            <Avatar
+              source={{ uri: user.email || undefined }}
+              fallback={user.email?.[0] || 'U'}
+              size={32}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => router.push('/auth/login' as any)}
           >
-            <MessageCircle className="h-5 w-5" />
-          </Button>
-          
-          {user ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleLogout}
-              className="text-red-500 hover:text-red-600"
-            >
-              <LogOut className="h-5 w-5" />
-            </Button>
-          ) : (
-            <Button
-              onClick={() => navigate('/auth/login')}
-              className="gap-2"
-            >
-              <User className="h-4 w-4" />
-              ログイン
-            </Button>
-          )}
-        </div>
-      </div>
-
-      <Dialog open={showNotifications} onOpenChange={setShowNotifications}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>通知</DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="h-[400px]">
-            <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-3 p-2 hover:bg-accent rounded-lg">
-                  <Avatar>
-                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} />
-                    <AvatarFallback>UN</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm">ユーザー{i}があなたの投稿にいいねしました</p>
-                    <p className="text-xs text-muted-foreground">1時間前</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
-    </nav>
+            <User size={16} color="#000" />
+            <Text style={styles.loginText}>ログイン</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  iconButton: {
+    padding: 8,
+  },
+  loginButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#f3f4f6',
+  },
+  loginText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+});
