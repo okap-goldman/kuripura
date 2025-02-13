@@ -3,7 +3,6 @@ import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import { Button } from '@/components/ui/native/button';
 import { Input } from '@/components/ui/native/input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/native/tabs';
-import { TouchableOpacity } from 'react-native';
 import { colors } from '@/lib/colors';
 import { Search as SearchIcon, MessageCircle } from 'lucide-react-native';
 import PostCard from '@/components/post/post-card';
@@ -235,4 +234,4 @@ export default function SearchPage() {
       </View>
     </View>
   );
-}                      
+}                        
