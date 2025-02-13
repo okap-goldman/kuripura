@@ -50,6 +50,7 @@ const MOCK_ANALYTICS_DETAIL = {
   ],
 };
 
+export default function AnalyticsDetailPage() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
@@ -66,117 +67,235 @@ const MOCK_ANALYTICS_DETAIL = {
         </View>
 
         {/* メインコンテンツ */}
-        <div className="space-y-6">
+        <View style={styles.content}>
           {/* メイン画像 */}
-          <div className="aspect-[2/1] rounded-lg overflow-hidden">
-            <img
-              src={MOCK_ANALYTICS_DETAIL.image}
-              alt={MOCK_ANALYTICS_DETAIL.title}
-              className="w-full h-full object-cover"
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: MOCK_ANALYTICS_DETAIL.image }}
+              style={styles.image}
             />
-          </div>
+          </View>
 
           {/* 概要 */}
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4"><Text>概要</Text></h2>
-              <p className="text-gray-600">
+            <CardContent>
+              <Text style={styles.sectionTitle}>概要</Text>
+              <Text style={styles.description}>
                 {MOCK_ANALYTICS_DETAIL.description}
-              </p>
+              </Text>
             </CardContent>
           </Card>
 
           {/* 主要指標 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <View style={styles.statsContainer}>
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2 text-gray-500 mb-2">
-                  <Users className="h-5 w-5" />
-                  <span><Text>参加者数</Text></span>
-                </div>
-                <p className="text-3xl font-bold">
+              <CardContent>
+                <View style={styles.statHeader}>
+                  <Users size={20} color="#6b7280" />
+                  <Text style={styles.statLabel}>参加者数</Text>
+                </View>
+                <Text style={styles.statValue}>
                   {MOCK_ANALYTICS_DETAIL.stats.participants}
-                </p>
+                </Text>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2 text-gray-500 mb-2">
-                  <Clock className="h-5 w-5" />
-                  <span><Text>平均実践時間</Text></span>
-                </div>
-                <p className="text-3xl font-bold">
+              <CardContent>
+                <View style={styles.statHeader}>
+                  <Clock size={20} color="#6b7280" />
+                  <Text style={styles.statLabel}>平均実践時間</Text>
+                </View>
+                <Text style={styles.statValue}>
                   {MOCK_ANALYTICS_DETAIL.stats.avgDuration}分
-                </p>
+                </Text>
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2 text-gray-500 mb-2">
-                  <Star className="h-5 w-5" />
-                  <span><Text>満足度</Text></span>
-                </div>
-                <p className="text-3xl font-bold">
+              <CardContent>
+                <View style={styles.statHeader}>
+                  <Star size={20} color="#6b7280" />
+                  <Text style={styles.statLabel}>満足度</Text>
+                </View>
+                <Text style={styles.statValue}>
                   {MOCK_ANALYTICS_DETAIL.stats.satisfaction}
-                </p>
+                </Text>
               </CardContent>
             </Card>
-          </div>
+          </View>
 
           {/* トレンド */}
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4"><Text>トレンド</Text></h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <CardContent>
+              <Text style={styles.sectionTitle}>トレンド</Text>
+              <View style={styles.trendsContainer}>
                 {MOCK_ANALYTICS_DETAIL.trends.map((trend) => (
-                  <div key={trend.label}>
-                    <p className="text-gray-500 mb-1">{trend.label}</p>
-                    <div className="flex items-end space-x-2">
-                      <p className="text-2xl font-bold">{trend.value}</p>
-                      <p className={`text-sm ${trend.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                  <View key={trend.label} style={styles.trendItem}>
+                    <Text style={styles.trendLabel}>{trend.label}</Text>
+                    <View style={styles.trendValues}>
+                      <Text style={styles.trendValue}>{trend.value}</Text>
+                      <Text style={[
+                        styles.trendChange,
+                        trend.isPositive ? styles.positiveChange : styles.negativeChange
+                      ]}>
                         {trend.change}
-                      </p>
-                    </div>
-                  </div>
+                      </Text>
+                    </View>
+                  </View>
                 ))}
-              </div>
+              </View>
             </CardContent>
           </Card>
 
           {/* 週間データ */}
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4"><Text>週間データ</Text></h2>
-              <div className="h-48 flex items-end justify-between">
+            <CardContent>
+              <Text style={styles.sectionTitle}>週間データ</Text>
+              <View style={styles.weeklyDataContainer}>
                 {MOCK_ANALYTICS_DETAIL.weeklyData.map((data) => (
-                  <div key={data.day} className="flex flex-col items-center">
-                    <div
-                      className="w-8 bg-primary rounded-t"
-                      style={{ height: `${data.value}%` }}
-                    />
-                    <p className="mt-2 text-sm text-gray-500">{data.day}</p>
-                  </div>
+                  <View key={data.day} style={styles.weeklyDataItem}>
+                    <View style={[styles.weeklyDataBar, { height: `${data.value}%` }]} />
+                    <Text style={styles.weeklyDataLabel}>{data.day}</Text>
+                  </View>
                 ))}
-              </div>
+              </View>
             </CardContent>
           </Card>
 
           {/* インサイト */}
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4"><Text>主なインサイト</Text></h2>
-              <ul className="space-y-3">
+            <CardContent>
+              <Text style={styles.sectionTitle}>主なインサイト</Text>
+              <View style={styles.insightsList}>
                 {MOCK_ANALYTICS_DETAIL.insights.map((insight, index) => (
-                  <li key={index} className="flex items-start space-x-3">
-                    <TrendingUp className="h-5 w-5 text-primary mt-0.5" />
-                    <span>{insight}</span>
-                  </li>
+                  <View key={index} style={styles.insightItem}>
+                    <TrendingUp size={20} color="#3b82f6" />
+                    <Text style={styles.insightText}>{insight}</Text>
+                  </View>
                 ))}
-              </ul>
+              </View>
             </CardContent>
           </Card>
-        </div>
-      </div>
+        </View>
+      </View>
     </View>
   );
-} 
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  content: {
+    padding: 16,
+    gap: 16,
+  },
+  description: {
+    color: '#6b7280',
+    fontSize: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  image: {
+    height: '100%',
+    width: '100%',
+  },
+  imageContainer: {
+    aspectRatio: 2,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  insightItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    marginBottom: 12,
+  },
+  insightsList: {
+    gap: 12,
+  },
+  insightText: {
+    flex: 1,
+    fontSize: 14,
+  },
+  positiveChange: {
+    color: '#10b981',
+  },
+  negativeChange: {
+    color: '#ef4444',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  statHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  statLabel: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  statValue: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginLeft: 16,
+  },
+  trendChange: {
+    fontSize: 14,
+  },
+  trendItem: {
+    flex: 1,
+  },
+  trendLabel: {
+    color: '#6b7280',
+    marginBottom: 4,
+  },
+  trendValue: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  trendValues: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 8,
+  },
+  trendsContainer: {
+    flexDirection: 'row',
+    gap: 24,
+  },
+  weeklyDataBar: {
+    backgroundColor: '#3b82f6',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    width: 32,
+  },
+  weeklyDataContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    height: 192,
+  },
+  weeklyDataItem: {
+    alignItems: 'center',
+  },
+  weeklyDataLabel: {
+    color: '#6b7280',
+    fontSize: 12,
+    marginTop: 8,
+  },
+});     
