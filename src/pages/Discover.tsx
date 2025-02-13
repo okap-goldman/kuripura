@@ -1,12 +1,13 @@
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Card } from "@/components/ui/native/card";
 import { AnalysisSection } from "@/components/discover/AnalysisSection";
 import { RegionalActivitySection } from "@/components/discover/RegionalActivitySection";
 import { EventsSection } from "@/components/discover/EventsSection";
 import { RecommendedPostsSection } from "@/components/discover/RecommendedPostsSection";
 import { useState } from "react";
-import { ChevronLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react-native";
+import { Button } from "@/components/ui/native/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/native/tabs";
 
 type Section = "main" | "analysis" | "regional" | "events" | "recommended";
 
@@ -17,97 +18,140 @@ export default function Discover() {
     switch (currentSection) {
       case "analysis":
         return (
-          <Card className="p-4">
+          <Card style={styles.sectionCard}>
             <AnalysisSection />
           </Card>
         );
       case "regional":
         return (
-          <Card className="p-4">
+          <Card style={styles.sectionCard}>
             <RegionalActivitySection />
           </Card>
         );
       case "events":
         return (
-          <Card className="p-4">
+          <Card style={styles.sectionCard}>
             <EventsSection />
           </Card>
         );
       case "recommended":
         return (
-          <Card className="p-4">
+          <Card style={styles.sectionCard}>
             <RecommendedPostsSection />
           </Card>
         );
       default:
         return (
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card 
-              className="p-6 cursor-pointer hover:bg-muted/50 transition-colors"
-              onClick={() => setCurrentSection("analysis")}
-            >
-              <h2 className="text-lg font-semibold mb-2">分析</h2>
-              <p className="text-sm text-muted-foreground">
-                あなたの目醒め状況を分析し、アドバイスを提供します
-              </p>
-            </Card>
+          <View style={styles.grid}>
+            <TouchableOpacity onPress={() => setCurrentSection("analysis")}>
+              <Card style={styles.gridCard}>
+                <Text style={styles.cardTitle}>分析</Text>
+                <Text style={styles.cardDescription}>
+                  あなたの目醒め状況を分析し、アドバイスを提供します
+                </Text>
+              </Card>
+            </TouchableOpacity>
 
-            <Card 
-              className="p-6 cursor-pointer hover:bg-muted/50 transition-colors"
-              onClick={() => setCurrentSection("regional")}
-            >
-              <h2 className="text-lg font-semibold mb-2">地域毎の活動状況</h2>
-              <p className="text-sm text-muted-foreground">
-                各地域での活動状況や注目のイベントをチェック
-              </p>
-            </Card>
+            <TouchableOpacity onPress={() => setCurrentSection("regional")}>
+              <Card style={styles.gridCard}>
+                <Text style={styles.cardTitle}>地域毎の活動状況</Text>
+                <Text style={styles.cardDescription}>
+                  各地域での活動状況や注目のイベントをチェック
+                </Text>
+              </Card>
+            </TouchableOpacity>
 
-            <Card 
-              className="p-6 cursor-pointer hover:bg-muted/50 transition-colors"
-              onClick={() => setCurrentSection("events")}
-            >
-              <h2 className="text-lg font-semibold mb-2">イベント</h2>
-              <p className="text-sm text-muted-foreground">
-                目醒め人が企画するイベントを探す・企画する
-              </p>
-            </Card>
+            <TouchableOpacity onPress={() => setCurrentSection("events")}>
+              <Card style={styles.gridCard}>
+                <Text style={styles.cardTitle}>イベント</Text>
+                <Text style={styles.cardDescription}>
+                  目醒め人が企画するイベントを探す・企画する
+                </Text>
+              </Card>
+            </TouchableOpacity>
 
-            <Card 
-              className="p-6 cursor-pointer hover:bg-muted/50 transition-colors"
-              onClick={() => setCurrentSection("recommended")}
-            >
-              <h2 className="text-lg font-semibold mb-2">おすすめ投稿</h2>
-              <p className="text-sm text-muted-foreground">
-                あなたにおすすめの投稿をピックアップ
-              </p>
-            </Card>
-          </div>
+            <TouchableOpacity onPress={() => setCurrentSection("recommended")}>
+              <Card style={styles.gridCard}>
+                <Text style={styles.cardTitle}>おすすめ投稿</Text>
+                <Text style={styles.cardDescription}>
+                  あなたにおすすめの投稿をピックアップ
+                </Text>
+              </Card>
+            </TouchableOpacity>
+          </View>
         );
     }
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: '#e5e7eb',
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: '#000',
+    },
+    scrollView: {
+      flex: 1,
+    },
+    content: {
+      padding: 16,
+    },
+    sectionCard: {
+      padding: 16,
+    },
+    grid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 16,
+    },
+    gridCard: {
+      width: (Dimensions.get('window').width - 48) / 2,
+      padding: 16,
+    },
+    cardTitle: {
+      fontSize: 18,
+      fontWeight: '600',
+      marginBottom: 8,
+      color: '#000',
+    },
+    cardDescription: {
+      fontSize: 14,
+      color: '#666',
+    },
+  });
+
   return (
-    <div className="container pb-24 pt-4 space-y-6">
-      <div className="flex items-center gap-4">
+    <View style={styles.container}>
+      <View style={styles.header}>
         {currentSection !== "main" && (
           <Button 
-            variant="ghost" 
+            variant="outline" 
             size="icon"
-            onClick={() => setCurrentSection("main")}
+            onPress={() => setCurrentSection("main")}
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft size={20} color="#000" />
           </Button>
         )}
-        <h1 className="text-2xl font-bold">
+        <Text style={styles.title}>
           {currentSection === "main" ? "発見" : ""}
-        </h1>
-      </div>
+        </Text>
+      </View>
       
-      <ScrollArea className="h-[calc(100vh-8rem)]">
-        <div className="space-y-6 pb-8">
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.content}>
           {renderSection()}
-        </div>
-      </ScrollArea>
-    </div>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
