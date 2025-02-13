@@ -1,44 +1,117 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { ArrowLeft, Mic, Square, Play, Pause, Upload } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
+import { Button } from '@/components/ui/native/button';
+import { TextInput } from 'react-native';
+import { ArrowLeft, Mic, Square, Play, Pause, Upload } from 'lucide-react-native';
+import { Audio } from 'expo-av';
+import * as DocumentPicker from 'expo-document-picker';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  backButton: {
+    padding: 8,
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+    gap: 24,
+  },
+  controls: {
+    alignItems: 'center',
+    gap: 24,
+  },
+  recordButton: {
+    alignItems: 'center',
+  },
+  roundButton: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  defaultButton: {
+    backgroundColor: '#3b82f6',
+  },
+  recordingButton: {
+    backgroundColor: '#ef4444',
+  },
+  playButton: {
+    backgroundColor: '#3b82f6',
+  },
+  selectButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+  },
+  selectButtonText: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  descriptionSection: {
+    gap: 8,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#374151',
+  },
+  descriptionInput: {
+    minHeight: 100,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: '#1f2937',
+    textAlignVertical: 'top',
+  },
+});
 
 export default function AudioPostPage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // Replaced with expo-router
   const [isRecording, setIsRecording] = useState(false);
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [audioUri, setAudioUri] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [description, setDescription] = useState('');
-  
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const audioElementRef = useRef<HTMLAudioElement | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
 
-      mediaRecorder.ondataavailable = (event) => {
-        audioChunksRef.current.push(event.data);
-      };
-
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        setAudioBlob(audioBlob);
-        setAudioUrl(audioUrl);
-        stream.getTracks().forEach(track => track.stop());
-      };
-
-      mediaRecorder.start();
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+      setRecording(recording);
       setIsRecording(true);
     } catch (error) {
       console.error('録音の開始に失敗しました:', error);
@@ -46,140 +119,139 @@ export default function AudioPostPage() {
     }
   };
 
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
+  const stopRecording = async () => {
+    if (!recording) return;
+
+    try {
+      await recording.stopAndUnloadAsync();
+      const uri = recording.getURI();
+      setAudioUri(uri);
+      setRecording(null);
       setIsRecording(false);
+
+      const { sound: newSound } = await Audio.Sound.createAsync({ uri });
+      setSound(newSound);
+    } catch (error) {
+      console.error('録音の停止に失敗しました:', error);
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setAudioBlob(file);
-      setAudioUrl(url);
+  const handleSelectAudio = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'audio/*',
+        copyToCacheDirectory: true,
+      });
+
+      if (result.type === 'success') {
+        setAudioUri(result.uri);
+        const { sound: newSound } = await Audio.Sound.createAsync({ uri: result.uri });
+        setSound(newSound);
+      }
+    } catch (error) {
+      console.error('音声ファイルの選択に失敗しました:', error);
     }
   };
 
-  const togglePlayback = () => {
-    if (audioElementRef.current) {
+  const togglePlayback = async () => {
+    if (!sound) return;
+
+    try {
       if (isPlaying) {
-        audioElementRef.current.pause();
+        await sound.pauseAsync();
       } else {
-        audioElementRef.current.play();
+        await sound.playAsync();
       }
       setIsPlaying(!isPlaying);
+    } catch (error) {
+      console.error('再生の切り替えに失敗しました:', error);
     }
   };
 
   const handleSubmit = async () => {
-    if (!audioBlob) {
+    if (!audioUri) {
       alert('音声を録音または選択してください。');
       return;
     }
 
     // TODO: Implement audio upload and post submission
-    console.log({ audioBlob, description });
-    navigate('/');
+    console.log({ audioUri, description });
+    router.replace('/(tabs)' as any);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 pb-16">
-      <div className="container mx-auto px-4">
-        {/* ヘッダー */}
-        <div className="sticky top-16 bg-gray-50 py-4 z-10 flex items-center justify-between border-b">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/post')}
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-lg font-semibold">音声投稿</h1>
-          <Button
-            onClick={handleSubmit}
-            disabled={!audioBlob}
-          >
-            投稿する
-          </Button>
-        </div>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Button
+          variant="outline"
+          style={styles.backButton}
+          onPress={() => router.replace('/(tabs)/post' as any)}
+        >
+          <ArrowLeft size={20} color="#6b7280" />
+        </Button>
+        <Text style={styles.title}>音声投稿</Text>
+        <Button
+          onPress={handleSubmit}
+          disabled={!audioUri}
+        >
+          投稿する
+        </Button>
+      </View>
 
-        <div className="py-6 space-y-6">
-          {/* 録音/再生コントロール */}
-          <div className="space-y-4">
-            <div className="flex justify-center space-x-4">
-              {!audioUrl ? (
-                <Button
-                  size="lg"
-                  variant={isRecording ? 'destructive' : 'default'}
-                  className="w-16 h-16 rounded-full"
-                  onClick={isRecording ? stopRecording : startRecording}
-                >
-                  {isRecording ? (
-                    <Square className="h-6 w-6" />
-                  ) : (
-                    <Mic className="h-6 w-6" />
-                  )}
-                </Button>
-              ) : (
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-16 h-16 rounded-full"
-                  onClick={togglePlayback}
-                >
-                  {isPlaying ? (
-                    <Pause className="h-6 w-6" />
-                  ) : (
-                    <Play className="h-6 w-6" />
-                  )}
-                </Button>
-              )}
-            </div>
-
-            {/* 音声ファイル選択 */}
-            <div className="flex justify-center">
-              <Button
-                variant="outline"
-                onClick={() => fileInputRef.current?.click()}
+      <View style={styles.content}>
+        {/* 録音/再生コントロール */}
+        <View style={styles.controls}>
+          <View style={styles.recordButton}>
+            {!audioUri ? (
+              <TouchableOpacity
+                style={[
+                  styles.roundButton,
+                  isRecording ? styles.recordingButton : styles.defaultButton,
+                ]}
+                onPress={isRecording ? stopRecording : startRecording}
               >
-                <Upload className="h-4 w-4 mr-2" />
-                音声ファイルを選択
-              </Button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="audio/*"
-                className="hidden"
-                onChange={handleFileSelect}
-              />
-            </div>
-
-            {/* 非表示のオーディオ要素 */}
-            {audioUrl && (
-              <audio
-                ref={audioElementRef}
-                src={audioUrl}
-                onEnded={() => setIsPlaying(false)}
-                className="hidden"
-              />
+                {isRecording ? (
+                  <Square size={24} color="#fff" />
+                ) : (
+                  <Mic size={24} color="#fff" />
+                )}
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.roundButton, styles.playButton]}
+                onPress={togglePlayback}
+              >
+                {isPlaying ? (
+                  <Pause size={24} color="#fff" />
+                ) : (
+                  <Play size={24} color="#fff" />
+                )}
+              </TouchableOpacity>
             )}
-          </div>
+          </View>
 
-          {/* 説明文入力 */}
-          <div className="space-y-2">
-            <Label htmlFor="description">説明文</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="説明文を入力（任意）"
-              className="min-h-[100px]"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+          {/* 音声ファイル選択 */}
+          <TouchableOpacity
+            style={styles.selectButton}
+            onPress={handleSelectAudio}
+          >
+            <Upload size={16} color="#6b7280" />
+            <Text style={styles.selectButtonText}>音声ファイルを選択</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 説明文入力 */}
+        <View style={styles.descriptionSection}>
+          <Text style={styles.sectionTitle}>説明文</Text>
+          <TextInput
+            value={description}
+            onChangeText={setDescription}
+            placeholder="説明文を入力（任意）"
+            multiline
+            style={styles.descriptionInput}
+          />
+        </View>
+      </View>
+    </View>
   );
-} 
+}        
