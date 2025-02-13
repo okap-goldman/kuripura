@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui/native/button';
@@ -129,7 +129,10 @@ export default function AudioPostPage() {
       setRecording(null);
       setIsRecording(false);
 
-      const { sound: newSound } = await Audio.Sound.createAsync({ uri });
+      if (uri) {
+        const { sound: newSound } = await Audio.Sound.createAsync({ uri });
+        setSound(newSound);
+      }
       setSound(newSound);
     } catch (error) {
       console.error('録音の停止に失敗しました:', error);
@@ -254,4 +257,4 @@ export default function AudioPostPage() {
       </View>
     </View>
   );
-}        
+}          
