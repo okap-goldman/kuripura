@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Search as SearchIcon, MessageCircle } from 'lucide-react';
+import { View, ScrollView, StyleSheet } from 'react-native';
+import { Button } from '@/components/ui/native/button';
+import { Input } from '@/components/ui/native/input';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/native/tabs';
+import { Search as SearchIcon, MessageCircle } from 'lucide-react-native';
 import PostCard from '@/components/post/post-card';
 import ChatMessage from './chat-message';
 
@@ -45,6 +46,76 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export default function SearchPage() {
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#f9fafb',
+      paddingTop: 64,
+      paddingBottom: 64,
+    },
+    content: {
+      paddingHorizontal: 16,
+    },
+    searchBar: {
+      backgroundColor: '#f9fafb',
+      padding: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: '#e5e7eb',
+    },
+    searchForm: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    searchInput: {
+      flex: 1,
+    },
+    chatContainer: {
+      backgroundColor: colors.background,
+      borderRadius: 8,
+      shadowColor: colors.text,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+      elevation: 2,
+    },
+    chatHistory: {
+      padding: 16,
+      minHeight: 400,
+      maxHeight: 600,
+    },
+    suggestedQuestions: {
+      padding: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+    suggestedQuestionsTitle: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginBottom: 8,
+    },
+    questionButtons: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+    },
+    inputContainer: {
+      padding: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+    inputWrapper: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    input: {
+      flex: 1,
+    },
+    remainingQuestions: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginTop: 8,
+    },
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState(MOCK_CHAT_HISTORY);
@@ -75,22 +146,22 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 pb-16">
-      <div className="container mx-auto px-4">
+    <View style={styles.container}>
+      <View style={styles.content}>
         {/* 検索バー */}
-        <div className="sticky top-16 bg-gray-50 py-4 z-10">
-          <form onSubmit={handleSearch} className="flex gap-2">
+        <View style={styles.searchBar}>
+          <View style={styles.searchForm}>
             <Input
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChangeText={setSearchQuery}
               placeholder="キーワードで検索"
-              className="flex-1"
+              style={styles.searchInput}
             />
-            <Button type="submit">
-              <SearchIcon className="h-4 w-4" />
+            <Button onPress={handleSearch}>
+              <SearchIcon size={16} />
             </Button>
-          </form>
-        </div>
+          </View>
+        </View>
 
         {/* タブ付きコンテンツ */}
         <Tabs defaultValue="chat" className="mt-4">
@@ -103,50 +174,50 @@ export default function SearchPage() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="chat" className="mt-6">
-            <div className="bg-white rounded-lg shadow-sm">
+          <TabsContent value="chat">
+            <View style={styles.chatContainer}>
               {/* チャット履歴 */}
-              <div className="p-4 space-y-4 min-h-[400px] max-h-[600px] overflow-y-auto">
+              <ScrollView style={styles.chatHistory}>
                 {chatHistory.map((message) => (
                   <ChatMessage key={message.id} message={message} />
                 ))}
-              </div>
+              </ScrollView>
 
               {/* サジェストされた質問 */}
-              <div className="p-4 border-t border-gray-100">
-                <p className="text-sm text-gray-500 mb-2">おすすめの質問：</p>
-                <div className="flex flex-wrap gap-2">
+              <View style={styles.suggestedQuestions}>
+                <Text style={styles.suggestedQuestionsTitle}>おすすめの質問：</Text>
+                <View style={styles.questionButtons}>
                   {SUGGESTED_QUESTIONS.map((question) => (
                     <Button
                       key={question}
                       variant="outline"
                       size="sm"
-                      onClick={() => handleSuggestedQuestion(question)}
+                      onPress={() => handleSuggestedQuestion(question)}
                     >
-                      {question}
+                      <Text>{question}</Text>
                     </Button>
                   ))}
-                </div>
-              </div>
+                </View>
+              </View>
 
               {/* メッセージ入力 */}
-              <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-100">
-                <div className="flex gap-2">
+              <View style={styles.inputContainer}>
+                <View style={styles.inputWrapper}>
                   <Input
                     value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
+                    onChangeText={setChatInput}
                     placeholder="質問を入力（1日5回まで）"
-                    className="flex-1"
+                    style={styles.input}
                   />
-                  <Button type="submit">
-                    <MessageCircle className="h-4 w-4" />
+                  <Button onPress={handleSendMessage}>
+                    <MessageCircle size={16} />
                   </Button>
-                </div>
-                <p className="text-sm text-gray-500 mt-2">
+                </View>
+                <Text style={styles.remainingQuestions}>
                   残り質問回数: 3回
-                </p>
-              </form>
-            </div>
+                </Text>
+              </View>
+            </View>
           </TabsContent>
 
           <TabsContent value="search" className="mt-6">
@@ -160,4 +231,4 @@ export default function SearchPage() {
       </div>
     </div>
   );
-} 
+}    
