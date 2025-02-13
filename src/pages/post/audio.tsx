@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/native/button';
 import { TextInput } from 'react-native';
 import { ArrowLeft, Mic, Square, Play, Pause, Upload } from 'lucide-react-native';
 import { Audio } from 'expo-av';
-import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
 
 const styles = StyleSheet.create({
   container: {
@@ -257,4 +257,4 @@ export default function AudioPostPage() {
       </View>
     </View>
   );
-}              
+}                
