@@ -2,9 +2,9 @@ import { useState, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui/native/button';
-import { Camera } from 'expo-camera';
+import { Camera as ExpoCamera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
-import { Video } from 'expo-av';
+import { Video as ExpoVideo, ResizeMode } from 'expo-av';
 import { ArrowLeft, Video as VideoIcon, Upload, Play, Pause } from 'lucide-react-native';
 import { Input } from '@/components/ui/native/input';
 
@@ -12,17 +12,18 @@ export default function VideoPostPage() {
   const [video, setVideo] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [description, setDescription] = useState('');
-  const [isPublic, setIsPublic] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   
-  const cameraRef = useRef<Camera | null>(null);
-  const videoRef = useRef<Video | null>(null);
+  const cameraRef = useRef<ExpoCamera>(null);
+  const videoRef = useRef<ExpoVideo>(null);
 
   const startRecording = async () => {
     try {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
+      const { status } = await ExpoCamera.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
+        alert('カメラへのアクセスを許可してください。');
+        return;
+      }
       
       if (status === 'granted') {
         setIsRecording(true);
@@ -59,13 +60,14 @@ export default function VideoPostPage() {
 
   const togglePlayback = async () => {
     if (videoRef.current) {
-      const status = await videoRef.current.getStatusAsync();
-      if (status.isPlaying) {
+      const status = await videoRef.current.getStatusAsync() as AVPlaybackStatus;
+      if (status.isLoaded && status.isPlaying) {
         await videoRef.current.pauseAsync();
+        setIsPlaying(false);
       } else {
         await videoRef.current.playAsync();
+        setIsPlaying(true);
       }
-      setIsPlaying(!status.isPlaying);
     }
   };
 
@@ -84,9 +86,9 @@ export default function VideoPostPage() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
-          onPress={() => router.push('/post')}
+          onPress={() => router.back()}
         >
           <ArrowLeft size={20} color="#000" />
         </Button>
@@ -102,10 +104,10 @@ export default function VideoPostPage() {
       <View style={styles.content}>
         <View style={styles.videoContainer}>
           {isRecording && (
-            <Camera
+            <ExpoCamera
               ref={cameraRef}
               style={styles.video}
-              type={Camera.Constants.Type.back}
+              type={ExpoCamera.Constants.Type.back}
             />
           )}
           
@@ -116,7 +118,7 @@ export default function VideoPostPage() {
                 source={{ uri: video }}
                 style={styles.video}
                 shouldPlay={isPlaying}
-                resizeMode="contain"
+                resizeMode={ResizeMode.CONTAIN}
               />
               <View style={styles.controlsContainer}>
                 <Button
@@ -256,4 +258,4 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginTop: 8,
   },
-});         
+});               
