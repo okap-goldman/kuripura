@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'expo-router';
-import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { Input } from '@/components/ui/native/input';
 import { Button } from '@/components/ui/native/button';
 
@@ -17,7 +17,7 @@ export default function RegisterPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        Register
+        アカウント登録
       </Text>
       
       <Input
@@ -54,7 +54,7 @@ export default function RegisterPage() {
       
       <Link href="/auth/login">
         <Text style={styles.linkText}>
-          Already have an account? Login
+          すでにアカウントをお持ちの方はこちら
         </Text>
       </Link>
     </View>
