@@ -48,37 +48,6 @@ const SUGGESTED_QUESTIONS = [
 
 export default function SearchPage() {
   const styles = StyleSheet.create({
-    tabs: {
-      marginTop: 16,
-    },
-    tabsList: {
-      flexDirection: 'row',
-      width: '100%',
-      backgroundColor: colors.background,
-      borderRadius: 8,
-      padding: 4,
-    },
-    tabsTrigger: {
-      flex: 1,
-      paddingVertical: 8,
-      paddingHorizontal: 12,
-      alignItems: 'center',
-      borderRadius: 6,
-    },
-    activeTab: {
-      backgroundColor: colors.primary,
-    },
-    tabText: {
-      fontSize: 14,
-      fontWeight: '500',
-      color: colors.text,
-    },
-    activeTabText: {
-      color: colors.background,
-    },
-    tabsContent: {
-      marginTop: 24,
-    },
     chatContainer: {
       backgroundColor: colors.background,
       borderRadius: 8,
@@ -147,11 +116,14 @@ export default function SearchPage() {
       fontSize: 14,
       marginBottom: 8,
     },
+    searchResults: {
+      gap: 16,
+    },
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState(MOCK_CHAT_HISTORY);
-  const [searchResults, setSearchResults] = useState(MOCK_SEARCH_RESULTS);
+  const [searchResults] = useState(MOCK_SEARCH_RESULTS);
   const [activeTab, setActiveTab] = useState('chat');
 
   const handleSearch = () => {
@@ -262,4 +234,4 @@ export default function SearchPage() {
       </View>
     </View>
   );
-}              
+}                  
