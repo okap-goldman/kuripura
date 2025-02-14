@@ -1,7 +1,9 @@
 import { useRef, useEffect, useState } from "react";
-import { Play, Pause } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import ReactMarkdown from "react-markdown";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import { Play, Pause } from "lucide-react-native";
+import { Button } from "@/components/ui/native/button";
+import { Audio, AVPlaybackStatus } from "expo-av";
+import { Video } from "expo-av";
 
 interface PostContentProps {
   content: string;
@@ -13,81 +15,39 @@ interface PostContentProps {
 
 export function PostContent({ content, caption, mediaType, isExpanded, setIsExpanded }: PostContentProps) {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const videoRef = useRef<HTMLIFrameElement>(null);
-  const videoContainerRef = useRef<HTMLDivElement>(null);
-  const audioContainerRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<Audio.Sound | null>(null);
+  const videoRef = useRef<Video>(null);
 
   useEffect(() => {
-    if (mediaType === "audio") {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting && audioRef.current && isAudioPlaying) {
-              audioRef.current.pause();
-              setIsAudioPlaying(false);
-            }
-          });
-        },
-        {
-          threshold: 0.5,
-        }
-      );
-
-      if (audioContainerRef.current) {
-        observer.observe(audioContainerRef.current);
-      }
-
-      return () => {
-        observer.disconnect();
-      };
-    }
-  }, [mediaType, isAudioPlaying]);
-
-  useEffect(() => {
-    if (mediaType !== "video" || !videoContainerRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!videoRef.current?.contentWindow) return;
-
-          if (entry.isIntersecting) {
-            videoRef.current.contentWindow.postMessage(
-              '{"event":"command","func":"playVideo","args":""}',
-              "*"
-            );
-          } else {
-            videoRef.current.contentWindow.postMessage(
-              '{"event":"command","func":"pauseVideo","args":""}',
-              "*"
-            );
-          }
-        });
-      },
-      {
-        threshold: 0.5,
-      }
-    );
-
-    observer.observe(videoContainerRef.current);
-
     return () => {
-      observer.disconnect();
+      if (audioRef.current) {
+        audioRef.current.unloadAsync();
+      }
     };
-  }, [mediaType]);
+  }, []);
 
-  const toggleAudio = () => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio(content);
+  useEffect(() => {
+    if (!isAudioPlaying && audioRef.current) {
+      audioRef.current.pauseAsync();
     }
+  }, [isAudioPlaying]);
 
-    if (isAudioPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
+  const toggleAudio = async () => {
+    try {
+      if (!audioRef.current) {
+        const { sound } = await Audio.Sound.createAsync({ uri: content });
+        audioRef.current = sound;
+      }
+
+      if (isAudioPlaying) {
+        await audioRef.current.pauseAsync();
+      } else {
+        await audioRef.current.playAsync();
+      }
+      setIsAudioPlaying(!isAudioPlaying);
+    } catch (error) {
+      console.error('Error playing audio:', error);
     }
-    setIsAudioPlaying(!isAudioPlaying);
   };
 
   const renderTruncatedText = (text: string) => {
@@ -140,8 +100,8 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
           <div ref={audioContainerRef} className="w-full bg-[#00ffff] text-[#000080] p-6 rounded-lg">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-lg font-semibold">使命</h3>
-                <p className="text-sm opacity-80">1時間5分・165人がリスニング/リプレイ</p>
+                <h3 className="text-lg font-semibold"><Text>使命</Text></h3>
+                <p className="text-sm opacity-80"><Text>1時間5分・165人がリスニング/リプレイ</Text></p>
               </div>
             </div>
             <Button
@@ -151,7 +111,7 @@ export function PostContent({ content, caption, mediaType, isExpanded, setIsExpa
               className="w-full bg-white text-purple-600 hover:bg-white/90 hover:text-purple-600"
             >
               {isAudioPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-              <span className="sr-only">音声を再生</span>
+              <span className="sr-only"><Text>音声を再生</Text></span>
             </Button>
           </div>
         );

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { View, Image, StyleSheet } from "react-native";
+import { Dialog } from "@/components/ui/native/dialog";
 import { FooterNav } from "@/components/FooterNav";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileTabs } from "@/components/profile/ProfileTabs";
@@ -25,7 +26,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 pt-24 pb-24">
+    <View style={styles.container}>
       <ProfileHeader
         isPlaying={isPlaying}
         handlePlayVoice={handlePlayVoice}
@@ -40,40 +41,38 @@ const Profile = () => {
       />
 
       {/* Post Dialog */}
-      <Dialog open={!!selectedPost} onOpenChange={() => setSelectedPost(null)}>
-        <DialogContent className="max-w-2xl">
+      <Dialog visible={!!selectedPost} onDismiss={() => setSelectedPost(null)}>
+        <View style={styles.dialogContent}>
           {selectedPost?.mediaType === "image" ? (
-            <img
-              src={selectedPost.content}
-              alt=""
-              className="w-full h-auto rounded-lg"
+            <Image
+              source={{ uri: selectedPost.content }}
+              style={styles.image}
             />
           ) : (
             selectedPost && <Post {...selectedPost} />
           )}
-        </DialogContent>
+        </View>
       </Dialog>
 
       {/* Shop Item Dialog */}
-      <Dialog open={!!selectedShopItem} onOpenChange={() => setSelectedShopItem(null)}>
-        <DialogContent className="max-w-2xl">
+      <Dialog visible={!!selectedShopItem} onDismiss={() => setSelectedShopItem(null)}>
+        <View style={styles.dialogContent}>
           {selectedShopItem && (
-            <div className="space-y-4">
-              <img
-                src={selectedShopItem.image}
-                alt={selectedShopItem.name}
-                className="w-full h-auto rounded-lg"
+            <View style={styles.shopItemContent}>
+              <Image
+                source={{ uri: selectedShopItem.image }}
+                style={styles.image}
               />
-              <h2 className="text-xl font-semibold">{selectedShopItem.name}</h2>
-              <p className="text-muted-foreground">{selectedShopItem.description}</p>
-              <p className="text-lg font-semibold">¥{selectedShopItem.price.toLocaleString()}</p>
-            </div>
+              <Text style={styles.itemTitle}>{selectedShopItem.name}</Text>
+              <Text style={styles.itemDescription}>{selectedShopItem.description}</Text>
+              <Text style={styles.itemPrice}><Text>¥{selectedShopItem.price.toLocaleString()}</Text></Text>
+            </View>
           )}
-        </DialogContent>
+        </View>
       </Dialog>
 
       <FooterNav />
-    </div>
+    </View>
   );
 };
 

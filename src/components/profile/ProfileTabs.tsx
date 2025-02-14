@@ -1,5 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
+import { View, Text, Image, ScrollView, StyleSheet, Pressable } from 'react-native';
+import { Card } from "@/components/ui/native/card";
 import { Post } from "@/components/Post";
 import { SAMPLE_POSTS } from "@/lib/data";
 
@@ -25,11 +25,11 @@ export function ProfileTabs({ selectedTab, setSelectedPost }: ProfileTabsProps) 
   return (
     <Tabs defaultValue={selectedTab} className="mt-8">
       <TabsList className="grid w-full grid-cols-5">
-        <TabsTrigger value="media">メディア</TabsTrigger>
-        <TabsTrigger value="audio">音声</TabsTrigger>
-        <TabsTrigger value="text">テキスト</TabsTrigger>
-        <TabsTrigger value="highlights">ハイライト</TabsTrigger>
-        <TabsTrigger value="events">イベント</TabsTrigger>
+        <TabsTrigger value="media"><Text>メディア</Text></TabsTrigger>
+        <TabsTrigger value="audio"><Text>音声</Text></TabsTrigger>
+        <TabsTrigger value="text"><Text>テキスト</Text></TabsTrigger>
+        <TabsTrigger value="highlights"><Text>ハイライト</Text></TabsTrigger>
+        <TabsTrigger value="events"><Text>イベント</Text></TabsTrigger>
       </TabsList>
 
       <TabsContent value="media" className="mt-4">
@@ -88,9 +88,9 @@ export function ProfileTabs({ selectedTab, setSelectedPost }: ProfileTabsProps) 
 
       <TabsContent value="events" className="mt-4">
         <Card className="p-4">
-          <h3 className="font-medium">瞑想ワークショップ</h3>
-          <p className="text-sm text-muted-foreground">2024年4月1日 14:00-16:00</p>
-          <p className="mt-2">心の平安を見つける瞑想の基礎を学びましょう。</p>
+          <h3 className="font-medium"><Text>瞑想ワークショップ</Text></h3>
+          <p className="text-sm text-muted-foreground"><Text>2024年4月1日 14:00-16:00</Text></p>
+          <p className="mt-2"><Text>心の平安を見つける瞑想の基礎を学びましょう。</Text></p>
         </Card>
       </TabsContent>
     </Tabs>

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { EventCard } from "@/components/events/EventCard"
+import { View, Text, StyleSheet } from 'react-native';
+import { Button } from '@/components/ui/native/button';
+import EventCard from "./event-card"
 import { EventFilter } from "@/components/events/EventFilter"
-import { PlusIcon } from "lucide-react"
+import { Plus } from "lucide-react-native"
 
 interface Event {
   id: string
@@ -66,64 +67,129 @@ export default function EventsPage() {
 
   const handleFilterChange = (filters: EventFilters) => {
     // 実際のアプリケーションではAPIコールなどで検索を行う
-    let filtered = mockEvents
+    let filtered = mockEvents;
 
-    if (filters.keyword) {
+    if (filters.keyword && typeof filters.keyword === 'string') {
+      const keyword = filters.keyword.toLowerCase();
       filtered = filtered.filter(
         event =>
-          event.title.toLowerCase().includes(filters.keyword.toLowerCase()) ||
-          event.description.toLowerCase().includes(filters.keyword.toLowerCase())
-      )
+          event.title.toLowerCase().includes(keyword) ||
+          event.description.toLowerCase().includes(keyword)
+      );
     }
 
     if (filters.location && filters.location !== "all") {
+      const location = filters.location.toLowerCase();
       filtered = filtered.filter(event =>
-        event.location.toLowerCase().includes(filters.location.toLowerCase())
-      )
+        event.location.toLowerCase().includes(location)
+      );
     }
 
-    if (filters.minPrice !== undefined) {
-      filtered = filtered.filter(event => event.price >= filters.minPrice)
+    if (typeof filters.minPrice === 'number') {
+      filtered = filtered.filter(event => event.price >= filters.minPrice!);
     }
 
-    if (filters.maxPrice !== undefined) {
-      filtered = filtered.filter(event => event.price <= filters.maxPrice)
+    if (typeof filters.maxPrice === 'number') {
+      filtered = filtered.filter(event => event.price <= filters.maxPrice!);
     }
 
-    if (filters.date) {
+    if (filters.date instanceof Date) {
+      const year = filters.date.getFullYear().toString();
       filtered = filtered.filter(event =>
-        event.date.includes(filters.date.getFullYear().toString())
-      )
+        event.date.includes(year)
+      );
     }
 
     setFilteredEvents(filtered)
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">イベント</h1>
-        <Button>
-          <PlusIcon className="mr-2 h-4 w-4" />
-          イベントを作成
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}><Text>イベント</Text></Text>
+        <Button onPress={() => {}}>
+          <View style={styles.buttonContent}>
+            <Plus size={16} color="#fff" />
+            <Text style={styles.buttonText}><Text>イベントを作成</Text></Text>
+          </View>
         </Button>
-      </div>
+      </View>
 
-      <div className="mb-8">
+      <View style={styles.filterContainer}>
         <EventFilter onFilterChange={handleFilterChange} />
-      </div>
+      </View>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <View style={styles.eventGrid}>
         {filteredEvents.map(event => (
-          <EventCard key={event.id} {...event} />
+          <EventCard
+            key={event.id}
+            event={{
+              id: event.id,
+              title: event.title,
+              description: event.description,
+              date: event.date,
+              location: event.location,
+              price: event.price,
+              capacity: event.participants,
+              currentParticipants: event.participants,
+              interestedCount: event.interested,
+              image: event.imageUrl || '',
+              organizer: {
+                name: '主催者',
+                image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=1',
+              },
+            }}
+            onClick={() => {}}
+          />
         ))}
-      </div>
+      </View>
 
       {filteredEvents.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">該当するイベントが見つかりませんでした。</p>
-        </div>
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyText}><Text>該当するイベントが見つかりませんでした。</Text></Text>
+        </View>
       )}
-    </div>
+    </View>
   )
-} 
+}
+
+const styles = StyleSheet.create({
+  buttonContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  buttonText: {
+    color: '#fff',
+    marginLeft: 8,
+  },
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+    padding: 16,
+  },
+  emptyState: {
+    alignItems: 'center',
+    padding: 48,
+  },
+  emptyText: {
+    color: '#6b7280',
+  },
+  eventGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
+  },
+  filterContainer: {
+    marginBottom: 24,
+  },
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});         

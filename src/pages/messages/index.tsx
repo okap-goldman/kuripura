@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { router } from "expo-router";
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
+import { Avatar } from "@/components/ui/native/avatar";
 import { FooterNav } from "@/components/FooterNav";
 
 type Message = {
@@ -130,59 +130,151 @@ const mockMessages: Message[] = [
 ];
 
 export const MessagesPage = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="flex flex-col h-screen bg-background">
-      <header className="flex items-center justify-between px-4 py-3 border-b bg-background">
-        <h1 className="text-lg font-bold">トーク</h1>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">9</span>
-        </div>
-      </header>
-      <div className="flex-1 overflow-y-auto">
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}><Text>トーク</Text></Text>
+        <View style={styles.headerRight}>
+          <Text style={styles.count}>9</Text>
+        </View>
+      </View>
+      <ScrollView style={styles.messageList}>
         {mockMessages.map((message) => (
-          <button
+          <TouchableOpacity
             key={message.id}
-            onClick={() => navigate(`/chat/${message.id}`)}
-            className="w-full p-4 flex items-center gap-3 hover:bg-muted/50 transition-colors border-b"
+            onPress={() => router.push(`/(app)/chat/${message.id}` as any)}
+            style={styles.messageItem}
           >
-            <Avatar className="w-12 h-12">
-              <AvatarImage src={message.user.avatarUrl} />
-              <AvatarFallback>{message.user.name[0]}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-sm text-rose-500">
+            <Avatar 
+              style={styles.avatar}
+              source={{ uri: message.user.avatarUrl }}
+              fallback={message.user.name[0]}
+            />
+            <View style={styles.messageContent}>
+              <View style={styles.messageHeader}>
+                <Text style={styles.userName}>
                   {message.user.name}
-                </span>
-                <span className="text-sm text-rose-500">
+                </Text>
+                <Text style={styles.userInfo}>
                   {message.user.age}歳 {message.user.location}
-                </span>
+                </Text>
                 {message.isUndelivered && (
-                  <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
-                    未返信
-                  </span>
+                  <View style={styles.undeliveredBadge}>
+                    <Text style={styles.undeliveredText}><Text>未返信</Text></Text>
+                  </View>
                 )}
-                <span className="text-sm text-muted-foreground ml-auto">
+                <Text style={styles.timeAgo}>
                   {message.weeksAgo}週間前
-                </span>
-              </div>
-              <div className="flex items-center gap-2 mt-1">
-                <p className="text-sm text-muted-foreground truncate">
+                </Text>
+              </View>
+              <View style={styles.messageFooter}>
+                <Text style={styles.lastMessage} numberOfLines={1}>
                   {message.lastMessage}
-                </p>
+                </Text>
                 {message.unreadCount && (
-                  <Badge variant="destructive" className="h-5 w-5 rounded-full p-0 flex items-center justify-center">
-                    {message.unreadCount}
-                  </Badge>
+                  <View style={[styles.unreadBadge, { backgroundColor: '#ef4444' }]}>
+                    <Text style={{ color: '#fff' }}>{message.unreadCount}</Text>
+                  </View>
                 )}
-              </div>
-            </div>
-          </button>
+              </View>
+            </View>
+          </TouchableOpacity>
         ))}
-      </div>
+      </ScrollView>
       <FooterNav />
-    </div>
+    </View>
   );
-}; 
+};
+
+const styles = StyleSheet.create({
+  avatar: {
+    height: 48,
+    marginRight: 12,
+    width: 48,
+  },
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  count: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  header: {
+    alignItems: 'center',
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 16,
+  },
+  headerRight: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  lastMessage: {
+    color: '#6b7280',
+    flex: 1,
+    fontSize: 14,
+  },
+  messageContent: {
+    flex: 1,
+  },
+  messageFooter: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  messageHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  messageItem: {
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    padding: 16,
+  },
+  messageList: {
+    flex: 1,
+  },
+  timeAgo: {
+    color: '#6b7280',
+    fontSize: 12,
+    marginLeft: 'auto',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  undeliveredBadge: {
+    backgroundColor: '#f3f4f6',
+    borderRadius: 12,
+    marginRight: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  undeliveredText: {
+    color: '#6b7280',
+    fontSize: 12,
+  },
+  unreadBadge: {
+    alignItems: 'center',
+    borderRadius: 10,
+    height: 20,
+    justifyContent: 'center',
+    marginLeft: 8,
+    width: 20,
+  },
+  userInfo: {
+    color: '#ef4444',
+    fontSize: 14,
+    marginRight: 8,
+  },
+  userName: {
+    color: '#ef4444',
+    fontSize: 16,
+    fontWeight: '600',
+    marginRight: 8,
+  },
+});           

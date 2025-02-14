@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { View, Text, Image, StyleSheet, Pressable, ScrollView, Dimensions } from 'react-native';
+import { Button } from '@/components/ui/native/button';
+import { Avatar } from '@/components/ui/native/avatar';
+import { MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react-native';
 
 interface ProductDetailProps {
   product: {
@@ -131,4 +132,4 @@ export default function ProductDetail({ product, onClose }: ProductDetailProps) 
       </div>
     </div>
   );
-} 
+}    

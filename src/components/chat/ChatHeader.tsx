@@ -1,6 +1,7 @@
-import { ArrowLeft, MoreVertical } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ArrowLeft, MoreVertical } from "lucide-react-native";
+import { Button } from "@/components/ui/native/button";
+import { Avatar } from "@/components/ui/native/avatar";
+import { View, Text, StyleSheet } from "react-native";
 
 type ChatHeaderProps = {
   user: {
@@ -12,22 +13,49 @@ type ChatHeaderProps = {
 
 export const ChatHeader = ({ user, onBack }: ChatHeaderProps) => {
   return (
-    <div className="border-b">
-      <div className="flex items-center gap-2 p-4">
-        <Button variant="ghost" size="icon" onClick={onBack}>
-          <ArrowLeft className="w-5 h-5" />
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Button variant="outline" onPress={onBack}>
+          <ArrowLeft size={20} color="#6b7280" />
         </Button>
-        <Avatar className="w-8 h-8">
-          <AvatarImage src={user.avatarUrl} />
-          <AvatarFallback>{user.name[0]}</AvatarFallback>
-        </Avatar>
-        <span className="font-medium">{user.name}</span>
-        <div className="ml-auto flex items-center gap-2">
-          <Button variant="ghost" size="icon">
-            <MoreVertical className="w-5 h-5" />
+        <Avatar 
+          source={{ uri: user.avatarUrl }}
+          fallback={user.name[0]}
+          style={styles.avatar}
+        />
+        <Text style={styles.name}>{user.name}</Text>
+        <View style={styles.actions}>
+          <Button variant="outline">
+            <MoreVertical size={20} color="#6b7280" />
           </Button>
-        </div>
-      </div>
-    </div>
+        </View>
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  actions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    marginLeft: 'auto',
+  },
+  avatar: {
+    height: 32,
+    width: 32,
+  },
+  container: {
+    borderBottomColor: '#e5e7eb',
+    borderBottomWidth: 1,
+  },
+  content: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    padding: 16,
+  },
+  name: {
+    fontWeight: '500',
+  },
+});

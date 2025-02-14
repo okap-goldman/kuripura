@@ -7,7 +7,7 @@ export function RecommendedPostsSection() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <ThumbsUp className="w-5 h-5" />
-        <h2 className="text-lg font-semibold">おすすめ投稿</h2>
+        <h2 className="text-lg font-semibold"><Text>おすすめ投稿</Text></h2>
       </div>
 
       <div className="space-y-4">

@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/native/button";
 import { Navbar } from "@/components/Navbar";
 import { Post } from "@/components/Post";
 import { useState } from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -138,6 +139,30 @@ const SAMPLE_POSTS = [
   },
 ];
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 96,
+    paddingBottom: 32,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+    marginBottom: 32,
+  },
+  posts: {
+    gap: 16,
+    maxWidth: 600,
+    alignSelf: 'center',
+  },
+});
+
 const Index = () => {
   const [timelineType, setTimelineType] = useState<"family" | "watch">("family");
   const [showWatchConfirm, setShowWatchConfirm] = useState(false);
@@ -151,42 +176,42 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <View style={styles.container}>
       <Navbar />
       
-      <main className="container mx-auto px-4 pt-24 pb-8">
-        <div className="flex justify-center gap-2 mb-8">
+      <ScrollView style={styles.content}>
+        <View style={styles.buttonContainer}>
           <Button
             variant={timelineType === "family" ? "default" : "outline"}
-            onClick={() => handleTimelineChange("family")}
+            onPress={() => handleTimelineChange("family")}
           >
             ファミリー
           </Button>
           <Button
             variant={timelineType === "watch" ? "default" : "outline"}
-            onClick={() => handleTimelineChange("watch")}
+            onPress={() => handleTimelineChange("watch")}
           >
             ウォッチ
           </Button>
-        </div>
+        </View>
 
-        <div className="space-y-4 max-w-xl mx-auto">
+        <View style={styles.posts}>
           {SAMPLE_POSTS.map((post, index) => (
             <Post key={index} {...post} />
           ))}
-        </div>
-      </main>
+        </View>
+      </ScrollView>
 
       <AlertDialog open={showWatchConfirm} onOpenChange={setShowWatchConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>ウォッチタイムラインの表示</AlertDialogTitle>
+            <AlertDialogTitle><Text>ウォッチタイムラインの表示</Text></AlertDialogTitle>
             <AlertDialogDescription>
               ウォッチタイムラインを表示しますか？
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>キャンセル</AlertDialogCancel>
+            <AlertDialogCancel><Text>キャンセル</Text></AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setTimelineType("watch");

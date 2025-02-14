@@ -1,11 +1,10 @@
 import { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera, Mic, Square, Play, Pause, ChevronRight } from 'lucide-react';
-import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { Button } from '@/components/ui/native/button';
+import { Camera, Mic, Square, Play, Pause, ChevronRight } from 'lucide-react-native';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
+import { Audio } from 'expo-av';
 import {
   Select,
   SelectContent,
@@ -39,38 +38,34 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
   const [isPlaying, setIsPlaying] = useState(false);
   const [pronouns, setPronouns] = useState(profile.pronouns || '');
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const audioElementRef = useRef<HTMLAudioElement | null>(null);
+  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setImagePreview(url);
+  const handleImageSelect = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImagePreview(result.assets[0].uri);
     }
   };
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
 
-      mediaRecorder.ondataavailable = (event) => {
-        audioChunksRef.current.push(event.data);
-      };
-
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        setAudioUrl(audioUrl);
-        stream.getTracks().forEach(track => track.stop());
-      };
-
-      mediaRecorder.start();
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+      setRecording(recording);
       setIsRecording(true);
     } catch (error) {
       console.error('録音の開始に失敗しました:', error);
@@ -165,7 +160,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
           {/* 名前とユーザーネーム */}
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="name">名前</Label>
+              <Label htmlFor="name"><Text>名前</Text></Label>
               <Input
                 id="name"
                 value={name}
@@ -177,7 +172,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="username">ユーザーネーム</Label>
+              <Label htmlFor="username"><Text>ユーザーネーム</Text></Label>
               <Input
                 id="username"
                 value={username}
@@ -191,7 +186,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
 
           {/* 代名詞の性別 */}
           <div className="space-y-2">
-            <Label htmlFor="pronouns">代名詞の性別</Label>
+            <Label htmlFor="pronouns"><Text>代名詞の性別</Text></Label>
             <Select value={pronouns} onValueChange={setPronouns}>
               <SelectTrigger
                 id="pronouns"
@@ -200,16 +195,16 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
                 <SelectValue placeholder="代名詞の性別を選択" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="he">彼 (he/him)</SelectItem>
-                <SelectItem value="she">彼女 (she/her)</SelectItem>
-                <SelectItem value="they">その他 (they/them)</SelectItem>
+                <SelectItem value="he"><Text>彼 (he/him)</Text></SelectItem>
+                <SelectItem value="she"><Text>彼女 (she/her)</Text></SelectItem>
+                <SelectItem value="they"><Text>その他 (they/them)</Text></SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* 自己紹介文 */}
           <div className="space-y-2">
-            <Label htmlFor="bio">自己紹介</Label>
+            <Label htmlFor="bio"><Text>自己紹介</Text></Label>
             <Textarea
               id="bio"
               value={bio}
@@ -225,7 +220,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
 
           {/* リンク */}
           <div className="space-y-2">
-            <Label htmlFor="external-link">リンク</Label>
+            <Label htmlFor="external-link"><Text>リンク</Text></Label>
             <div className="relative border-b">
               <Input
                 id="external-link"
@@ -241,7 +236,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Profile
 
           {/* 自己紹介音声 */}
           <div className="space-y-4">
-            <Label>自己紹介音声</Label>
+            <Label><Text>自己紹介音声</Text></Label>
             <div className="flex justify-center space-x-4">
               {!audioUrl ? (
                 <Button

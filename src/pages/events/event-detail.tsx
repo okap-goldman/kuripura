@@ -1,10 +1,113 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Calendar, MapPin, Users, Heart, MessageCircle } from 'lucide-react';
+import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import { Button } from '@/components/ui/native/button';
+import { Avatar } from '@/components/ui/native/avatar';
+import { Calendar, MapPin, Users, Heart, MessageCircle } from 'lucide-react-native';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import PostCard from '@/components/post/post-card';
+
+const styles = StyleSheet.create({
+  actions: {
+    gap: 16,
+  },
+  buttonContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  buttonText: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  content: {
+    gap: 24,
+    padding: 16,
+  },
+  description: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  detailRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  detailText: {
+    color: '#6b7280',
+    fontSize: 14,
+  },
+  details: {
+    gap: 8,
+  },
+  dot: {
+    color: '#6b7280',
+    marginHorizontal: 8,
+  },
+  fullText: {
+    color: '#ef4444',
+  },
+  icon: {
+    height: 20,
+    width: 20,
+  },
+  image: {
+    height: '100%',
+    resizeMode: 'cover',
+    width: '100%',
+  },
+  imageContainer: {
+    aspectRatio: 16 / 9,
+    borderRadius: 8,
+    overflow: 'hidden',
+    width: '100%',
+  },
+  interestedText: {
+    color: '#ef4444',
+  },
+  organizer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  organizerName: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  participateButton: {
+    width: '100%',
+  },
+  price: {
+    color: '#000',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  section: {
+    gap: 16,
+  },
+  sectionTitle: {
+    color: '#000',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  subActionButton: {
+    flex: 1,
+  },
+  subActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  title: {
+    color: '#000',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});
 
 interface EventDetailProps {
   event: {
@@ -67,100 +170,106 @@ export default function EventDetail({ event, onClose }: EventDetailProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <ScrollView style={styles.container}>
       {/* イベント画像 */}
-      <div className="aspect-video relative rounded-lg overflow-hidden">
-        <img
-          src={event.image}
-          alt={event.title}
-          className="w-full h-full object-cover"
+      <View style={styles.imageContainer}>
+        <Image
+          source={{ uri: event.image }}
+          style={styles.image}
         />
-      </div>
+      </View>
 
       {/* イベント情報 */}
-      <div className="space-y-6">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold">{event.title}</h2>
+      <View style={styles.content}>
+        <View style={styles.section}>
+          <Text style={styles.title}>{event.title}</Text>
           
-          <div className="flex items-center space-x-2">
-            <Avatar>
-              <AvatarImage src={event.organizer.image} />
-              <AvatarFallback>{event.organizer.name[0]}</AvatarFallback>
-            </Avatar>
-            <span className="font-semibold">主催: {event.organizer.name}</span>
-          </div>
+          <View style={styles.organizer}>
+            <Avatar
+              source={{ uri: event.organizer.image }}
+              fallback={event.organizer.name[0]}
+            />
+            <Text style={styles.organizerName}><Text>主催: {event.organizer.name}</Text></Text>
+          </View>
 
-          <div className="space-y-2 text-gray-600">
-            <div className="flex items-center">
-              <Calendar className="h-5 w-5 mr-2" />
-              {formattedDate}
-            </div>
-            <div className="flex items-center">
-              <MapPin className="h-5 w-5 mr-2" />
-              {event.location}
-            </div>
-            <div className="flex items-center">
-              <Users className="h-5 w-5 mr-2" />
+          <View style={styles.details}>
+            <View style={styles.detailRow}>
+              <Calendar size={20} color="#6b7280" style={styles.icon} />
+              <Text style={styles.detailText}>{formattedDate}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <MapPin size={20} color="#6b7280" style={styles.icon} />
+              <Text style={styles.detailText}>{event.location}</Text>
+            </View>
+            <View style={styles.detailRow}>
+              <Users size={20} color="#6b7280" style={styles.icon} />
               {remainingSpots > 0 ? (
-                <span>残り{remainingSpots}名</span>
+                <Text style={styles.detailText}><Text>残り{remainingSpots}名</Text></Text>
               ) : (
-                <span className="text-red-500">満員</span>
+                <Text style={[styles.detailText, styles.fullText]}><Text>満員</Text></Text>
               )}
-              <span className="mx-2">•</span>
-              <span>{event.interestedCount}名が興味あり</span>
-            </div>
-          </div>
+              <Text style={styles.dot}><Text>•</Text></Text>
+              <Text style={styles.detailText}><Text>{event.interestedCount}名が興味あり</Text></Text>
+            </View>
+          </View>
 
-          <div className="flex items-center space-x-4">
-            <p className="text-2xl font-bold">
-              {event.price === 0 ? '無料' : `¥${event.price.toLocaleString()}`}
-            </p>
-          </div>
-        </div>
+          <Text style={styles.price}>
+            {event.price === 0 ? '無料' : `¥${event.price.toLocaleString()}`}
+          </Text>
+        </View>
 
-        <div className="space-y-2">
-          <h3 className="font-semibold">イベント詳細</h3>
-          <p className="text-gray-600 whitespace-pre-wrap">
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}><Text>イベント詳細</Text></Text>
+          <Text style={styles.description}>
             {event.description}
-          </p>
-        </div>
+          </Text>
+        </View>
 
         {/* アクションボタン */}
-        <div className="flex space-x-4">
+        <View style={styles.actions}>
           <Button
-            className="flex-1"
-            onClick={handleParticipate}
+            style={styles.participateButton}
+            onPress={handleParticipate}
             disabled={remainingSpots <= 0}
           >
             {remainingSpots > 0 ? '参加する' : '満員です'}
           </Button>
           
-          <Button
-            variant="outline"
-            onClick={handleToggleInterest}
-            className={isInterested ? 'text-red-500' : ''}
-          >
-            <Heart className="h-4 w-4 mr-2" fill={isInterested ? 'currentColor' : 'none'} />
-            興味あり
-          </Button>
-          
-          <Button
-            variant="outline"
-            onClick={handleContact}
-          >
-            <MessageCircle className="h-4 w-4 mr-2" />
-            質問する
-          </Button>
-        </div>
+          <View style={styles.subActions}>
+            <Button
+              variant="outline"
+              onPress={handleToggleInterest}
+              style={styles.subActionButton}
+            >
+              <View style={styles.buttonContent}>
+                <Heart size={16} color={isInterested ? '#ef4444' : '#6b7280'} />
+                <Text style={[styles.buttonText, isInterested && styles.interestedText]}>
+                  興味あり
+                </Text>
+              </View>
+            </Button>
+            
+            <Button
+              variant="outline"
+              onPress={handleContact}
+              style={styles.subActionButton}
+            >
+              <View style={styles.buttonContent}>
+                <MessageCircle size={16} color="#6b7280" />
+                <Text style={styles.buttonText}><Text>質問する</Text></Text>
+              </View>
+            </Button>
+          </View>
+        </View>
 
         {/* 関連投稿 */}
-        <div className="space-y-4">
-          <h3 className="font-semibold">関連投稿</h3>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}><Text>関連投稿</Text></Text>
           {MOCK_RELATED_POSTS.map((post) => (
             <PostCard key={post.id} post={post} />
           ))}
-        </div>
-      </div>
-    </div>
+        </View>
+      </View>
+    </ScrollView>
   );
-} 
+}    

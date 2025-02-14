@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { Card } from "@/components/ui/native/card";
 import { PostHeader } from "./post/PostHeader";
 import { PostContent } from "./post/PostContent";
 import { PostActions } from "./post/PostActions";
 import { PostComments } from "./post/PostComments";
-import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/native/dialog";
 
 interface PostProps {
   author: {
@@ -23,12 +24,12 @@ export function Post({ author, content, caption, mediaType }: PostProps) {
   const [showFullPost, setShowFullPost] = useState(false);
 
   return (
-    <Card className="p-4 space-y-4">
+    <Card style={styles.card}>
       <PostHeader author={author} />
       
-      <div 
-        onClick={() => mediaType !== "text" && mediaType !== "audio" && setShowFullPost(true)}
-        className={mediaType !== "text" && mediaType !== "audio" ? "cursor-pointer" : ""}
+      <TouchableOpacity 
+        onPress={() => mediaType !== "text" && mediaType !== "audio" && setShowFullPost(true)}
+        disabled={mediaType === "text" || mediaType === "audio"}
       >
         <PostContent
           content={content}
@@ -37,18 +38,15 @@ export function Post({ author, content, caption, mediaType }: PostProps) {
           isExpanded={isExpanded}
           setIsExpanded={setIsExpanded}
         />
-      </div>
+      </TouchableOpacity>
 
       <PostActions
         postId="1"
         onComment={() => setShowComments(true)}
       />
 
-      <Dialog open={showComments} onOpenChange={setShowComments}>
-        <DialogContent className="sm:max-w-md">
-          <DialogDescription className="sr-only">
-            コメントセクション
-          </DialogDescription>
+      <Dialog visible={showComments} onDismiss={() => setShowComments(false)}>
+        <View style={styles.dialogContent}>
           <PostComments
             postId="1"
             comments={[
@@ -63,33 +61,30 @@ export function Post({ author, content, caption, mediaType }: PostProps) {
               },
             ]}
           />
-        </DialogContent>
+        </View>
       </Dialog>
 
-      <Dialog open={showFullPost} onOpenChange={setShowFullPost}>
-        <DialogContent className="max-w-3xl">
-          <DialogDescription className="sr-only">
-            投稿の詳細
-          </DialogDescription>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Dialog visible={showFullPost} onDismiss={() => setShowFullPost(false)}>
+        <View style={styles.dialogContent}>
+          <View style={styles.fullPostContent}>
             <PostContent
               content={content}
               mediaType={mediaType}
               isExpanded={true}
               setIsExpanded={setIsExpanded}
             />
-            <div className="space-y-4">
+            <View style={styles.fullPostDetails}>
               <PostHeader author={author} />
               {caption && (
-                <p className="text-sm whitespace-pre-wrap">{caption}</p>
+                <Text style={styles.caption}>{caption}</Text>
               )}
               <PostActions
                 postId="1"
                 onComment={() => setShowComments(true)}
               />
-            </div>
-          </div>
-        </DialogContent>
+            </View>
+          </View>
+        </View>
       </Dialog>
     </Card>
   );

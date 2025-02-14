@@ -1,8 +1,9 @@
-import { useRouter } from 'next/router';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ArrowLeft, Users, Calendar, MapPin } from 'lucide-react';
+import { router } from 'expo-router';
+import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { Button } from '@/components/ui/native/button';
+import { Card } from '@/components/ui/native/card';
+import { Tabs } from '@/components/ui/native/tabs';
+import { ArrowLeft, Users, Calendar, MapPin } from 'lucide-react-native';
 import EventCard from '@/pages/events/event-card';
 import PostCard from '@/components/post/post-card';
 
@@ -85,81 +86,98 @@ const MOCK_LOCATION_DETAIL = {
 };
 
 export default function LocationDetailPage() {
-  const router = useRouter();
-
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#f9fafb',
+    },
+    content: {
+      padding: 16,
+      paddingTop: 64,
+      paddingBottom: 64,
+    },
+    header: {
+      marginBottom: 24,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: 'bold',
+    },
+    buttonText: {
+      marginLeft: 8,
+    },
+  });
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 pb-16">
-      <div className="container mx-auto px-4">
+    <ScrollView style={styles.container}>
+      <View style={styles.content}>
         {/* ヘッダー */}
-        <div className="mb-6">
+        <View style={styles.header}>
           <Button
             variant="ghost"
-            className="mb-4"
-            onClick={() => router.back()}
+            onPress={() => router.back()}
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            戻る
+            <ArrowLeft size={16} color="#000" />
+            <Text style={styles.buttonText}><Text>戻る</Text></Text>
           </Button>
-          <h1 className="text-3xl font-bold">{MOCK_LOCATION_DETAIL.name}</h1>
-        </div>
+          <Text style={styles.title}>{MOCK_LOCATION_DETAIL.name}</Text>
+        </View>
 
         {/* メインコンテンツ */}
-        <div className="space-y-6">
+        <View style={styles.mainContent}>
           {/* メイン画像 */}
-          <div className="aspect-[2/1] rounded-lg overflow-hidden">
-            <img
-              src={MOCK_LOCATION_DETAIL.image}
-              alt={MOCK_LOCATION_DETAIL.name}
-              className="w-full h-full object-cover"
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: MOCK_LOCATION_DETAIL.image }}
+              style={styles.mainImage}
             />
-          </div>
+          </View>
 
           {/* 概要 */}
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">概要</h2>
-              <p className="text-gray-600">
+          <Card style={styles.card}>
+            <View style={styles.cardContent}>
+              <Text style={styles.sectionTitle}><Text>概要</Text></Text>
+              <Text style={styles.description}>
                 {MOCK_LOCATION_DETAIL.description}
-              </p>
-            </CardContent>
+              </Text>
+            </View>
           </Card>
 
           {/* 主要指標 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2 text-gray-500 mb-2">
-                  <Users className="h-5 w-5" />
-                  <span>アクティブユーザー</span>
-                </div>
-                <p className="text-3xl font-bold">
+          <View style={styles.statsGrid}>
+            <Card style={styles.statsCard}>
+              <View style={styles.cardContent}>
+                <View style={styles.statsHeader}>
+                  <Users size={20} color="#6b7280" />
+                  <Text style={styles.statsLabel}><Text>アクティブユーザー</Text></Text>
+                </View>
+                <Text style={styles.statsValue}>
                   {MOCK_LOCATION_DETAIL.stats.activeUsers}
-                </p>
-              </CardContent>
+                </Text>
+              </View>
             </Card>
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2 text-gray-500 mb-2">
-                  <Calendar className="h-5 w-5" />
-                  <span>イベント数</span>
-                </div>
-                <p className="text-3xl font-bold">
+            <Card style={styles.statsCard}>
+              <View style={styles.cardContent}>
+                <View style={styles.statsHeader}>
+                  <Calendar size={20} color="#6b7280" />
+                  <Text style={styles.statsLabel}><Text>イベント数</Text></Text>
+                </View>
+                <Text style={styles.statsValue}>
                   {MOCK_LOCATION_DETAIL.stats.events}
-                </p>
-              </CardContent>
+                </Text>
+              </View>
             </Card>
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2 text-gray-500 mb-2">
-                  <Users className="h-5 w-5" />
-                  <span>コミュニティ数</span>
-                </div>
-                <p className="text-3xl font-bold">
+            <Card style={styles.statsCard}>
+              <View style={styles.cardContent}>
+                <View style={styles.statsHeader}>
+                  <Users size={20} color="#6b7280" />
+                  <Text style={styles.statsLabel}><Text>コミュニティ数</Text></Text>
+                </View>
+                <Text style={styles.statsValue}>
                   {MOCK_LOCATION_DETAIL.stats.communities}
-                </p>
-              </CardContent>
+                </Text>
+              </View>
             </Card>
-          </div>
+          </View>
 
           {/* タブ付きコンテンツ */}
           <Tabs defaultValue="events" className="space-y-6">
@@ -235,4 +253,4 @@ export default function LocationDetailPage() {
       </div>
     </div>
   );
-} 
+}    

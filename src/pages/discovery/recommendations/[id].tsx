@@ -1,10 +1,11 @@
-import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ArrowLeft, Users, Calendar, MessageCircle, Heart, Star } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
+import { Button } from '@/components/ui/native/button';
+import { Card } from '@/components/ui/native/card';
+import { Tabs } from '@/components/ui/native/tabs';
+import { ArrowLeft, Users, Calendar, MessageCircle, Heart, Star } from 'lucide-react-native';
+import { Avatar } from '@/components/ui/native/avatar';
 import PostCard from '@/components/post/post-card';
 
 // モックデータ
@@ -152,7 +153,7 @@ export default function RecommendationDetailPage() {
               <CardContent className="p-6">
                 <div className="flex items-center space-x-2 text-gray-500 mb-2">
                   <Users className="h-5 w-5" />
-                  <span>アクティブメンバー</span>
+                  <span><Text>アクティブメンバー</Text></span>
                 </div>
                 <p className="text-3xl font-bold">
                   {MOCK_RECOMMENDATION_DETAIL.stats.activeMembers}
@@ -163,7 +164,7 @@ export default function RecommendationDetailPage() {
               <CardContent className="p-6">
                 <div className="flex items-center space-x-2 text-gray-500 mb-2">
                   <Calendar className="h-5 w-5" />
-                  <span>月間イベント数</span>
+                  <span><Text>月間イベント数</Text></span>
                 </div>
                 <p className="text-3xl font-bold">
                   {MOCK_RECOMMENDATION_DETAIL.stats.monthlyEvents}
@@ -174,7 +175,7 @@ export default function RecommendationDetailPage() {
               <CardContent className="p-6">
                 <div className="flex items-center space-x-2 text-gray-500 mb-2">
                   <Heart className="h-5 w-5" />
-                  <span>満足度</span>
+                  <span><Text>満足度</Text></span>
                 </div>
                 <p className="text-3xl font-bold">
                   {MOCK_RECOMMENDATION_DETAIL.stats.avgSatisfaction}
@@ -292,4 +293,4 @@ export default function RecommendationDetailPage() {
       </div>
     </div>
   );
-} 
+}    

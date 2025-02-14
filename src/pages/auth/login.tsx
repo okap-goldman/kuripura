@@ -1,27 +1,27 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { FcGoogle } from 'react-icons/fc';
-import { useToast } from '@/components/ui/use-toast';
+import { View, Text, StyleSheet } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Button } from '@/components/ui/native/button';
+import { Checkbox } from '@/components/ui/native/checkbox';
+import { useToast } from '@/components/ui/native/toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { LogIn } from 'lucide-react-native';
 
 export default function LoginPage() {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const { user, isInitialized, login } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const params = useLocalSearchParams();
   const { toast } = useToast();
   
-  const isDevelopment = import.meta.env.MODE === 'development';
-  const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
+  const isDevelopment = __DEV__;
+  const testingEmail = process.env.EXPO_PUBLIC_TESTING_GOOGLE_MAIL;
 
   useEffect(() => {
     if (isInitialized && user) {
-      const from = location.state?.from?.pathname || '/';
-      navigate(from, { replace: true });
+      const from = params.from as string || '/(app)';
+      router.replace(from as any);
     }
-  }, [user, isInitialized, navigate, location]);
+  }, [user, isInitialized, params.from]);
 
   const handleGoogleLogin = async () => {
     if (!agreedToTerms) {
@@ -50,54 +50,156 @@ export default function LoginPage() {
   };
 
   if (!isInitialized) {
-    return <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-rose-500"></div>
-    </div>;
+    return (
+      <View style={styles.loadingContainer}>
+        <View style={styles.spinner} />
+      </View>
+    );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-4">
-      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">目醒め人のためのSNS</h1>
-        </div>
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <View style={styles.header}>
+          <Text style={styles.title}><Text>目醒め人のためのSNS</Text></Text>
+        </View>
 
-        <div className="space-y-6">
+        <View style={styles.content}>
           {isDevelopment && testingEmail && (
-            <div className="text-sm text-gray-500 text-center">
+            <Text style={styles.devInfo}>
               開発環境: {testingEmail} でログイン
-            </div>
+            </Text>
           )}
           <Button
-            onClick={handleGoogleLogin}
+            onPress={handleGoogleLogin}
             variant="outline"
-            className="w-full flex items-center justify-center gap-2 py-6"
             disabled={!agreedToTerms}
+            style={styles.loginButton}
           >
-            <FcGoogle className="w-6 h-6" />
-            <span>Googleでログイン</span>
+            <View style={styles.buttonContent}>
+              <LogIn size={24} color="#000" />
+              <Text style={styles.buttonText}><Text>Googleでログイン</Text></Text>
+            </View>
           </Button>
 
-          <div className="flex items-start space-x-2">
+          <View style={styles.termsContainer}>
             <Checkbox
-              id="terms"
               checked={agreedToTerms}
               onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
             />
-            <div className="grid gap-1.5 leading-none">
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                <a href="/terms" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">利用規約</a>
+            <View style={styles.termsText}>
+              <Text style={styles.termsLabel}>
+                <Text 
+                  style={styles.link}
+                  onPress={() => router.push('/(app)/terms' as any)}
+                >
+                  利用規約
+                </Text>
                 と
-                <a href="/privacy" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>
+                <Text 
+                  style={styles.link}
+                  onPress={() => router.push('/(app)/privacy' as any)}
+                >
+                  プライバシーポリシー
+                </Text>
                 に同意する
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
   );
-}                                
+}
+
+const styles = StyleSheet.create({
+  buttonContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    elevation: 3,
+    maxWidth: 400,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    width: '100%',
+  },
+  container: {
+    alignItems: 'center',
+    backgroundColor: '#f3f4f6',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
+  content: {
+    gap: 24,
+  },
+  devInfo: {
+    color: '#6b7280',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  googleIcon: {
+    height: 24,
+    width: 24,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  link: {
+    color: '#3b82f6',
+    textDecorationLine: 'underline',
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  loginButton: {
+    paddingVertical: 16,
+    width: '100%',
+  },
+  spinner: {
+    borderBottomColor: 'transparent',
+    borderColor: '#ef4444',
+    borderRadius: 16,
+    borderTopColor: 'transparent',
+    borderWidth: 2,
+    height: 32,
+    transform: [{ rotate: '45deg' }],
+    width: 32,
+  },
+  termsContainer: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  termsLabel: {
+    color: '#374151',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  termsText: {
+    flex: 1,
+  },
+  title: {
+    color: '#111827',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});                                                                                                                                                                                                                                                                                                                                                                                                                                                              

@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Heart, MessageCircle, Flame } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
+import { View, Text, Image, StyleSheet, Alert } from 'react-native';
+import { Heart, MessageCircle, Flame } from 'lucide-react-native';
+import { Button } from '@/components/ui/native/button';
+import { Avatar } from '@/components/ui/native/avatar';
+import { Dialog } from '@/components/ui/native/dialog';
+import { Textarea } from '@/components/ui/native/textarea';
 
 interface PostCardProps {
   post: {
@@ -125,7 +126,7 @@ export default function PostCard({ post }: PostCardProps) {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>心震えた理由を教えてください</DialogTitle>
+              <DialogTitle><Text>心震えた理由を教えてください</Text></DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <Textarea
@@ -143,4 +144,4 @@ export default function PostCard({ post }: PostCardProps) {
       </div>
     </div>
   );
-} 
+}  

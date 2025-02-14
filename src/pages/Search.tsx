@@ -1,11 +1,77 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useToast } from "@/hooks/use-toast";
-import { Search as SearchIcon, MessageSquare } from "lucide-react";
+import { View, TextInput, ScrollView, StyleSheet, Text } from "react-native";
+import { Button } from "@/components/ui/native/button";
+// import { useToast } from "@/hooks/use-toast";
+import { Search as SearchIcon, MessageSquare } from "lucide-react-native";
 import { ChatMessage } from "@/components/chat/ChatMessage";
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+    padding: 16,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    marginLeft: 8,
+  },
+  inputContainer: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderTopColor: '#e5e7eb',
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    padding: 16,
+  },
+  messageList: {
+    flex: 1,
+  },
+  questionButton: {
+    marginBottom: 8,
+  },
+  questionButtonContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  questionText: {
+    color: '#374151',
+    fontSize: 14,
+  },
+  questionsList: {
+    maxHeight: 400,
+  },
+  searchContainer: {
+    marginBottom: 16,
+    position: 'relative',
+  },
+  searchIcon: {
+    left: 12,
+    position: 'absolute',
+    top: 12,
+    zIndex: 1,
+  },
+  searchInput: {
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    fontSize: 16,
+    paddingLeft: 40,
+    paddingVertical: 12,
+  },
+  suggestedQuestionsContainer: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 16,
+  },
+  suggestedQuestionsTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 12,
+  },
+});
 
 const SUGGESTED_QUESTIONS = [
   "子どもとの適切な関わり方は？",
@@ -18,10 +84,8 @@ export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isChatMode, setIsChatMode] = useState(false);
   const [messages, setMessages] = useState<Array<{ isAi: boolean; message: string }>>([]);
-  const { toast } = useToast();
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = async () => {
     if (!searchQuery.trim()) return;
 
     setIsChatMode(true);
@@ -40,68 +104,64 @@ export default function Search() {
 
   const handleQuestionClick = (question: string) => {
     setSearchQuery(question);
-    handleSearch(new Event('submit') as React.FormEvent);
+    handleSearch();
   };
 
   if (isChatMode) {
     return (
-      <div className="container max-w-3xl mx-auto px-4 pt-20 pb-24">
-        <ScrollArea className="h-[calc(100vh-200px)]">
-          <div className="space-y-0 divide-y">
+      <View style={styles.container}>
+        <ScrollView style={styles.messageList}>
+          <View style={styles.messageList}>
             {messages.map((msg, index) => (
               <ChatMessage key={index} isAi={msg.isAi} message={msg.message} />
             ))}
-          </div>
-        </ScrollArea>
-        <form onSubmit={handleSearch} className="fixed bottom-24 left-0 right-0 bg-background p-4">
-          <div className="container max-w-3xl mx-auto relative">
-            <SearchIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="メッセージを入力..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </form>
-      </div>
+          </View>
+        </ScrollView>
+        <View style={styles.inputContainer}>
+          <SearchIcon style={styles.searchIcon} size={16} color="#666" />
+          <TextInput
+            placeholder="メッセージを入力..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch}
+            style={styles.input}
+          />
+        </View>
+      </View>
     );
   }
 
   return (
-    <div className="container max-w-2xl mx-auto px-4 pt-20 pb-24">
-      <form onSubmit={handleSearch} className="space-y-4">
-        <div className="relative">
-          <SearchIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="検索キーワードや質問を入力"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
+    <View style={styles.container}>
+      <View style={styles.searchContainer}>
+        <SearchIcon style={styles.searchIcon} size={16} color="#666" />
+        <TextInput
+          placeholder="検索キーワードや質問を入力"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onSubmitEditing={handleSearch}
+          style={styles.searchInput}
+        />
+      </View>
 
-        <Card className="p-4">
-          <h3 className="text-sm font-medium mb-3">おすすめの質問</h3>
-          <ScrollArea className="h-[400px]">
-            <div className="space-y-2">
-              {SUGGESTED_QUESTIONS.map((question, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  className="w-full justify-start gap-2"
-                  onClick={() => handleQuestionClick(question)}
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  {question}
-                </Button>
-              ))}
-            </div>
-          </ScrollArea>
-        </Card>
-      </form>
-    </div>
+      <View style={styles.suggestedQuestionsContainer}>
+        <Text style={styles.suggestedQuestionsTitle}><Text>おすすめの質問</Text></Text>
+        <ScrollView style={styles.questionsList}>
+          {SUGGESTED_QUESTIONS.map((question, index) => (
+            <Button
+              key={index}
+              variant="outline"
+              onPress={() => handleQuestionClick(question)}
+              containerStyle={styles.questionButton}
+            >
+              <View style={styles.questionButtonContent}>
+                <MessageSquare size={16} color="#666" />
+                <Text style={styles.questionText}>{question}</Text>
+              </View>
+            </Button>
+          ))}
+        </ScrollView>
+      </View>
+    </View>
   );
 }

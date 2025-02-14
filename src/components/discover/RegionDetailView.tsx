@@ -1,7 +1,7 @@
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { X } from "lucide-react-native";
+import { Button } from "@/components/ui/native/button";
+import { Modal } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { RegionCharacteristics } from "./RegionCharacteristics";
 import { RegionEvents } from "./RegionEvents";
 import { RegionPeople } from "./RegionPeople";
@@ -172,32 +172,56 @@ export function RegionDetailView({ open, onClose, region }: RegionDetailViewProp
   if (!regionData) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl p-0">
-        <ScrollArea className="h-[80vh]">
-          <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold">{region}の目醒め情報</h2>
+    <Modal visible={open} onRequestClose={onClose} animationType="slide">
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.content}>
+            <View style={styles.header}>
+              <Text style={styles.title}><Text>{region}の目醒め情報</Text></Text>
               <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={onClose}
-                className="hover:bg-destructive/10 transition-colors"
+                variant="outline" 
+                onPress={onClose}
               >
-                <X className="w-5 h-5" />
-                <span className="sr-only">閉じる</span>
+                <X size={20} color="#000" />
               </Button>
-            </div>
+            </View>
 
-            <div className="space-y-8">
+            <View style={styles.sections}>
               <RegionCharacteristics characteristics={regionData.features.characteristics} />
               <RegionEvents />
               <RegionPeople people={regionData.features.people} />
               <RegionSpecialties specialties={regionData.features.specialties} />
-            </div>
-          </div>
-        </ScrollArea>
-      </DialogContent>
-    </Dialog>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  content: {
+    gap: 24,
+    padding: 16,
+  },
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  sections: {
+    gap: 32,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});

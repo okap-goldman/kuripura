@@ -1,43 +1,50 @@
-import { Home, User, Compass, Search, Calendar, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { View, StyleSheet } from 'react-native';
+import { Home, User, Compass, Calendar, Plus } from 'lucide-react-native';
+import { Button } from '@/components/ui/native/button';
+import { router } from 'expo-router';
 
 export default function Footer() {
   return (
-    <footer className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 z-50">
-      <div className="container h-full mx-auto px-4">
-        <nav className="h-full flex items-center justify-around">
-          <Link to="/">
-            <Button variant="ghost" size="icon">
-              <Home className="h-5 w-5" />
-            </Button>
-          </Link>
+    <View style={styles.footer}>
+      <View style={styles.container}>
+        <View style={styles.nav}>
+          <Button
+            variant="outline"
+            onPress={() => router.replace('/(tabs)/' as any)}
+          >
+            <Home size={20} color="#6b7280" />
+          </Button>
           
-          <Link to="/profile">
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            onPress={() => router.replace('/(tabs)/profile' as any)}
+          >
+            <User size={20} color="#6b7280" />
+          </Button>
           
-          <Link to="/post">
-            <Button size="icon" className="bg-primary text-white rounded-full hover:bg-primary/90">
-              <Plus className="h-5 w-5" />
-            </Button>
-          </Link>
+          <Button
+            variant="default"
+            style={styles.postButton}
+            onPress={() => router.replace('/(tabs)/post' as any)}
+          >
+            <Plus size={20} color="#fff" />
+          </Button>
           
-          <Link to="/discover">
-            <Button variant="ghost" size="icon">
-              <Compass className="h-5 w-5" />
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            onPress={() => router.replace('/(tabs)/discover' as any)}
+          >
+            <Compass size={20} color="#6b7280" />
+          </Button>
           
-          <Link to="/events">
-            <Button variant="ghost" size="icon">
-              <Calendar className="h-5 w-5" />
-            </Button>
-          </Link>
-        </nav>
-      </div>
-    </footer>
+          <Button
+            variant="outline"
+            onPress={() => router.replace('/(tabs)/events' as any)}
+          >
+            <Calendar size={20} color="#6b7280" />
+          </Button>
+        </View>
+      </View>
+    </View>
   );
-} 
+}  
