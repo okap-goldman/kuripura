@@ -32,7 +32,7 @@ export default function TextPostPage() {
 
     setIsUploading(true);
     try {
-      const url = await uploadImage(file, user!.uid);
+      const url = await uploadImage(file);
       setImages([...images, url]);
     } catch (error) {
       console.error('Image upload error:', error);
@@ -194,4 +194,4 @@ export default function TextPostPage() {
       </div>
     </div>
   );
-}        
+}                
