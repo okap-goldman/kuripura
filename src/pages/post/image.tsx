@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Image as ImageIcon, Plus, X } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
 import { uploadImage, ImageUploadError } from '@/lib/storage';
 
@@ -109,10 +110,67 @@ export default function ImagePostPage() {
 
         <div className="py-6 space-y-6">
           {/* 画像プレビュー */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+          <div className="space-y-4">
+            {/* 最初の2枚の画像を固定表示 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {images.slice(0, 2).map((image, index) => (
+                <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
+                  <img
+                    src={image.url}
+                    alt={`プレビュー ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    className="absolute top-2 right-2"
+                    onClick={() => handleRemoveImage(index)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            {/* 残りの画像をスライダーで表示 */}
+            {images.length > 2 && (
+              <Carousel
+                opts={{
+                  align: "start",
+                  containScroll: false,
+                }}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {images.slice(2).map((image, index) => (
+                    <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                      <div className="relative aspect-square rounded-lg overflow-hidden">
+                        <img
+                          src={image.url}
+                          alt={`プレビュー ${index + 3}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-2 right-2"
+                          onClick={() => handleRemoveImage(index + 2)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden sm:flex -left-4" />
+                <CarouselNext className="hidden sm:flex -right-4" />
+              </Carousel>
+            )}
+
+            {/* 画像追加ボタン */}
             <Button
               variant="outline"
-              className="aspect-square"
+              className="w-full aspect-square sm:aspect-auto"
               onClick={() => fileInputRef.current?.click()}
             >
               <div className="flex flex-col items-center space-y-2">
@@ -120,23 +178,6 @@ export default function ImagePostPage() {
                 <span className="text-sm">画像を追加</span>
               </div>
             </Button>
-            {images.map((image, index) => (
-              <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
-                <img
-                  src={image.url}
-                  alt={`プレビュー ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  className="absolute top-2 right-2"
-                  onClick={() => handleRemoveImage(index)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
           </div>
 
           {/* 説明文入力 */}
@@ -164,4 +205,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}                
+}                  
