@@ -12,7 +12,10 @@ export default defineConfig(({ mode }) => ({
     strictPort: false,
     hmr: {
       overlay: true
-    }
+    },
+    allowedHosts: [
+      'image-post-app-tunnel-7mtu0whd.devinapps.com'
+    ]
   },
   plugins: [
     react(),
