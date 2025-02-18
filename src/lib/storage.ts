@@ -1,15 +1,21 @@
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from './firebase';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 interface UploadImageOptions {
-  maxSizeMB?: number;
   allowedTypes?: string[];
 }
 
 const DEFAULT_OPTIONS: UploadImageOptions = {
-  maxSizeMB: 5,
   allowedTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 };
+
+const s3Client = new S3Client({
+  region: import.meta.env.VITE_WASABI_REGION,
+  endpoint: `https://s3.${import.meta.env.VITE_WASABI_REGION}.wasabisys.com`,
+  credentials: {
+    accessKeyId: import.meta.env.VITE_WASABI_ACCESS_KEY_ID,
+    secretAccessKey: import.meta.env.VITE_WASABI_SECRET_ACCESS_KEY
+  }
+});
 
 export class ImageUploadError extends Error {
   constructor(message: string) {
@@ -29,17 +35,17 @@ export const uploadImage = async (
     );
   }
 
-  if (options.maxSizeMB && file.size > options.maxSizeMB * 1024 * 1024) {
-    throw new ImageUploadError(
-      `ファイルサイズが大きすぎます。${options.maxSizeMB}MB以下にしてください。`
-    );
-  }
-
   try {
     const fileName = `${Date.now()}-${file.name}`;
-    const storageRef = ref(storage, `images/${fileName}`);
-    const snapshot = await uploadBytes(storageRef, file);
-    return await getDownloadURL(snapshot.ref);
+    const command = new PutObjectCommand({
+      Bucket: import.meta.env.VITE_WASABI_BUCKET,
+      Key: `images/${fileName}`,
+      Body: file,
+      ContentType: file.type
+    });
+
+    await s3Client.send(command);
+    return `https://s3.${import.meta.env.VITE_WASABI_REGION}.wasabisys.com/${import.meta.env.VITE_WASABI_BUCKET}/images/${fileName}`;
   } catch (error) {
     console.error('Image upload error:', error);
     throw new ImageUploadError(
