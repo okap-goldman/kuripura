@@ -14,17 +14,10 @@ export default function LoginPage() {
   const { toast } = useToast();
   
   const isDevelopment = import.meta.env.MODE === 'development';
-  const testingEmail = isDevelopment ? import.meta.env.VITE_TESTING_GOOGLE_MAIL : null;
-
-  useEffect(() => {
-    if (isInitialized && user) {
-      const from = location.state?.from?.pathname || '/';
-      navigate(from, { replace: true });
-    }
-  }, [user, isInitialized, navigate, location]);
+  const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
 
   const handleGoogleLogin = async () => {
-    if (!agreedToTerms) {
+    if (!agreedToTerms && !isDevelopment) {
       toast({
         title: 'エラー',
         description: '利用規約とプライバシーポリシーに同意してください',
@@ -48,6 +41,12 @@ export default function LoginPage() {
       });
     }
   };
+
+  useEffect(() => {
+    if (isInitialized && !user && isDevelopment && testingEmail) {
+      handleGoogleLogin();
+    }
+  }, [isInitialized, user, isDevelopment, testingEmail, handleGoogleLogin]);
 
   if (!isInitialized) {
     return <div className="flex items-center justify-center min-h-screen">
@@ -100,4 +99,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}                                                                
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
