@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -16,7 +16,7 @@ export default function LoginPage() {
   const isDevelopment = import.meta.env.MODE === 'development';
   const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = useCallback(async () => {
     if (!agreedToTerms && !isDevelopment) {
       toast({
         title: 'エラー',
@@ -32,6 +32,7 @@ export default function LoginPage() {
         title: 'ログイン成功',
         description: 'ようこそ！',
       });
+      navigate('/');
     } catch (error) {
       console.error('Login error:', error);
       toast({
@@ -40,18 +41,18 @@ export default function LoginPage() {
         variant: 'destructive',
       });
     }
-  };
-
-  useEffect(() => {
-    if (isInitialized && !user && isDevelopment && testingEmail) {
-      handleGoogleLogin();
-    }
-  }, [isInitialized, user, isDevelopment, testingEmail, handleGoogleLogin]);
+  }, [agreedToTerms, isDevelopment, login, navigate, toast]);
 
   if (!isInitialized) {
     return <div className="flex items-center justify-center min-h-screen">
       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-rose-500"></div>
     </div>;
+  }
+
+  // ユーザーが既にログインしている場合はタイムラインにリダイレクト
+  if (user) {
+    navigate('/');
+    return null;
   }
 
   return (

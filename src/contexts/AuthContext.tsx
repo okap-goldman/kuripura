@@ -41,9 +41,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const isDevelopment = import.meta.env.MODE === 'development';
-    const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
     const storedUser = localStorage.getItem('user');
 
+    // ローカルストレージからユーザー情報を復元
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setIsInitialized(true);
@@ -51,58 +51,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    if (isDevelopment && testingEmail) {
-      const mockUser: User = {
-        user_id: 1,
-        uid: '12345678',
-        user_name: 'テストユーザー',
-        email: testingEmail,
-        profile_icon_url: null,
-        profile_audio_url: null,
-        shop_link_url: null,
-        is_shop_link: false,
-        introduction: null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        notification_settings: {
-          comments: true,
-          highlights: true,
-          new_followers: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      };
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      setIsInitialized(true);
-      setIsLoading(false);
-      return;
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setIsLoading(true);
-      try {
-        if (firebaseUser) {
-          const appUser = createUserFromFirebase(firebaseUser);
-          setUser(appUser);
-          localStorage.setItem('user', JSON.stringify(appUser));
-        } else {
+    if (!isDevelopment) {
+      // 本番環境の場合はFirebaseの認証状態を監視
+      const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        setIsLoading(true);
+        try {
+          if (firebaseUser) {
+            const appUser = createUserFromFirebase(firebaseUser);
+            setUser(appUser);
+            localStorage.setItem('user', JSON.stringify(appUser));
+          } else {
+            setUser(null);
+            localStorage.removeItem('user');
+          }
+        } catch (error) {
+          console.error('Auth state change error:', error);
           setUser(null);
           localStorage.removeItem('user');
+        } finally {
+          setIsLoading(false);
+          setIsInitialized(true);
         }
-      } catch (error) {
-        console.error('Auth state change error:', error);
-        setUser(null);
-        localStorage.removeItem('user');
-      } finally {
-        setIsLoading(false);
-        setIsInitialized(true);
-      }
-    });
+      });
 
-    return () => {
-      unsubscribe();
-    };
+      return () => {
+        unsubscribe();
+      };
+    }
+
+    // 開発環境でストレージにユーザーがない場合は、未ログイン状態で初期化
+    setUser(null);
+    setIsInitialized(true);
+    setIsLoading(false);
   }, []);
 
   const login = async () => {
@@ -122,7 +102,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const appUser = createUserFromFirebase(mockUser);
         setUser(appUser);
         localStorage.setItem('user', JSON.stringify(appUser));
-        setIsLoading(false);
         return;
       }
 
@@ -131,8 +110,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const result = await signInWithPopup(auth, provider);
       const appUser = createUserFromFirebase(result.user);
       setUser(appUser);
+      localStorage.setItem('user', JSON.stringify(appUser));
     } catch (error) {
       console.error('Login error:', error);
+      setUser(null);
+      localStorage.removeItem('user');
       throw error;
     } finally {
       setIsLoading(false);
@@ -142,8 +124,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       setIsLoading(true);
+      const isDevelopment = import.meta.env.MODE === 'development';
+      
+      if (isDevelopment) {
+        // 開発環境では直接状態をクリア
+        setUser(null);
+        localStorage.removeItem('user');
+        setIsLoading(false);
+        return;
+      }
+
+      // 本番環境ではFirebaseのログアウトを実行
       await signOut(auth);
       setUser(null);
+      localStorage.removeItem('user');
     } catch (error) {
       console.error('Logout error:', error);
       throw error;
