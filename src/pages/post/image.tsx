@@ -111,7 +111,7 @@ export default function ImagePostPage() {
         <div className="py-6 space-y-6">
           {/* 画像プレビュー */}
           <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {images.map((image, index) => (
                 <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
                   <img
@@ -172,4 +172,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}                                                                    
+}                                                                      
