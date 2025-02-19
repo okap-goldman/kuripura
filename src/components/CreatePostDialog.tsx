@@ -19,8 +19,16 @@ export function CreatePostDialog({ isOpen, onClose }: CreatePostDialogProps) {
   const navigate = useNavigate();
 
   const handlePostTypeSelect = (type: string) => {
-    if (type === 'text') {
-      navigate('/post/text');
+    switch (type) {
+      case 'text':
+        navigate('/post/text');
+        break;
+      case 'media':
+        navigate('/post/image');
+        break;
+      case 'audio':
+        navigate('/post/audio');
+        break;
     }
     onClose();
   };

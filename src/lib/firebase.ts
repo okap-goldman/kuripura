@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
-// TODO: Replace with actual Firebase config
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -19,16 +18,20 @@ export const db = getFirestore(app);
 
 interface CreateTextPostData {
   userId: string;
-  title: string;
-  content: string;
+  content: {
+    text: string;
+    html: string;
+  };
+  images?: string[];
   isPublic: boolean;
 }
 
 export const createTextPost = async (data: CreateTextPostData) => {
   const post = {
     userId: data.userId,
-    title: data.title,
-    text_content: data.content,
+    text_content: data.content.text,
+    html_content: data.content.html,
+    images: data.images || [],
     post_type: 'text' as const,
     visibility: data.isPublic ? 'public' : 'private' as const,
     created_at: new Date().toISOString(),

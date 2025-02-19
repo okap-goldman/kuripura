@@ -17,6 +17,7 @@ import { MessagesPage } from "@/pages/messages";
 import NotificationsPage from "@/pages/notifications";
 import SettingsPage from "@/pages/settings";
 import TextPostPage from "@/pages/post/text";
+import ImagePostPage from "@/pages/post/image";
 
 function AppContent() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function AppContent() {
             <Route path="/notifications" element={<PrivateRoute><NotificationsPage /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
             <Route path="/post/text" element={<PrivateRoute><TextPostPage /></PrivateRoute>} />
+            <Route path="/post/image" element={<PrivateRoute><ImagePostPage /></PrivateRoute>} />
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
