@@ -173,6 +173,7 @@ export default function ImagePostPage() {
               variant="outline"
               className="w-full aspect-square sm:aspect-auto"
               onClick={() => fileInputRef.current?.click()}
+              id="add-image-button"
               data-testid="add-image-button"
               data-devinid="add-image-button"
             >
@@ -208,4 +209,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}                                                  
+}                                                        
