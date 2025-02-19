@@ -138,6 +138,7 @@ export default function ImagePostPage() {
                 opts={{
                   align: "start",
                   containScroll: false,
+                  direction: "horizontal"
                 }}
                 className="w-full"
               >
@@ -205,4 +206,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}                  
+}                    
