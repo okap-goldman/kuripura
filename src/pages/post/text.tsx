@@ -5,7 +5,8 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, ImagePlus, X } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { createTextPost, uploadImage } from '@/lib/firebase';
+import { createTextPost } from '@/lib/firebase';
+import { uploadImage } from '@/lib/storage';
 import { useAuth } from '@/contexts/AuthContext';
 import { RichTextEditor } from '@/components/RichTextEditor';
 
@@ -31,7 +32,7 @@ export default function TextPostPage() {
 
     setIsUploading(true);
     try {
-      const url = await uploadImage(file, user!.uid);
+      const url = await uploadImage(file);
       setImages([...images, url]);
     } catch (error) {
       console.error('Image upload error:', error);
@@ -193,4 +194,4 @@ export default function TextPostPage() {
       </div>
     </div>
   );
-}    
+}                
