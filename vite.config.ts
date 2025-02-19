@@ -13,7 +13,8 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: true,
       clientPort: 443,
-      host: 'image-post-app-tunnel-zq9ylxru.devinapps.com'
+      host: 'image-post-app-tunnel-zq9ylxru.devinapps.com',
+      protocol: 'wss'
     },
     allowedHosts: [
       'image-post-app-tunnel-7mtu0whd.devinapps.com',
