@@ -14,8 +14,8 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const createUserFromFirebase = (firebaseUser: any): User => ({
-  user_id: parseInt(firebaseUser.uid.slice(0, 8), 16), // UIDの最初の8文字を数値に変換
-  uid: firebaseUser.uid, // Firebase UIDを保持
+  user_id: firebaseUser.uid, // UIDをそのまま使用
+  uid: firebaseUser.uid,
   user_name: firebaseUser.displayName || '名称未設定',
   email: firebaseUser.email || '',
   profile_icon_url: firebaseUser.photoURL,
@@ -24,7 +24,14 @@ const createUserFromFirebase = (firebaseUser: any): User => ({
   is_shop_link: false,
   introduction: null,
   created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString()
+  updated_at: new Date().toISOString(),
+  notification_settings: {
+    comments: true,
+    highlights: true,
+    new_followers: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -65,10 +72,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (isDevelopment && testingEmail) {
         // 開発環境でのバイパス
         const mockUser = {
-          uid: '12345678',
-          displayName: 'Test User',
+          uid: `dev_${Date.now()}`, // 一意のUIDを生成
+          displayName: 'テストユーザー',
           email: testingEmail,
-          photoURL: 'https://example.com/default-avatar.png'
+          photoURL: null
         };
         const appUser = createUserFromFirebase(mockUser);
         setUser(appUser);
