@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/',
+  base: '',
   server: {
     host: true,
     port: 8080,
@@ -14,8 +14,15 @@ export default defineConfig({
       overlay: true,
       clientPort: 443,
       host: 'image-post-app-tunnel-zq9ylxru.devinapps.com',
-      protocol: 'wss',
-      path: '/@vite/client'
+      protocol: 'wss'
+    },
+    proxy: {
+      '/@vite/client': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+        ws: true
+      }
     },
     allowedHosts: [
       'image-post-app-tunnel-7mtu0whd.devinapps.com',
