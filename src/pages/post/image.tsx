@@ -139,6 +139,7 @@ export default function ImagePostPage() {
                   align: "start",
                   containScroll: false,
                 }}
+                orientation="horizontal"
                 className="w-full relative px-12"
               >
                 <CarouselContent className="gap-2">
@@ -205,4 +206,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}                        
+}                          
