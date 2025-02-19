@@ -111,9 +111,8 @@ export default function ImagePostPage() {
         <div className="py-6 space-y-6">
           {/* 画像プレビュー */}
           <div className="space-y-4">
-            {/* 最初の2枚の画像を固定表示 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {images.slice(0, 2).map((image, index) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+              {images.map((image, index) => (
                 <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
                   <img
                     src={image.url}
@@ -131,41 +130,6 @@ export default function ImagePostPage() {
                 </div>
               ))}
             </div>
-
-            {/* 残りの画像をスライダーで表示 */}
-            {images.length > 2 && (
-              <Carousel
-                opts={{
-                  align: "start",
-                  containScroll: false,
-                }}
-                className="w-full relative px-12"
-              >
-                <CarouselContent className="gap-2">
-                  {images.slice(2).map((image, index) => (
-                    <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-2">
-                      <div className="relative aspect-square rounded-lg overflow-hidden">
-                        <img
-                          src={image.url}
-                          alt={`プレビュー ${index + 3}`}
-                          className="w-full h-full object-cover"
-                        />
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-2 right-2"
-                          onClick={() => handleRemoveImage(index + 2)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute left-0 hover:bg-white/90" />
-                <CarouselNext className="absolute right-0 hover:bg-white/90" />
-              </Carousel>
-            )}
 
             {/* 画像追加ボタン */}
             <Button
@@ -208,4 +172,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}                                                                  
+}                                                                    
