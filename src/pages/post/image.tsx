@@ -142,11 +142,12 @@ export default function ImagePostPage() {
                   dragFree: true,
                   loop: true
                 }}
+                orientation="horizontal"
                 className="w-full relative px-12"
               >
-                <CarouselContent className="gap-2">
+                <CarouselContent className="gap-2 !flex-row">
                   {images.slice(2).map((image, index) => (
-                    <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-2">
+                    <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 !pl-2">
                       <div className="relative aspect-square rounded-lg overflow-hidden">
                         <img
                           src={image.url}
@@ -211,4 +212,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}                                                            
+}                                                              
