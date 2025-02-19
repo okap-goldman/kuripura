@@ -42,9 +42,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const isDevelopment = import.meta.env.MODE === 'development';
     const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
-    const testingPassword = import.meta.env.VITE_TESTING_GOOGLE_PASSWORD;
 
-    if (isDevelopment && testingEmail && testingPassword) {
+    if (isDevelopment && testingEmail) {
       const mockUser: User = {
         user_id: 1,
         uid: '12345678',
@@ -66,12 +65,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       };
       setUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
       setIsInitialized(true);
       setIsLoading(false);
       return;
     }
 
-    const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setIsInitialized(true);
@@ -109,15 +108,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setIsLoading(true);
       const isDevelopment = import.meta.env.MODE === 'development';
+<<<<<<< Updated upstream
       const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
 
       if (isDevelopment && testingEmail) {
+||||||| constructed merge base
+      const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
+      const testingPassword = import.meta.env.VITE_TESTING_GOOGLE_PASSWORD;
+
+      if (isDevelopment && testingEmail && testingPassword) {
+=======
+      if (isDevelopment) {
+>>>>>>> Stashed changes
         // 開発環境でのバイパス
         const mockUser = {
           uid: '12345678',
-          displayName: 'Test User',
-          email: testingEmail,
-          photoURL: 'https://example.com/default-avatar.png'
+          displayName: 'テストユーザー',
+          email: import.meta.env.VITE_TESTING_GOOGLE_MAIL || 'test@example.com',
+          photoURL: null
         };
         const appUser = createUserFromFirebase(mockUser);
         setUser(appUser);

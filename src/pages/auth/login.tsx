@@ -14,7 +14,7 @@ export default function LoginPage() {
   const { toast } = useToast();
   
   const isDevelopment = import.meta.env.MODE === 'development';
-  const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
+  const testingEmail = isDevelopment ? import.meta.env.VITE_TESTING_GOOGLE_MAIL : null;
 
   useEffect(() => {
     if (isInitialized && user) {
@@ -100,4 +100,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}                                
+}                                                                
