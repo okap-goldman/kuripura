@@ -61,9 +61,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
       const isDevelopment = import.meta.env.MODE === 'development';
       const testingEmail = import.meta.env.VITE_TESTING_GOOGLE_MAIL;
-      const testingPassword = import.meta.env.VITE_TESTING_GOOGLE_PASSWORD;
 
-      if (isDevelopment && testingEmail && testingPassword) {
+      if (isDevelopment && testingEmail) {
         // 開発環境でのバイパス
         const mockUser = {
           uid: '12345678',
@@ -73,6 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         };
         const appUser = createUserFromFirebase(mockUser);
         setUser(appUser);
+        setIsLoading(false);
         return;
       }
 
