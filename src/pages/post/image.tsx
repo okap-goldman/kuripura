@@ -175,6 +175,7 @@ export default function ImagePostPage() {
               variant="outline"
               className="w-full aspect-square sm:aspect-auto"
               onClick={() => fileInputRef.current?.click()}
+              data-devinid="add-image-button"
             >
               <div className="flex flex-col items-center space-y-2">
                 <Plus className="h-6 w-6" />
@@ -208,4 +209,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}                                        
+}                                          
