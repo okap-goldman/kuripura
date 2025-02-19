@@ -7,22 +7,14 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig({
   base: '',
   server: {
-    host: true,
+    host: '0.0.0.0',
     port: 8080,
-    strictPort: false,
+    strictPort: true,
     hmr: {
       overlay: true,
       clientPort: 443,
       host: 'image-post-app-tunnel-zq9ylxru.devinapps.com',
       protocol: 'wss'
-    },
-    proxy: {
-      '/@vite/client': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
-        ws: true
-      }
     },
     allowedHosts: [
       'image-post-app-tunnel-7mtu0whd.devinapps.com',
