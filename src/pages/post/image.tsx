@@ -138,7 +138,9 @@ export default function ImagePostPage() {
                 opts={{
                   align: "start",
                   containScroll: false,
-                  axis: "x"
+                  axis: "x",
+                  dragFree: true,
+                  loop: true
                 }}
                 className="w-full relative px-12"
               >
@@ -173,9 +175,9 @@ export default function ImagePostPage() {
               variant="outline"
               className="w-full aspect-square sm:aspect-auto"
               onClick={() => fileInputRef.current?.click()}
-              id="add-image-button"
-              data-testid="add-image-button"
-              data-devinid="add-image-button"
+              id="upload-button"
+              data-testid="upload-button"
+              data-devinid="upload-button"
             >
               <div className="flex flex-col items-center space-y-2">
                 <Plus className="h-6 w-6" />
@@ -209,4 +211,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}                                                        
+}                                                            
