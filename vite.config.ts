@@ -15,7 +15,8 @@ export default defineConfig(({ mode }) => ({
     },
     allowedHosts: [
       'image-post-app-tunnel-7mtu0whd.devinapps.com',
-      'image-post-app-tunnel-58pu1ckr.devinapps.com'
+      'image-post-app-tunnel-58pu1ckr.devinapps.com',
+      'image-post-app-tunnel-zq9ylxru.devinapps.com'
     ]
   },
   plugins: [
