@@ -138,15 +138,13 @@ export default function ImagePostPage() {
                 opts={{
                   align: "start",
                   containScroll: false,
-                  axis: "x",
-                  direction: "ltr"
+                  axis: "x"
                 }}
-                orientation="horizontal"
                 className="w-full relative px-12"
               >
-                <CarouselContent className="gap-2">
+                <CarouselContent className="flex flex-row !-ml-4">
                   {images.slice(2).map((image, index) => (
-                    <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-2">
+                    <CarouselItem key={index} className="!pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                       <div className="relative aspect-square rounded-lg overflow-hidden">
                         <img
                           src={image.url}
@@ -165,8 +163,8 @@ export default function ImagePostPage() {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="absolute left-0 hover:bg-white/90" />
-                <CarouselNext className="absolute right-0 hover:bg-white/90" />
+                <CarouselPrevious className="absolute left-2 hover:bg-white/90" />
+                <CarouselNext className="absolute right-2 hover:bg-white/90" />
               </Carousel>
             )}
 
@@ -209,4 +207,4 @@ export default function ImagePostPage() {
       </div>
     </div>
   );
-}                                          
+}                                              
